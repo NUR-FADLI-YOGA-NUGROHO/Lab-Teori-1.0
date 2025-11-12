@@ -206,6 +206,123 @@
             }
         }
 
+        /* ===== RESPONSIVE HEADING & TEXT SIZING ===== */
+        
+        /* Large heading scaling for smaller screens */
+        h1, h2, h3, h4, h5, h6 {
+            word-break: break-word;
+            hyphens: auto;
+            overflow-wrap: break-word;
+        }
+
+        /* Text-4xl responsive scaling */
+        .text-4xl {
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+        }
+
+        /* Text-3xl responsive scaling */
+        .text-3xl {
+            font-size: 1.875rem;
+            line-height: 2.25rem;
+        }
+
+        /* Add max width constraint to large headings */
+        h1.text-4xl,
+        h1.text-3xl,
+        h2.text-4xl,
+        h2.text-3xl,
+        h3.text-4xl,
+        h3.text-3xl {
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+
+        /* Media query for tablets and smaller (768px and below) */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem !important;
+            }
+            
+            h2.text-4xl {
+                font-size: 1.75rem !important;
+                line-height: 2.125rem;
+            }
+
+            h2.text-3xl {
+                font-size: 1.5rem !important;
+                line-height: 1.875rem;
+            }
+
+            .text-4xl {
+                font-size: 1.75rem !important;
+                line-height: 2.125rem;
+            }
+
+            .text-3xl {
+                font-size: 1.5rem !important;
+                line-height: 1.875rem;
+            }
+
+            .text-2xl {
+                font-size: 1.25rem !important;
+                line-height: 1.75rem;
+            }
+
+            /* Constrain heading width for better text wrapping */
+            h1, h2, h3 {
+                max-width: 95%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        /* Media query for small phones (480px and below) */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.25rem !important;
+                line-height: 1.5rem;
+            }
+            
+            h2.text-4xl {
+                font-size: 1.5rem !important;
+                line-height: 1.875rem;
+            }
+
+            h2.text-3xl {
+                font-size: 1.25rem !important;
+                line-height: 1.5rem;
+            }
+
+            .text-4xl {
+                font-size: 1.5rem !important;
+                line-height: 1.875rem;
+            }
+
+            .text-3xl {
+                font-size: 1.25rem !important;
+                line-height: 1.5rem;
+            }
+
+            .text-2xl {
+                font-size: 1.125rem !important;
+                line-height: 1.5rem;
+            }
+
+            /* Tighter constraints for very small screens */
+            h1, h2, h3 {
+                max-width: 100%;
+                padding: 0 0.5rem;
+                box-sizing: border-box;
+                word-spacing: -0.05em;
+            }
+
+            /* Reduce margin bottom for headings on small screens */
+            h1, h2, h3 {
+                margin-bottom: 0.75rem !important;
+            }
+        }
+
         /* Hide sidebar & main when not logged in */
         body.not-logged-in aside,
         body.not-logged-in main {
@@ -272,6 +389,468 @@
         }
         body.not-logged-in #btn-close-auth {
             display: none !important;
+        }
+
+        /* ===== BUTTON HOVER FEEDBACK EFFECTS ===== */
+        
+        /* General button hover effects */
+        button {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Colored buttons with glow effect */
+        button[class*="bg-indigo"],
+        button[class*="bg-cyan"],
+        button[class*="bg-purple"],
+        button[class*="bg-orange"],
+        button[class*="bg-green"],
+        button[class*="bg-pink"],
+        button[class*="bg-red"],
+        button[class*="bg-yellow"],
+        button[class*="bg-teal"] {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        button[class*="bg-indigo"]:hover {
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4), 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        button[class*="bg-cyan"]:hover {
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4), 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+
+        button[class*="bg-purple"]:hover {
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.4), 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        button[class*="bg-orange"]:hover {
+            box-shadow: 0 8px 30px rgba(249, 115, 22, 0.4), 0 0 20px rgba(249, 115, 22, 0.3);
+        }
+
+        button[class*="bg-green"]:hover {
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.4), 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+
+        button[class*="bg-pink"]:hover {
+            box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4), 0 0 20px rgba(236, 72, 153, 0.3);
+        }
+
+        button[class*="bg-red"]:hover {
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.4), 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        button[class*="bg-yellow"]:hover {
+            box-shadow: 0 8px 30px rgba(234, 179, 8, 0.4), 0 0 20px rgba(234, 179, 8, 0.3);
+        }
+
+        button[class*="bg-teal"]:hover {
+            box-shadow: 0 8px 30px rgba(20, 184, 166, 0.4), 0 0 20px rgba(20, 184, 166, 0.3);
+        }
+
+        /* Neon button styles */
+        .neon-btn {
+            position: relative;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: 2px solid;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            overflow: hidden;
+        }
+
+        .neon-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .neon-btn:hover::before {
+            opacity: 1;
+        }
+
+        .neon-btn-primary {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .neon-btn-primary:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.8), 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .neon-btn-secondary {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+            color: #6366f1;
+            border-color: #6366f1;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .neon-btn-secondary:hover {
+            transform: scale(1.08);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2));
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.6), 0 8px 20px rgba(99, 102, 241, 0.3);
+            color: #06b6d4;
+        }
+
+        /* Language toggle and settings button styles */
+        #language-toggle,
+        #dark-mode-toggle {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #language-toggle:hover {
+            transform: scale(1.06);
+            background-color: #e5e7eb !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark #language-toggle:hover {
+            background-color: #4b5563 !important;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        #dark-mode-toggle:hover {
+            transform: scale(1.1) rotate(20deg);
+            background-color: rgba(99, 102, 241, 0.2) !important;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Tab buttons styling */
+        .tool-tab {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .tool-tab:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+        }
+
+        .tool-tab.active {
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        /* ===== DARK MODE TEXT CONTRAST IMPROVEMENTS ===== */
+        
+        .dark {
+            --tw-text-opacity: 1;
+            color: rgb(248 250 252 / var(--tw-text-opacity));
+        }
+
+        .dark p,
+        .dark span,
+        .dark li,
+        .dark td {
+            color: rgb(241 245 249 / var(--tw-text-opacity));
+        }
+
+        .dark h1,
+        .dark h2,
+        .dark h3,
+        .dark h4,
+        .dark h5,
+        .dark h6 {
+            color: rgb(248 250 252 / var(--tw-text-opacity));
+            font-weight: 600;
+            letter-spacing: -0.015em;
+        }
+
+        /* Even brighter gray text for better contrast */
+        .dark .text-gray-300 {
+            color: rgb(226 232 240) !important;
+        }
+
+        .dark .text-gray-400 {
+            color: rgb(203 213 225) !important;
+        }
+
+        .dark .text-gray-500 {
+            color: rgb(203 213 225) !important;
+        }
+
+        .dark .text-gray-600 {
+            color: rgb(226 232 240) !important;
+        }
+
+        .dark .text-gray-700 {
+            color: rgb(241 245 249) !important;
+        }
+
+        .dark .text-gray-800 {
+            color: rgb(241 245 249) !important;
+        }
+
+        .dark .dark\:text-gray-300 {
+            color: rgb(226 232 240) !important;
+        }
+
+        .dark .dark\:text-gray-400 {
+            color: rgb(203 213 225) !important;
+        }
+
+        .dark .dark\:text-gray-500 {
+            color: rgb(203 213 225) !important;
+        }
+
+        /* Improve button text contrast in dark mode */
+        .dark button {
+            color: rgb(248 250 252) !important;
+        }
+
+        .dark .dark\:text-white {
+            color: rgb(248 250 252) !important;
+        }
+
+        /* Improved dark mode for input fields and text areas */
+        .dark input,
+        .dark textarea,
+        .dark select {
+            color: rgb(248 250 252) !important;
+            background-color: rgba(30, 41, 59, 0.9) !important;
+            border: 1px solid rgba(99, 102, 241, 0.3) !important;
+        }
+
+        .dark input::placeholder,
+        .dark textarea::placeholder {
+            color: rgb(148 163 184) !important;
+        }
+
+        .dark input:focus,
+        .dark textarea:focus,
+        .dark select:focus {
+            border-color: rgba(99, 102, 241, 0.8) !important;
+            background-color: rgba(30, 41, 59, 0.95) !important;
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.4), inset 0 0 10px rgba(99, 102, 241, 0.1) !important;
+            outline: none !important;
+        }
+
+        /* Dark mode for cards and panels - more visible backgrounds */
+        .dark .bg-white {
+            background-color: rgba(30, 41, 59, 0.9) !important;
+            border: 1px solid rgba(99, 102, 241, 0.15) !important;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: rgba(30, 41, 59, 0.7) !important;
+        }
+
+        .dark .bg-gray-100 {
+            background-color: rgba(30, 41, 59, 0.7) !important;
+        }
+
+        .dark .bg-gray-800 {
+            background-color: rgba(15, 23, 42, 0.7) !important;
+        }
+
+        /* Better contrast for dark mode links */
+        .dark a {
+            color: rgb(147, 197, 253) !important;
+            transition: all 0.2s ease;
+        }
+
+        .dark a:hover {
+            color: rgb(191, 219, 254) !important;
+            text-decoration: underline;
+            text-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Dark mode table styling */
+        .dark table {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .dark thead {
+            background-color: rgba(99, 102, 241, 0.15);
+            color: rgb(241 245 249);
+        }
+
+        .dark thead th {
+            color: rgb(248 250 252);
+            font-weight: 600;
+        }
+
+        .dark tbody tr {
+            border-color: rgba(99, 102, 241, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .dark tbody tr:hover {
+            background-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .dark tbody td {
+            color: rgb(226 232 240);
+        }
+
+        /* ===== ENHANCED BUTTON HOVER HIGHLIGHT EFFECTS ===== */
+
+        /* Add subtle inner shadow on button hover for depth */
+        button:hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 3px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+        }
+
+        /* Enhanced button color-specific hover glow */
+        button[class*="bg-indigo"]:hover {
+            box-shadow: 
+                0 0 30px rgba(99, 102, 241, 0.6),
+                0 0 60px rgba(99, 102, 241, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+
+        button[class*="bg-cyan"]:hover {
+            box-shadow: 
+                0 0 30px rgba(6, 182, 212, 0.6),
+                0 0 60px rgba(6, 182, 212, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+        }
+
+        button[class*="bg-purple"]:hover {
+            box-shadow: 
+                0 0 30px rgba(168, 85, 247, 0.6),
+                0 0 60px rgba(168, 85, 247, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+        }
+
+        button[class*="bg-orange"]:hover {
+            box-shadow: 
+                0 0 30px rgba(249, 115, 22, 0.6),
+                0 0 60px rgba(249, 115, 22, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
+        }
+
+        button[class*="bg-green"]:hover {
+            box-shadow: 
+                0 0 30px rgba(34, 197, 94, 0.6),
+                0 0 60px rgba(34, 197, 94, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+        }
+
+        button[class*="bg-pink"]:hover {
+            box-shadow: 
+                0 0 30px rgba(236, 72, 153, 0.6),
+                0 0 60px rgba(236, 72, 153, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+        }
+
+        button[class*="bg-red"]:hover {
+            box-shadow: 
+                0 0 30px rgba(239, 68, 68, 0.6),
+                0 0 60px rgba(239, 68, 68, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+
+        button[class*="bg-yellow"]:hover {
+            box-shadow: 
+                0 0 30px rgba(234, 179, 8, 0.6),
+                0 0 60px rgba(234, 179, 8, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(234, 179, 8, 0.3);
+        }
+
+        button[class*="bg-teal"]:hover {
+            box-shadow: 
+                0 0 30px rgba(20, 184, 166, 0.6),
+                0 0 60px rgba(20, 184, 166, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(20, 184, 166, 0.3);
+        }
+
+        /* Neon button enhanced hover with extra glow */
+        .neon-btn-primary:hover {
+            box-shadow: 
+                0 0 40px rgba(99, 102, 241, 0.8),
+                0 0 80px rgba(99, 102, 241, 0.4),
+                0 10px 30px rgba(99, 102, 241, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+            text-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+        }
+
+        .neon-btn-secondary:hover {
+            box-shadow: 
+                0 0 30px rgba(99, 102, 241, 0.7),
+                0 0 60px rgba(99, 102, 241, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Tab buttons with enhanced highlight */
+        .tool-tab:hover {
+            box-shadow: 
+                0 4px 16px rgba(99, 102, 241, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+        }
+
+        .tool-tab.active {
+            box-shadow: 
+                0 4px 20px rgba(99, 102, 241, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        /* Language and theme toggle with enhanced feedback */
+        #language-toggle:hover {
+            box-shadow: 
+                0 4px 20px rgba(99, 102, 241, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            background-color: #dbeafe !important;
+        }
+
+        .dark #language-toggle:hover {
+            background-color: #3b4557 !important;
+            box-shadow: 
+                0 4px 20px rgba(99, 102, 241, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        }
+
+        #dark-mode-toggle:hover {
+            box-shadow: 
+                0 4px 20px rgba(99, 102, 241, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            background-color: rgba(99, 102, 241, 0.3) !important;
+        }
+
+        .dark #dark-mode-toggle:hover {
+            box-shadow: 
+                0 4px 20px rgba(99, 102, 241, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
         }
         /* Dark Mode Styles */
         .dark {
@@ -993,6 +1572,134 @@
             z-index: 1;
         }
 
+        /* ===== SIDEBAR & NAV LINK STYLING ===== */
+
+        /* Ensure all text in sidebar is visible */
+        aside#sidebar h1,
+        aside#sidebar h2,
+        aside#sidebar h3,
+        aside#sidebar p,
+        aside#sidebar span {
+            color: rgb(31 41 55) !important;
+        }
+
+        /* Navigation links styling */
+        .nav-link {
+            color: rgb(31 41 55) !important;
+            position: relative;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: rgb(17 24 39) !important;
+            background-color: rgba(99, 102, 241, 0.1) !important;
+            border-left-color: rgba(99, 102, 241, 0.6);
+            box-shadow: inset 2px 0 0 rgba(99, 102, 241, 0.3);
+        }
+
+        /* Efek saat mengklik (temporary) */
+        .nav-link:active,
+        .nav-link:focus {
+            background-color: rgba(99, 102, 241, 0.15) !important;
+            border-left-color: rgb(99 102 241) !important;
+            box-shadow: inset 2px 0 0 rgba(99, 102, 241, 0.5) !important;
+        }
+
+        .nav-link.active,
+        .nav-link[href="#home"] {
+            color: rgb(17 24 39) !important;
+            background-color: transparent !important;
+            border-left-color: transparent;
+            font-weight: 600;
+            box-shadow: none;
+        }
+
+        /* Override text-gray-600 and text-gray-700 in nav links */
+        .nav-link.text-gray-600,
+        .nav-link.text-gray-700 {
+            color: rgb(31 41 55) !important;
+        }
+
+        .nav-link.text-gray-700 {
+            color: rgb(31 41 55) !important;
+        }
+
+        /* Dark mode nav link styling */
+        .dark .nav-link {
+            color: rgb(226 232 240) !important;
+        }
+
+        .dark .nav-link:hover {
+            color: rgb(248 250 252) !important;
+            background-color: rgba(99, 102, 241, 0.2) !important;
+            border-left-color: rgba(99, 102, 241, 0.8);
+            box-shadow: inset 2px 0 0 rgba(99, 102, 241, 0.5);
+        }
+
+        .dark .nav-link.active,
+        .dark .nav-link[href="#home"] {
+            color: rgb(248 250 252) !important;
+            background-color: transparent !important;
+            border-left-color: rgb(129 140 248);
+            font-weight: 600;
+            box-shadow: none;
+            border-left-width: 4px;
+            padding-left: calc(1.5rem - 1px);
+        }
+
+        .dark .nav-link.text-gray-600,
+        .dark .nav-link.text-gray-700 {
+            color: rgb(226 232 240) !important;
+        }
+
+        /* Portal Mahasiswa text styling */
+        aside#sidebar .text-sm {
+            color: rgb(75 85 99) !important;
+        }
+
+        /* Override all gray text in sidebar to be darker */
+        aside#sidebar .text-gray-500 {
+            color: rgb(75 85 99) !important;
+        }
+
+        aside#sidebar .text-gray-600 {
+            color: rgb(55 65 81) !important;
+        }
+
+        aside#sidebar .text-gray-700 {
+            color: rgb(31 41 55) !important;
+        }
+
+        aside#sidebar .text-gray-400 {
+            color: rgb(75 85 99) !important;
+        }
+
+        /* Make sure icon colors are visible too */
+        aside#sidebar i {
+            opacity: 1 !important;
+        }
+
+        .dark aside#sidebar .text-sm {
+            color: rgb(226 232 240) !important;
+        }
+
+        .dark aside#sidebar .text-gray-400 {
+            color: rgb(226 232 240) !important;
+        }
+
+        .dark aside#sidebar .text-gray-500 {
+            color: rgb(226 232 240) !important;
+        }
+
+        .dark aside#sidebar .text-gray-600 {
+            color: rgb(226 232 240) !important;
+        }
+
+        .dark aside#sidebar .text-gray-700 {
+            color: rgb(226 232 240) !important;
+        }
+
         /* Animated Physics Card Styling */
         .fade-in-card {
             position: relative;
@@ -1051,6 +1758,106 @@
                 transform: translate(20px, 20px) scale(1.1);
                 opacity: 0.5;
             }
+        }
+
+        /* Enhanced card hover effects */
+        .fade-in-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 12px 35px rgba(99, 102, 241, 0.2),
+                0 0 25px rgba(99, 102, 241, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .dark .fade-in-card:hover {
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(99, 102, 241, 0.3),
+                0 0 25px rgba(99, 102, 241, 0.2),
+                inset 0 1px 0 rgba(167, 139, 250, 0.1);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        /* Topic cards with color-specific highlights */
+        .topic-card:hover {
+            box-shadow: 
+                0 12px 35px rgba(99, 102, 241, 0.25),
+                0 0 30px rgba(99, 102, 241, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .topic-card[data-topic="quantum"]:hover {
+            border-color: rgba(99, 102, 241, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(99, 102, 241, 0.3),
+                0 0 30px rgba(99, 102, 241, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .topic-card[data-topic="relativity"]:hover {
+            border-color: rgba(6, 182, 212, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(6, 182, 212, 0.25),
+                0 0 30px rgba(6, 182, 212, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .topic-card[data-topic="cosmology"]:hover {
+            border-color: rgba(168, 85, 247, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(168, 85, 247, 0.25),
+                0 0 30px rgba(168, 85, 247, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .topic-card[data-topic="thermodynamics"]:hover {
+            border-color: rgba(249, 115, 22, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(249, 115, 22, 0.25),
+                0 0 30px rgba(249, 115, 22, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .topic-card[data-topic="particle"]:hover {
+            border-color: rgba(34, 197, 94, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(34, 197, 94, 0.25),
+                0 0 30px rgba(34, 197, 94, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .topic-card[data-topic="electromagnetism"]:hover {
+            border-color: rgba(236, 72, 153, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(236, 72, 153, 0.25),
+                0 0 30px rgba(236, 72, 153, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .topic-card[data-topic="nuclear"]:hover {
+            border-color: rgba(239, 68, 68, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(239, 68, 68, 0.25),
+                0 0 30px rgba(239, 68, 68, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .topic-card[data-topic="astrophysics"]:hover {
+            border-color: rgba(234, 179, 8, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(234, 179, 8, 0.25),
+                0 0 30px rgba(234, 179, 8, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .topic-card[data-topic="optics"]:hover {
+            border-color: rgba(20, 184, 166, 0.8);
+            box-shadow: 
+                0 12px 35px rgba(20, 184, 166, 0.25),
+                0 0 30px rgba(20, 184, 166, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         /* Physics Formula Animation for Cards */
@@ -2120,8 +2927,8 @@
                 <!-- kiri: logo + judul -->
                 <div class="flex items-center space-x-4 flex-shrink-0">
                     <img src="atom.gif" alt="planetary" class="w-20 h-20 object-cover rounded-full atom-logo">
-                    <div>
-                        <h2 class="text-3xl font-bold" data-i18n="header.welcome"></h2>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-3xl font-bold break-words" data-i18n="header.welcome"></h2>
                         <p id="current-date" class="text-gray-500 text-sm" data-i18n="header.loading-date"></p>
                     </div>
                 </div>
