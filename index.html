@@ -1,0 +1,3323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Laboratorium Fisika Teori & Komputasi - Pusat penelitian dan pembelajaran fisika modern melalui pendekatan teoritis dan komputasional.">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Lab Fisika Teori & Komputasi</title>
+    <!-- Tailwind CSS CDN with Dark Mode Support -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Dark mode config untuk Tailwind
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icon Library: Lucide.dev -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Removed Firebase CDN (using localStorage auth instead) -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .task-item.completed span {
+            text-decoration: line-through;
+            color: #9ca3af; /* gray-400 */
+        }
+        /* Animasi On-Scroll untuk Card */
+        .fade-in-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Mobile Sidebar Styling */
+        .sidebar-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .sidebar-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: #4f46e5;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        /* Dark Mode Toggle Button */
+        .dark-mode-toggle {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .dark-mode-toggle:hover {
+            background-color: #f3f4f6;
+        }
+        .dark .dark-mode-toggle:hover {
+            background-color: #374151;
+        }
+        .dark-mode-toggle svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+        /* Profile Avatar - ensure text is uppercase */
+        #profile-avatar {
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+        }
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+            .sidebar-toggle {
+                display: flex !important;
+            }
+            aside {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 75%;
+                max-width: 280px;
+                height: 100vh;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 40;
+            }
+            aside.mobile-open {
+                transform: translateX(0);
+            }
+            #sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                z-index: 30;
+                pointer-events: none;
+            }
+            #sidebar-overlay.mobile-open {
+                background: rgba(0, 0, 0, 0.5);
+                opacity: 1;
+                pointer-events: auto;
+            }
+            main {
+                width: 100%;
+                padding-left: 0 !important;
+            }
+            .content-section {
+                padding: 1rem !important;
+            }
+            h1, h2, h3 {
+                word-break: break-word;
+            }
+            table {
+                font-size: 14px;
+            }
+            .overflow-x-auto {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        @media (max-width: 480px) {
+            aside {
+                width: 85%;
+            }
+            table {
+                font-size: 12px;
+            }
+            .p-4 {
+                padding: 0.5rem !important;
+            }
+            .p-6 {
+                padding: 1rem !important;
+            }
+            .p-8 {
+                padding: 1.5rem !important;
+            }
+            .text-2xl {
+                font-size: 1.25rem !important;
+            }
+            .text-3xl {
+                font-size: 1.75rem !important;
+            }
+            .text-4xl {
+                font-size: 2rem !important;
+            }
+            .gap-4 {
+                gap: 1rem !important;
+            }
+            .gap-6 {
+                gap: 1.5rem !important;
+            }
+        }
+
+        /* Hide sidebar & main when not logged in */
+        body.not-logged-in aside,
+        body.not-logged-in main {
+            display: none !important;
+        }
+        body.not-logged-in {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1847 50%, #0f3460 100%);
+        }
+        /* Auth panel fullscreen when not logged in */
+        body.not-logged-in #auth-panel {
+            position: fixed !important;
+            display: flex !important;
+            background: rgba(15, 23, 42, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        body.not-logged-in #auth-panel .bg-white {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+            border: 1px solid rgba(99, 102, 241, 0.3) !important;
+            box-shadow: 0 0 60px rgba(6, 182, 212, 0.2),
+                        0 0 40px rgba(99, 102, 241, 0.1) !important;
+        }
+        body.not-logged-in #auth-panel h3 {
+            color: white !important;
+            font-size: 1.875rem !important;
+            margin-bottom: 2rem !important;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        body.not-logged-in #auth-panel input {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(99, 102, 241, 0.3) !important;
+            color: white !important;
+        }
+        body.not-logged-in #auth-panel input::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+        body.not-logged-in #auth-panel input:focus {
+            border-color: rgba(6, 182, 212, 0.6) !important;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2) !important;
+            outline: none !important;
+        }
+        body.not-logged-in #btn-login {
+            background: linear-gradient(135deg, #06b6d4, #0ea5e9) !important;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5) !important;
+        }
+        body.not-logged-in #btn-login:hover {
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.7) !important;
+            transform: translateY(-2px) !important;
+        }
+        body.not-logged-in #btn-register {
+            color: #06b6d4 !important;
+            border-color: #06b6d4 !important;
+            background: rgba(6, 182, 212, 0.05) !important;
+        }
+        body.not-logged-in #btn-register:hover {
+            background: rgba(6, 182, 212, 0.15) !important;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4) !important;
+        }
+        body.not-logged-in #btn-close-auth {
+            display: none !important;
+        }
+        /* Dark Mode Styles */
+        .dark {
+            background-color: #1f2937;
+            color: #f3f4f6;
+        }
+        .dark aside {
+            background-color: #111827;
+            border-right: 1px solid #374151;
+        }
+        .dark main {
+            background-color: #1f2937;
+        }
+        .dark .bg-white {
+            background-color: #1f2937;
+            color: #f3f4f6;
+        }
+        .dark .bg-gray-100 {
+            background-color: #1f2937;
+        }
+        .dark .bg-gray-50 {
+            background-color: #111827;
+        }
+        .dark .text-gray-600,
+        .dark .text-gray-500,
+        .dark .text-gray-800 {
+            color: #d1d5db;
+        }
+        .dark .border-gray-300,
+        .dark .border-gray-200 {
+            border-color: #374151;
+        }
+        .dark .shadow-md,
+        .dark .shadow-lg {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        /* Physics-Themed Background Styling */
+        .physics-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Put background at base layer but allow other decorative elements
+               (like formula-comets) to be positioned above it */
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        body.physics-themed {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 25%, #f0e7fe 50%, #f8fafc 100%);
+            position: relative;
+        }
+
+        body.dark.physics-themed {
+            background: linear-gradient(135deg, #0f172a 0%, #082f49 25%, #1e1b4b 50%, #0f172a 100%);
+        }
+
+        /* Make the main physics-themed background visible everywhere by
+           making common 'surface' utility backgrounds semi-transparent
+           when physics theme is active. We keep the auth panel and other
+           explicitly-styled modals intact by restoring them later if needed. */
+        body.physics-themed .bg-white,
+        body.physics-themed .bg-gray-50,
+        body.physics-themed .bg-gray-100,
+        body.physics-themed .surface-bg {
+                background-color: transparent !important;
+                box-shadow: none !important;
+                border-color: rgba(99,102,241,0.06) !important;
+                /* removed backdrop blur to keep background elements (e.g. formulas)
+                    clearly visible through surfaces */
+        }
+
+        /* Dark-mode variant: keep a faint tint so text remains readable */
+        body.dark.physics-themed .bg-white,
+        body.dark.physics-themed .bg-gray-50,
+        body.dark.physics-themed .bg-gray-100,
+        body.dark.physics-themed .surface-bg {
+              background-color: rgba(17,24,39,0.45) !important;
+              box-shadow: none !important;
+              border-color: rgba(167,139,250,0.06) !important;
+              /* keep faint tint for readability but remove blur */
+        }
+
+
+        /* Atom Styling */
+        .atom {
+            position: absolute;
+            opacity: 0.15;
+        }
+
+        .atom-1 {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 5%;
+            animation: float-slow 6s ease-in-out infinite;
+        }
+
+        .atom-2 {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 10%;
+            animation: float-slow 7s ease-in-out infinite reverse;
+        }
+
+        .atom-3 {
+            width: 100px;
+            height: 100px;
+            bottom: 15%;
+            left: 20%;
+            animation: float-slow 8s ease-in-out infinite;
+        }
+
+        .nucleus {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #6366f1, #4f46e5);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .electron {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #06b6d4, #0891b2);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+        }
+
+        .atom-1 .electron:nth-child(2) {
+            animation: orbit-electron 4s linear infinite;
+            width: 60px;
+            height: 60px;
+            margin-left: -30px;
+            margin-top: -30px;
+        }
+
+        .atom-1 .electron:nth-child(3) {
+            animation: orbit-electron 4s linear infinite 1.33s;
+            width: 60px;
+            height: 60px;
+            margin-left: -30px;
+            margin-top: -30px;
+            animation-delay: 1.33s;
+        }
+
+        .atom-1 .electron:nth-child(4) {
+            animation: orbit-electron 4s linear infinite 2.66s;
+            width: 60px;
+            height: 60px;
+            margin-left: -30px;
+            margin-top: -30px;
+            animation-delay: 2.66s;
+        }
+
+        .atom-2 .electron:nth-child(2) {
+            animation: orbit-electron 3.5s linear infinite;
+            width: 50px;
+            height: 50px;
+            margin-left: -25px;
+            margin-top: -25px;
+        }
+
+        .atom-2 .electron:nth-child(3) {
+            animation: orbit-electron 3.5s linear infinite 1.75s;
+            width: 50px;
+            height: 50px;
+            margin-left: -25px;
+            margin-top: -25px;
+            animation-delay: 1.75s;
+        }
+
+        .atom-3 .electron:nth-child(2) {
+            animation: orbit-electron 3s linear infinite;
+            width: 45px;
+            height: 45px;
+            margin-left: -22.5px;
+            margin-top: -22.5px;
+        }
+
+        .atom-3 .electron:nth-child(3) {
+            animation: orbit-electron 3s linear infinite 1.5s;
+            width: 45px;
+            height: 45px;
+            margin-left: -22.5px;
+            margin-top: -22.5px;
+            animation-delay: 1.5s;
+        }
+
+        .atom-3 .electron:nth-child(4) {
+            animation: orbit-electron 3s linear infinite 2s;
+            width: 45px;
+            height: 45px;
+            margin-left: -22.5px;
+            margin-top: -22.5px;
+            animation-delay: 2s;
+        }
+
+        @keyframes orbit-electron {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(30px) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(30px) rotate(-360deg); }
+        }
+
+        /* Additional Mobile Fixes */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+            .flex {
+                flex-wrap: wrap;
+            }
+            .space-y-4 {
+                margin-bottom: 1rem;
+            }
+            nav ul {
+                flex-direction: column;
+            }
+            .header-right {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            button {
+                min-height: 44px; /* iOS minimum touch target */
+            }
+            input, textarea, select {
+                font-size: 16px; /* Prevent iOS zoom */
+                min-height: 44px; /* iOS minimum touch target */
+            }
+        }
+
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+
+        /* Wave Pattern Styling */
+        .wave-pattern {
+            position: absolute;
+            width: 100%;
+            opacity: 0.4;
+            animation: wave-animate 8s linear infinite;
+        }
+
+        .wave-1 {
+            top: 20%;
+            animation-duration: 8s;
+        }
+
+        .wave-2 {
+            bottom: 25%;
+            animation-duration: 12s;
+            animation-direction: reverse;
+        }
+
+        @keyframes wave-animate {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Physics Formulas */
+        .formula {
+            position: absolute;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            opacity: 0.08;
+            color: #6366f1;
+            font-size: 1.5rem;
+            white-space: nowrap;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .dark .formula {
+            color: #a78bfa;
+            text-shadow: 0 0 10px rgba(167, 139, 250, 0.4);
+        }
+
+        .formula-1 {
+            top: 15%;
+            left: 10%;
+            animation: float-formula 10s ease-in-out infinite;
+            font-size: 2rem;
+        }
+
+        .formula-2 {
+            top: 50%;
+            right: 5%;
+            animation: float-formula 12s ease-in-out infinite reverse;
+            font-size: 1.3rem;
+        }
+
+        .formula-3 {
+            bottom: 20%;
+            left: 15%;
+            animation: float-formula 11s ease-in-out infinite;
+            font-size: 1.8rem;
+        }
+
+        .formula-4 {
+            top: 35%;
+            right: 20%;
+            animation: float-formula 13s ease-in-out infinite reverse;
+            font-size: 1.4rem;
+        }
+
+        .formula-5 {
+            bottom: 30%;
+            right: 12%;
+            animation: float-formula 9s ease-in-out infinite;
+            font-size: 1.6rem;
+        }
+
+        @keyframes float-formula {
+            0%, 100% { transform: translateY(0px) rotateZ(-5deg); opacity: 0.05; }
+            50% { transform: translateY(30px) rotateZ(5deg); opacity: 0.12; }
+        }
+
+        /* Particle Dots */
+        .particle-dot {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particle-float 15s infinite ease-in-out;
+        }
+
+        .particle-dot-1 {
+            width: 8px;
+            height: 8px;
+            background: #6366f1;
+            top: 25%;
+            left: 30%;
+            animation-duration: 15s;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.6);
+        }
+
+        .particle-dot-2 {
+            width: 5px;
+            height: 5px;
+            background: #06b6d4;
+            top: 45%;
+            right: 25%;
+            animation-duration: 18s;
+            animation-delay: 2s;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+
+        .particle-dot-3 {
+            width: 6px;
+            height: 6px;
+            background: #a855f7;
+            bottom: 30%;
+            left: 25%;
+            animation-duration: 20s;
+            animation-delay: 4s;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+        }
+
+        .particle-dot-4 {
+            width: 7px;
+            height: 7px;
+            background: #0ea5e9;
+            top: 60%;
+            left: 10%;
+            animation-duration: 17s;
+            animation-delay: 1s;
+            box-shadow: 0 0 14px rgba(14, 165, 233, 0.6);
+        }
+
+        .particle-dot-5 {
+            width: 5px;
+            height: 5px;
+            background: #f59e0b;
+            top: 20%;
+            right: 15%;
+            animation-duration: 19s;
+            animation-delay: 3s;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+
+        .particle-dot-6 {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            bottom: 15%;
+            right: 20%;
+            animation-duration: 21s;
+            animation-delay: 5s;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+        }
+
+        @keyframes particle-float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+            25% { transform: translate(40px, -30px) scale(1.2); opacity: 0.4; }
+            50% { transform: translate(-30px, 50px) scale(1); opacity: 0.3; }
+            75% { transform: translate(50px, 20px) scale(0.9); opacity: 0.35; }
+        }
+
+
+        /* Ensure content is above background */
+        aside, main, #auth-panel {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Physics-Themed Sidebar Styling */
+        aside#sidebar {
+            /* slightly transparent background to reveal physics-themed backdrop */
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.85) 0%, rgba(224, 242, 254, 0.8) 50%, rgba(240, 231, 254, 0.8) 100%);
+            background-color: rgba(255,255,255,0.6); /* fallback */
+            /* removed backdrop blur so background elements remain crisp */
+            position: relative;
+            overflow: hidden;
+            border-right: 1px solid rgba(99,102,241,0.08);
+        }
+
+        .dark aside#sidebar {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(8, 47, 73, 0.8) 50%, rgba(30, 27, 75, 0.8) 100%);
+            background-color: rgba(17,24,39,0.6);
+            /* removed backdrop blur for clarity */
+            border-right: 1px solid rgba(167,139,250,0.06);
+        }
+
+        aside#sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        aside#sidebar > div {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Animated Physics Card Styling */
+        .fade-in-card {
+            position: relative;
+            overflow: hidden;
+            /* semi-transparent card to show physics-themed background */
+            background: rgba(255,255,255,0.65);
+            /* removed backdrop-filter to keep background elements crisp */
+            border: 1px solid rgba(99,102,241,0.06);
+            transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.6s ease, background 0.25s ease;
+            will-change: transform;
+        }
+
+        /* Dark mode variant for cards */
+        .dark .fade-in-card {
+            background: rgba(17,24,39,0.55);
+            border: 1px solid rgba(167,139,250,0.05);
+            /* removed backdrop blur for clarity */
+        }
+
+        .fade-in-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.03) 100%);
+            pointer-events: none;
+        }
+
+        .dark .fade-in-card::before {
+            background: 
+                linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+        }
+
+        .fade-in-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 70%);
+            animation: card-glow 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes card-glow {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(20px, 20px) scale(1.1);
+                opacity: 0.5;
+            }
+        }
+
+        /* Physics Formula Animation for Cards */
+        .card-formula {
+            position: absolute;
+            font-family: 'Inter', monospace;
+            font-weight: 600;
+            opacity: 0.05;
+            color: #6366f1;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(99, 102, 241, 0.2);
+        }
+
+        .dark .card-formula {
+            color: #a78bfa;
+            opacity: 0.08;
+            text-shadow: 0 0 5px rgba(167, 139, 250, 0.3);
+        }
+
+        .card-formula-1 {
+            top: 5%;
+            left: 5%;
+            animation: float-formula 6s ease-in-out infinite;
+            font-size: 0.65rem;
+        }
+
+        .card-formula-2 {
+            bottom: 5%;
+            right: 5%;
+            animation: float-formula 7s ease-in-out infinite reverse;
+            font-size: 0.6rem;
+        }
+
+        .card-formula-3 {
+            top: 50%;
+            right: 3%;
+            animation: float-formula 8s ease-in-out infinite;
+            font-size: 0.55rem;
+        }
+
+        .card-formula-4 {
+            bottom: 20%;
+            left: 3%;
+            animation: float-formula 7.5s ease-in-out infinite reverse;
+            font-size: 0.6rem;
+        }
+
+        /* Quantum-Inspired Wave Lines for Cards */
+        .wave-line {
+            position: absolute;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .dark .wave-line {
+            opacity: 0.1;
+        }
+
+        .wave-line-1 {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent,
+                #6366f1,
+                transparent);
+            animation: wave-propagate 4s linear infinite;
+        }
+
+        .wave-line-2 {
+            bottom: 10%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent,
+                #06b6d4,
+                transparent);
+            animation: wave-propagate 5s linear infinite reverse;
+        }
+
+        @keyframes wave-propagate {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        /* Sidebar Physics Text Overlay */
+        .sidebar-physics-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.06;
+            pointer-events: none;
+            font-family: 'Inter', monospace;
+            font-size: 0.7rem;
+            line-height: 1.5;
+            color: #6366f1;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .dark .sidebar-physics-bg {
+            color: #a78bfa;
+            opacity: 0.08;
+        }
+
+        /* Floating Atom Icons in Background */
+        .floating-atom {
+            position: absolute;
+            opacity: 0.06;
+            pointer-events: none;
+        }
+
+        .dark .floating-atom {
+            opacity: 0.08;
+        }
+
+        .floating-atom svg {
+            width: 60px;
+            height: 60px;
+            stroke: #6366f1;
+            animation: float-slow 8s ease-in-out infinite;
+        }
+
+        .dark .floating-atom svg {
+            stroke: #a78bfa;
+        }
+
+        .atom-1 {
+            top: 10%;
+            left: 5%;
+            animation-duration: 6s;
+        }
+
+        .atom-2 {
+            bottom: 15%;
+            right: 5%;
+            animation-duration: 8s;
+            animation-direction: reverse;
+        }
+
+        /* Animated Hero Section Styles */
+        .hero-section {
+            position: relative;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1847 50%, #0f3460 100%);
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        /* Orbit Container */
+        .orbit {
+            position: absolute;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotate-orbit linear infinite;
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.3),
+                        inset 0 0 40px rgba(6, 182, 212, 0.1);
+        }
+        .orbit:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            animation-duration: 20s;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.4), 
+                        inset 0 0 30px rgba(6, 182, 212, 0.15);
+        }
+        .orbit:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            animation-duration: 30s;
+            animation-direction: reverse;
+            box-shadow: 0 0 35px rgba(167, 139, 250, 0.3),
+                        inset 0 0 35px rgba(167, 139, 250, 0.1);
+            border-color: rgba(167, 139, 250, 0.2);
+        }
+        .orbit:nth-child(3) {
+            width: 500px;
+            height: 500px;
+            animation-duration: 40s;
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.3),
+                        inset 0 0 40px rgba(6, 182, 212, 0.1);
+        }
+        .orbit:nth-child(4) {
+            width: 650px;
+            height: 650px;
+            animation-duration: 50s;
+            animation-direction: reverse;
+            box-shadow: 0 0 45px rgba(167, 139, 250, 0.25),
+                        inset 0 0 45px rgba(167, 139, 250, 0.08);
+            border-color: rgba(167, 139, 250, 0.15);
+        }
+        @keyframes rotate-orbit {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        /* Planet/Stars on Orbits */
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.9), rgba(99, 102, 241, 0.4));
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.8);
+        }
+        .planet:nth-child(1) {
+            width: 20px;
+            height: 20px;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle at 30% 30%, #06b6d4, #0ea5e9);
+            box-shadow: 0 0 25px #06b6d4, 
+                        0 0 40px rgba(6, 182, 212, 0.6),
+                        0 0 60px rgba(6, 182, 212, 0.3),
+                        inset -2px -2px 10px rgba(0, 0, 0, 0.5);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        .planet:nth-child(2) {
+            width: 16px;
+            height: 16px;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle at 30% 30%, #a78bfa, #c084fc);
+            box-shadow: 0 0 25px #a78bfa,
+                        0 0 40px rgba(167, 139, 250, 0.6),
+                        0 0 60px rgba(167, 139, 250, 0.3),
+                        inset -2px -2px 10px rgba(0, 0, 0, 0.5);
+            animation: pulse-glow 2.5s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px #06b6d4, 0 0 35px rgba(6, 182, 212, 0.5), 0 0 50px rgba(6, 182, 212, 0.2), inset -2px -2px 10px rgba(0, 0, 0, 0.5); }
+            50% { box-shadow: 0 0 30px #06b6d4, 0 0 50px rgba(6, 182, 212, 0.7), 0 0 80px rgba(6, 182, 212, 0.4), inset -2px -2px 10px rgba(0, 0, 0, 0.5); }
+        }
+        /* Stars/Particles */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 3s infinite;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.6),
+                        0 0 20px 4px rgba(99, 102, 241, 0.4);
+        }
+        .star:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; box-shadow: 0 0 15px 3px rgba(6, 182, 212, 0.5), 0 0 30px 6px rgba(6, 182, 212, 0.2); }
+        .star:nth-child(2) { top: 25%; right: 15%; animation-delay: 1s; box-shadow: 0 0 15px 3px rgba(167, 139, 250, 0.5), 0 0 30px 6px rgba(167, 139, 250, 0.2); }
+        .star:nth-child(3) { top: 50%; left: 8%; animation-delay: 2s; box-shadow: 0 0 15px 3px rgba(6, 182, 212, 0.5), 0 0 30px 6px rgba(6, 182, 212, 0.2); }
+        .star:nth-child(4) { top: 60%; right: 10%; animation-delay: 1.5s; box-shadow: 0 0 15px 3px rgba(167, 139, 250, 0.5), 0 0 30px 6px rgba(167, 139, 250, 0.2); }
+        .star:nth-child(5) { bottom: 15%; left: 20%; animation-delay: 2.5s; box-shadow: 0 0 15px 3px rgba(6, 182, 212, 0.5), 0 0 30px 6px rgba(6, 182, 212, 0.2); }
+        .star:nth-child(6) { bottom: 20%; right: 20%; animation-delay: 0.5s; box-shadow: 0 0 15px 3px rgba(167, 139, 250, 0.5), 0 0 30px 6px rgba(167, 139, 250, 0.2); }
+        .star:nth-child(7) { top: 35%; left: 45%; animation-delay: 1.2s; box-shadow: 0 0 15px 3px rgba(6, 182, 212, 0.5), 0 0 30px 6px rgba(6, 182, 212, 0.2); }
+        .star:nth-child(8) { top: 70%; right: 35%; animation-delay: 2.2s; box-shadow: 0 0 15px 3px rgba(167, 139, 250, 0.5), 0 0 30px 6px rgba(167, 139, 250, 0.2); }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        /* Nebula/Glow effect */
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+        }
+        .nebula:nth-child(5) {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.5), transparent);
+        }
+        .nebula:nth-child(6) {
+            width: 300px;
+            height: 300px;
+            bottom: -50px;
+            right: -50px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.5), transparent);
+        }
+        /* Central galaxy circle */
+        .central-galaxy {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle at center, rgba(6, 182, 212, 0.4), transparent);
+            border: 2px dashed rgba(6, 182, 212, 0.4);
+            border-radius: 50%;
+            animation: rotate-orbit 60s linear infinite;
+            z-index: 2;
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.5),
+                        0 0 80px rgba(6, 182, 212, 0.3),
+                        inset 0 0 40px rgba(6, 182, 212, 0.2);
+        }
+        .central-galaxy::before {
+            content: '';
+            position: absolute;
+            inset: 30%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.8), transparent);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.6), 
+                        0 0 50px rgba(6, 182, 212, 0.4),
+                        inset 0 0 20px rgba(6, 182, 212, 0.5);
+            animation: pulse-core 3s ease-in-out infinite;
+        }
+        @keyframes pulse-core {
+            0%, 100% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.5), 0 0 40px rgba(6, 182, 212, 0.3), inset 0 0 15px rgba(6, 182, 212, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.7), 0 0 60px rgba(6, 182, 212, 0.5), inset 0 0 25px rgba(6, 182, 212, 0.6); }
+        }
+        /* Shooting Stars / Comets */
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.8);
+        }
+        .comet {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: radial-gradient(circle at 30% 30%, #06b6d4, #0ea5e9);
+            border-radius: 50%;
+            box-shadow: 0 0 20px 2px rgba(6, 182, 212, 0.8),
+                        0 0 40px 4px rgba(6, 182, 212, 0.4);
+        }
+        /* Comet Trails */
+        .comet-trail-1 {
+            animation: comet-move-1 8s linear infinite;
+        }
+        .comet-trail-2 {
+            animation: comet-move-2 10s linear infinite 2s;
+        }
+        .comet-trail-3 {
+            animation: comet-move-3 12s linear infinite 4s;
+        }
+        .shooting-star-trail-1 {
+            animation: shooting-move-1 6s linear infinite 1s;
+        }
+        .shooting-star-trail-2 {
+            animation: shooting-move-2 7s linear infinite 3.5s;
+        }
+        .shooting-star-trail-3 {
+            animation: shooting-move-3 8s linear infinite 5.5s;
+        }
+        /* Comet 1: Top-left to bottom-right */
+        @keyframes comet-move-1 {
+            0% {
+                left: -50px;
+                top: -50px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: 110%;
+                top: 110%;
+                opacity: 0;
+            }
+        }
+        /* Comet 2: Right to left */
+        @keyframes comet-move-2 {
+            0% {
+                right: -50px;
+                top: 25%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                right: 110%;
+                top: 35%;
+                opacity: 0;
+            }
+        }
+        /* Comet 3: Bottom-right to top-left */
+        @keyframes comet-move-3 {
+            0% {
+                right: -50px;
+                bottom: -50px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                right: 110%;
+                bottom: 110%;
+                opacity: 0;
+            }
+        }
+        /* Shooting Star 1: Diagonal top-right to bottom-left */
+        @keyframes shooting-move-1 {
+            0% {
+                right: -30px;
+                top: -30px;
+                opacity: 0;
+                box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.6);
+            }
+            5% {
+                opacity: 1;
+                box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.8),
+                           -20px 20px 20px 0px rgba(255, 255, 255, 0.3);
+            }
+            95% {
+                opacity: 1;
+                box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.8),
+                           -20px 20px 20px 0px rgba(255, 255, 255, 0.3);
+            }
+            100% {
+                right: 110%;
+                top: 110%;
+                opacity: 0;
+                box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.2);
+            }
+        }
+        /* Shooting Star 2: Left to right diagonal */
+        @keyframes shooting-move-2 {
+            0% {
+                left: -30px;
+                top: 40%;
+                opacity: 0;
+                box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.6);
+            }
+            5% {
+                opacity: 1;
+                box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.8),
+                           20px -10px 20px 0px rgba(255, 255, 255, 0.3);
+            }
+            95% {
+                opacity: 1;
+                box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.8),
+                           20px -10px 20px 0px rgba(255, 255, 255, 0.3);
+            }
+            100% {
+                left: 110%;
+                top: 20%;
+                opacity: 0;
+                box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.2);
+            }
+        }
+        /* Shooting Star 3: Bottom to top */
+        @keyframes shooting-move-3 {
+            0% {
+                left: 60%;
+                bottom: -30px;
+                opacity: 0;
+                box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.6);
+            }
+            5% {
+                opacity: 1;
+                box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.8),
+                           10px -20px 20px 0px rgba(255, 255, 255, 0.3);
+            }
+            95% {
+                opacity: 1;
+                box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.8),
+                           10px -20px 20px 0px rgba(255, 255, 255, 0.3);
+            }
+            100% {
+                left: 40%;
+                bottom: 110%;
+                opacity: 0;
+                box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.2);
+            }
+        }
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            animation: slideDown 0.8s ease-out;
+        }
+        .hero-subtitle {
+            font-size: 1.125rem;
+            color: #cbd5e1;
+            max-width: 600px;
+            margin-bottom: 2rem;
+            animation: slideUp 0.8s ease-out 0.2s both;
+        }
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            animation: slideUp 0.8s ease-out 0.4s both;
+        }
+        @media (min-width: 640px) {
+            .hero-buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .hero-title {
+                font-size: 4.5rem;
+            }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Click Ripple Effect */
+        .click-ripple {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.8) 0%, rgba(6, 182, 212, 0.3) 70%, transparent 100%);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+        }
+        @keyframes ripple-expand {
+            from {
+                width: 20px;
+                height: 20px;
+                margin-left: -10px;
+                margin-top: -10px;
+                opacity: 1;
+            }
+            to {
+                width: 500px;
+                height: 500px;
+                margin-left: -250px;
+                margin-top: -250px;
+                opacity: 0;
+            }
+        }
+        .click-ripple.active {
+            animation: ripple-expand 0.6s ease-out forwards;
+        }
+
+        /* Particle Burst Effect */
+        .click-particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            will-change: transform, opacity;
+        }
+        @keyframes particle-burst {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+        .click-particle {
+            animation: particle-burst 0.8s ease-out forwards;
+        }
+
+        /* Page Transition */
+        .content-section {
+            animation: fade-in 0.4s ease-out;
+        }
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .neon-btn {
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .neon-btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #0ea5e9);
+            color: white;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+        .neon-btn-primary:hover {
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.8);
+            transform: translateY(-3px);
+        }
+        .neon-btn-secondary {
+            background: transparent;
+            color: #06b6d4;
+            border: 2px solid #06b6d4;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+        .neon-btn-secondary:hover {
+            background: rgba(6, 182, 212, 0.1);
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.6);
+            transform: translateY(-3px);
+        }
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.25rem;
+            }
+            .orbit {
+                opacity: 0.5;
+            }
+            .star {
+                opacity: 0.4;
+            }
+            .nebula {
+                opacity: 0.15;
+            }
+            .orbit:nth-child(1) {
+                width: 120px;
+                height: 120px;
+            }
+            .orbit:nth-child(2) {
+                width: 200px;
+                height: 200px;
+            }
+            .orbit:nth-child(3) {
+                width: 280px;
+                height: 280px;
+            }
+            .orbit:nth-child(4) {
+                width: 350px;
+                height: 350px;
+            }
+        }
+        @media (max-width: 640px) {
+            .hero-section {
+                padding: 3rem 1rem;
+            }
+            .hero-title {
+                font-size: 1.875rem;
+            }
+            .orbit:nth-child(1) {
+                width: 80px;
+                height: 80px;
+            }
+            .orbit:nth-child(2) {
+                width: 130px;
+                height: 130px;
+            }
+            .orbit:nth-child(3) {
+                width: 180px;
+                height: 180px;
+            }
+            .orbit:nth-child(4) {
+                width: 230px;
+                height: 230px;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar-toggle {
+                display: flex;
+            }
+            aside {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                z-index: 40;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                width: 250px !important;
+            }
+            aside.mobile-open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 30;
+            }
+            .sidebar-overlay.mobile-open {
+                display: block;
+            }
+        }
+
+        /* Footer Styling */
+        footer {
+            background: rgba(255,255,255,0.65);
+            margin-left: 0;
+        }
+
+        .dark footer {
+            background: rgba(17,24,39,0.55);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300 physics-themed">
+    <!-- Physics-Themed Background Elements -->
+    <div class="physics-background">
+        <!-- Atom structures -->
+        <div class="atom atom-1">
+            <div class="nucleus"></div>
+            <div class="electron"></div>
+            <div class="electron"></div>
+            <div class="electron"></div>
+        </div>
+        <div class="atom atom-2">
+            <div class="nucleus"></div>
+            <div class="electron"></div>
+            <div class="electron"></div>
+        </div>
+        <div class="atom atom-3">
+            <div class="nucleus"></div>
+            <div class="electron"></div>
+            <div class="electron"></div>
+            <div class="electron"></div>
+        </div>
+
+        <!-- Wave patterns -->
+        <svg class="wave-pattern wave-1" viewBox="0 0 1200 120">
+            <defs>
+                <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:rgba(99,102,241,0.3);stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:rgba(6,182,212,0.2);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:rgba(99,102,241,0.1);stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path d="M0,60 Q300,20 600,60 T1200,60" stroke="url(#waveGrad1)" stroke-width="2" fill="none"/>
+            <path d="M0,70 Q300,30 600,70 T1200,70" stroke="url(#waveGrad1)" stroke-width="1" fill="none" opacity="0.6"/>
+            <path d="M0,50 Q300,10 600,50 T1200,50" stroke="url(#waveGrad1)" stroke-width="1" fill="none" opacity="0.4"/>
+        </svg>
+
+        <svg class="wave-pattern wave-2" viewBox="0 0 1200 120">
+            <defs>
+                <linearGradient id="waveGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:rgba(167,139,250,0.2);stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:rgba(168,85,247,0.15);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:rgba(167,139,250,0.1);stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path d="M0,40 Q300,80 600,40 T1200,40" stroke="url(#waveGrad2)" stroke-width="2" fill="none"/>
+            <path d="M0,30 Q300,70 600,30 T1200,30" stroke="url(#waveGrad2)" stroke-width="1" fill="none" opacity="0.6"/>
+        </svg>
+
+    <!-- Physics equations/formulas floating (static) -->
+    <div class="formula formula-1">E=mc²</div>
+    <div class="formula formula-2">∇·E = ρ/ε₀</div>
+    <div class="formula formula-3">F = ma</div>
+    <div class="formula formula-4">ψ = Ae^(ikx)</div>
+    <div class="formula formula-5">p = mv</div>
+
+    <!-- Particle dots -->
+    <div class="particle-dot particle-dot-1"></div>
+    <div class="particle-dot particle-dot-2"></div>
+    <div class="particle-dot particle-dot-3"></div>
+    <div class="particle-dot particle-dot-4"></div>
+    <div class="particle-dot particle-dot-5"></div>
+    <div class="particle-dot particle-dot-6"></div>
+    </div>
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Hamburger Menu Button (Mobile Only) -->
+        <div class="sidebar-toggle" id="sidebar-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-white shadow-lg md:min-h-screen" id="sidebar">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-indigo-600">Lab Fisika Teori & Komputasi</h1>
+                <div class="p-6 flex items-center space-x-3">
+    <img src="Logo-Resmi-Unhas-1.png" 
+         alt="Logo UNHAS" 
+         class="w-10 h-10 object-contain">
+                <p class="text-sm text-gray-500">Portal Mahasiswa</p>
+            </div>
+            <nav class="mt-6">
+                <a href="#home" class="nav-link flex items-center px-6 py-3 text-gray-700 bg-gray-200 font-semibold">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
+                    <span data-i18n="nav.home"></span>
+                </a>
+                <a href="#list" class="nav-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
+                    <i data-lucide="users" class="w-10 h-10 mr-3"></i>
+                    <span data-i18n="dosen.title"></span>
+                </a>
+                <a href="#students" class="nav-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
+                    <i data-lucide="graduation-cap" class="w-10 h-10 mr-3"></i>
+                    <span data-i18n="mahasiswa.title"></span>
+                </a>
+                <a href="#resources" class="nav-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
+                    <i data-lucide="book-open" class="w-10 h-10 mr-3"></i>
+                    <span data-i18n="resources.title"></span>
+                </a>
+                <a href="#explore" class="nav-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
+                    <i data-lucide="lightbulb" class="w-5 h-5 mr-3"></i>
+                    <span data-i18n="nav.explore"></span>
+                </a>
+                <a href="#about" class="nav-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
+                    <i data-lucide="info" class="w-5 h-5 mr-3"></i>
+                    <span data-i18n="nav.about"></span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="site-main" class="flex-1 p-6 md:p-10">
+          <div class="w-full px-0">
+            <!-- Header -->
+            <header class="flex flex-col lg:flex-row items-center justify-between mb-8 w-full gap-4">
+                <!-- kiri: logo + judul -->
+                <div class="flex items-center space-x-4 flex-shrink-0">
+                    <img src="atom.gif" alt="planetary" class="w-20 h-20 object-cover rounded-full">
+                    <div>
+                        <h2 class="text-3xl font-bold" data-i18n="header.welcome"></h2>
+                        <p id="current-date" class="text-gray-500 text-sm" data-i18n="header.loading-date"></p>
+                    </div>
+                </div>
+
+                <!-- kanan: profil -->
+                <div class="flex items-center space-x-4 flex-shrink-0">
+                    <!-- Language Toggle -->
+                    <div class="relative">
+                        <button id="language-toggle" class="px-2 py-1 text-sm font-medium bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" title="Ubah bahasa / Change language">
+                            <span id="lang-display">ID</span>
+                        </button>
+                        <div id="language-menu" class="hidden absolute right-0 mt-2 w-24 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50">
+                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm" data-lang="id">
+                                🇮🇩 Bahasa Indonesia
+                            </button>
+                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm" data-lang="en">
+                                🇬🇧 English
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dark Mode Toggle -->
+                    <button id="dark-mode-toggle" class="dark-mode-toggle" title="Ganti tema">
+                        <svg id="sun-icon" class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                        <svg id="moon-icon" class="dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+
+                    <div class="text-right">
+                        <!-- id untuk update via JS -->
+                        <p id="profile-name" class="font-semibold text-lg md:text-lg" data-i18n="header.guest"></p>
+                        <p id="profile-role" class="text-sm text-gray-500 dark:text-gray-400">-</p>
+                    </div>
+                    <img id="profile-avatar"
+                         src="https://placehold.co/40x40/EFEFEF/333?text=NFY"
+                         alt="User Avatar"
+                         class="w-12 h-12 rounded-full border border-gray-300 shadow-sm dark:border-gray-600">
+                    <!-- tombol ini berfungsi: buka panel auth bila belum login, atau logout bila sudah -->
+                    <button id="auth-toggle-btn" class="ml-2 px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors" data-i18n="header.login"></button>
+                </div>
+            </header>
+
+            <!-- Home Section -->
+            <section id="home" class="content-section active">
+                <!-- Hero Section: Cosmology Theme with Orbits & Planets -->
+                <section class="hero-section mb-12 rounded-lg overflow-hidden" style="min-height: 500px;">
+                    <!-- Space Background with Stars and Nebula -->
+                    <div class="hero-particles">
+                        <!-- Orbits with planets -->
+                        <div class="orbit">
+                            <div class="planet"></div>
+                            <div class="planet"></div>
+                        </div>
+                        <div class="orbit">
+                            <div class="planet"></div>
+                            <div class="planet"></div>
+                        </div>
+                        <div class="orbit">
+                            <div class="planet"></div>
+                            <div class="planet"></div>
+                        </div>
+                        <div class="orbit">
+                            <div class="planet"></div>
+                            <div class="planet"></div>
+                        </div>
+
+                        <!-- Stars -->
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+
+                        <!-- Comets (Cyan colored) -->
+                        <div class="comet comet-trail-1"></div>
+                        <div class="comet comet-trail-2"></div>
+                        <div class="comet comet-trail-3"></div>
+
+                        <!-- Shooting Stars (White colored) -->
+                        <div class="shooting-star shooting-star-trail-1"></div>
+                        <div class="shooting-star shooting-star-trail-2"></div>
+                        <div class="shooting-star shooting-star-trail-3"></div>
+
+                        <!-- Nebula glow -->
+                        <div class="nebula"></div>
+                        <div class="nebula"></div>
+
+                        <!-- Central galaxy -->
+                        <div class="central-galaxy"></div>
+                    </div>
+
+                    <!-- Hero Content -->
+                    <div class="hero-content py-20 px-6 md:py-32">
+                        <h2 class="hero-title" data-i18n="home.hero-title">
+                        </h2>
+                        <p class="hero-subtitle" data-i18n="home.hero-subtitle">
+                        </p>
+                        <div class="hero-buttons">
+                            <button id="hero-explore-btn" class="neon-btn neon-btn-primary" data-i18n="home.explore">
+                            </button>
+                            <button id="hero-about-btn" class="neon-btn neon-btn-secondary" data-i18n="home.about">
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Announcements Card -->
+                    <div class="fade-in-card p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow lg:col-span-3" aria-label="Informasi Lab">
+                        <h3 class="font-bold text-lg mb-4" data-i18n="lab.title"></h3>
+                        <div class="border-l-4 border-yellow-400 pl-4">
+                            <p class="font-semibold" data-i18n="lab.name"></p>
+                            <p class="text-sm text-gray-600" data-i18n="lab.description"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- List Dosen Section -->
+<section id="list" class="content-section">
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <h3 class="font-bold text-2xl mb-6" data-i18n="dosen.title"></h3>
+
+    <div class="overflow-x-auto">
+      <table id="dosenTable" class="w-full text-left border-collapse">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="p-4 font-semibold" data-i18n="dosen.no"></th>
+            <th class="p-4 font-semibold" data-i18n="dosen.name"></th>
+            <th class="p-4 font-semibold" data-i18n="dosen.expertise"></th>
+            <th class="p-4 font-semibold" data-i18n="dosen.email"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b">
+            <td class="p-4">1</td>
+            <td class="p-4 flex items-center space-x-2">
+              <i data-lucide="user" class="w-4 h-4 text-indigo-600"></i>
+              <span>Prof. Dr. rer-nat Wira Bahari Nurdin</span>
+            </td>
+            <td class="p-4" data-i18n="dosen.expertise.1"></td>
+            <td class="p-4">wira.nurdin@labfisika.ac.id</td>
+          </tr>
+          <tr class="border-b bg-gray-50">
+            <td class="p-4">2</td>
+            <td class="p-4 flex items-center space-x-2">
+              <i data-lucide="user" class="w-4 h-4 text-indigo-600"></i>
+              <span>Prof. Dr. Tasrief Tsurungan, M.Sc</span>
+            </td>
+            <td class="p-4" data-i18n="dosen.expertise.2"></td>
+            <td class="p-4">tasrief@labfisika.ac.id</td>
+          </tr>
+          <tr class="border-b">
+            <td class="p-4">3</td>
+            <td class="p-4 flex items-center space-x-2">
+              <i data-lucide="user" class="w-4 h-4 text-indigo-600"></i>
+              <span>Dr. Azwar Sutiono, M.Si</span>
+            </td>
+            <td class="p-4" data-i18n="dosen.expertise.3"></td>
+            <td class="p-4">azwar@labfisika.ac.id</td>
+          </tr>
+          <tr class="border-b bg-gray-50">
+            <td class="p-4">4</td>
+            <td class="p-4 flex items-center space-x-2">
+              <i data-lucide="user" class="w-4 h-4 text-indigo-600"></i>
+              <span>Bayu Dirgantara, SST., Ph.D</span>
+            </td>
+            <td class="p-4" data-i18n="dosen.expertise.4"></td>
+            <td class="p-4">bayu.dirgantara@labfisika.ac.id</td>
+          </tr>
+          <tr class="border-b">
+            <td class="p-4">5</td>
+            <td class="p-4 flex items-center space-x-2">
+              <i data-lucide="user" class="w-4 h-4 text-indigo-600"></i>
+              <span>Drs. Bangsawan BJ., M.Si</span>
+            </td>
+            <td class="p-4" data-i18n="dosen.expertise.5"></td>
+            <td class="p-4">bangsawan@labfisika.ac.id</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!-- List Mahasiswa Section -->
+<section id="students" class="content-section">
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <h3 class="font-bold text-2xl mb-6" data-i18n="mahasiswa.title"></h3>
+
+    <div class="overflow-x-auto">
+      <table id="mahasiswaTable" class="w-full text-left border-collapse">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="p-4 font-semibold" data-i18n="mahasiswa.no"></th>
+            <th class="p-4 font-semibold" data-i18n="mahasiswa.name"></th>
+            <th class="p-4 font-semibold" data-i18n="mahasiswa.nim"></th>
+            <th class="p-4 font-semibold" data-i18n="mahasiswa.research"></th>
+            <th class="p-4 font-semibold" data-i18n="mahasiswa.advisor"></th>
+          </tr>
+        </thead>
+        <tbody>
+                    <tr class="border-b">
+                        <td class="p-4">1</td>
+                        <td class="p-4 flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i><span>Elviana</span></td>
+                        <td class="p-4">H021231006</td>
+                        <td class="p-4" data-i18n="mahasiswa.research.1"></td>
+                        <td class="p-4">Dr. Azwar Sutiono, M.Si</td>
+                    </tr>
+                    <tr class="border-b bg-gray-50">
+                        <td class="p-4">2</td>
+                        <td class="p-4 flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i><span>Nurhaliza</span></td>
+                        <td class="p-4">H021231008</td>
+                        <td class="p-4" data-i18n="mahasiswa.research.2"></td>
+                        <td class="p-4">Drs. Bangsawan BJ., M.Si</td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="p-4">3</td>
+                        <td class="p-4 flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i><span>Citra Fikriah Jamal</span></td>
+                        <td class="p-4">H021231010</td>
+                        <td class="p-4" data-i18n="mahasiswa.research.3"></td>
+                        <td class="p-4">Prof. Dr. Tasrief Tsurungan, M.Sc</td>
+                    </tr>
+                    <tr class="border-b bg-gray-50">
+                        <td class="p-4">4</td>
+                        <td class="p-4 flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i><span>Santri</span></td>
+                        <td class="p-4">H021231012</td>
+                        <td class="p-4" data-i18n="mahasiswa.research.4"></td>
+                        <td class="p-4">Dr. Azwar Sutiono, M.Si</td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="p-4">5</td>
+                        <td class="p-4 flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i><span>Yeni Estefani Parinding</span></td>
+                        <td class="p-4">H021231016</td>
+                        <td class="p-4" data-i18n="mahasiswa.research.5"></td>
+                        <td class="p-4">Prof. Dr. rer-nat Wira Bahari Nurdin</td>
+                    </tr>
+                    <tr class="border-b bg-gray-50">
+                        <td class="p-4">6</td>
+                        <td class="p-4 flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i><span>Muhammad Ibrahim</span></td>
+                        <td class="p-4">H021231026</td>
+                        <td class="p-4" data-i18n="mahasiswa.research.6"></td>
+                        <td class="p-4">Bayu Dirgantara, SST., Ph.D</td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="p-4">7</td>
+                        <td class="p-4 flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i><span>Deby Lebryawati</span></td>
+                        <td class="p-4">H021231046</td>
+                        <td class="p-4" data-i18n="mahasiswa.research.7"></td>
+                        <td class="p-4">Dr. Azwar Sutiono, M.Si</td>
+                    </tr>
+                    <tr class="border-b bg-gray-50">
+                        <td class="p-4">8</td>
+                        <td class="p-4 flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i><span>Angga Anugrah</span></td>
+                        <td class="p-4">H021231024</td>
+                        <td class="p-4" data-i18n="mahasiswa.research.8"></td>
+                        <td class="p-4">Prof. Dr. Tasrief Tsurungan, M.Sc</td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="p-4">9</td>
+                        <td class="p-4 flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4 text-indigo-600"></i><span>Nur Fadli Yoga</span></td>
+                        <td class="p-4">H021231073</td>
+                        <td class="p-4" data-i18n="mahasiswa.research.9"></td>
+                        <td class="p-4">Drs. Bangsawan BJ., M.Si</td>
+                    </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+            
+            <!-- Resources Section -->
+            <section id="resources" class="content-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-2xl mb-6" data-i18n="resources.title"></h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="#" class="block p-4 border rounded-lg hover:shadow-lg transition-shadow">
+                            <h4 class="font-semibold text-indigo-700" data-i18n="resources.library"></h4>
+                            <p class="text-sm text-gray-600" data-i18n="resources.library-desc"></p>
+                        </a>
+                        <a href="#" class="block p-4 border rounded-lg hover:shadow-lg transition-shadow">
+                            <h4 class="font-semibold text-indigo-700" data-i18n="resources.scholar"></h4>
+                            <p class="text-sm text-gray-600" data-i18n="resources.scholar-desc"></p>
+                        </a>
+                        <a href="#" class="block p-4 border rounded-lg hover:shadow-lg transition-shadow">
+                            <h4 class="font-semibold text-indigo-700" data-i18n="resources.portal"></h4>
+                            <p class="text-sm text-gray-600" data-i18n="resources.portal-desc"></p>
+                        </a>
+                        <a href="#" class="block p-4 border rounded-lg hover:shadow-lg transition-shadow">
+                            <h4 class="font-semibold text-indigo-700" data-i18n="resources.ejornal"></h4>
+                            <p class="text-sm text-gray-600" data-i18n="resources.ejornal-desc"></p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Explore Physics Section -->
+            <section id="explore" class="content-section">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+                    <!-- Explore Header -->
+                    <h2 class="font-bold text-3xl mb-4" data-i18n="explore.title"></h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8" data-i18n="explore.subtitle"></p>
+
+                    <!-- Physics Topics -->
+                    <div class="mb-12">
+                        <h3 class="font-bold text-2xl mb-6 flex items-center">
+                            <i data-lucide="zap" class="w-6 h-6 mr-2 text-indigo-600"></i>
+                            <span data-i18n="explore.topics-title"></span>
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Topic 1: Quantum Mechanics -->
+                            <div class="fade-in-card p-6 rounded-lg border-l-4 border-indigo-600 hover:shadow-lg transition-shadow cursor-pointer topic-card" data-topic="quantum">
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="atom" class="w-6 h-6 text-indigo-600 mr-2"></i>
+                                    <h4 class="font-bold text-lg" data-i18n="explore.topic.1-title"></h4>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.topic.1-desc"></p>
+                            </div>
+
+                            <!-- Topic 2: Relativity -->
+                            <div class="fade-in-card p-6 rounded-lg border-l-4 border-cyan-500 hover:shadow-lg transition-shadow cursor-pointer topic-card" data-topic="relativity">
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="star" class="w-6 h-6 text-cyan-500 mr-2"></i>
+                                    <h4 class="font-bold text-lg" data-i18n="explore.topic.2-title"></h4>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.topic.2-desc"></p>
+                            </div>
+
+                            <!-- Topic 3: Cosmology -->
+                            <div class="fade-in-card p-6 rounded-lg border-l-4 border-purple-500 hover:shadow-lg transition-shadow cursor-pointer topic-card" data-topic="cosmology">
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="globe" class="w-6 h-6 text-purple-500 mr-2"></i>
+                                    <h4 class="font-bold text-lg" data-i18n="explore.topic.3-title"></h4>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.topic.3-desc"></p>
+                            </div>
+
+                            <!-- Topic 4: Thermodynamics -->
+                            <div class="fade-in-card p-6 rounded-lg border-l-4 border-orange-500 hover:shadow-lg transition-shadow cursor-pointer topic-card" data-topic="thermodynamics">
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="flame" class="w-6 h-6 text-orange-500 mr-2"></i>
+                                    <h4 class="font-bold text-lg" data-i18n="explore.topic.4-title"></h4>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.topic.4-desc"></p>
+                            </div>
+
+                            <!-- Topic 5: Particle Physics -->
+                            <div class="fade-in-card p-6 rounded-lg border-l-4 border-green-500 hover:shadow-lg transition-shadow cursor-pointer topic-card" data-topic="particle">
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="cpu" class="w-6 h-6 text-green-500 mr-2"></i>
+                                    <h4 class="font-bold text-lg" data-i18n="explore.topic.5-title"></h4>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.topic.5-desc"></p>
+                            </div>
+
+                            <!-- Topic 6: Electromagnetism -->
+                            <div class="fade-in-card p-6 rounded-lg border-l-4 border-pink-500 hover:shadow-lg transition-shadow cursor-pointer topic-card" data-topic="electromagnetism">
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="radio" class="w-6 h-6 text-pink-500 mr-2"></i>
+                                    <h4 class="font-bold text-lg" data-i18n="explore.topic.6-title"></h4>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.topic.6-desc"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interesting Physics Facts -->
+                    <div class="mb-12">
+                        <h3 class="font-bold text-2xl mb-6 flex items-center">
+                            <i data-lucide="lightbulb" class="w-6 h-6 mr-2 text-yellow-500"></i>
+                            <span data-i18n="explore.facts-title"></span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="fade-in-card p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500">
+                                <h4 class="font-semibold text-blue-900 dark:text-blue-200 mb-2" data-i18n="explore.fact.1-title"></h4>
+                                <p class="text-sm text-blue-800 dark:text-blue-300" data-i18n="explore.fact.1-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500">
+                                <h4 class="font-semibold text-green-900 dark:text-green-200 mb-2" data-i18n="explore.fact.2-title"></h4>
+                                <p class="text-sm text-green-800 dark:text-green-300" data-i18n="explore.fact.2-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500">
+                                <h4 class="font-semibold text-purple-900 dark:text-purple-200 mb-2" data-i18n="explore.fact.3-title"></h4>
+                                <p class="text-sm text-purple-800 dark:text-purple-300" data-i18n="explore.fact.3-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500">
+                                <h4 class="font-semibold text-red-900 dark:text-red-200 mb-2" data-i18n="explore.fact.4-title"></h4>
+                                <p class="text-sm text-red-800 dark:text-red-300" data-i18n="explore.fact.4-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500">
+                                <h4 class="font-semibold text-indigo-900 dark:text-indigo-200 mb-2" data-i18n="explore.fact.5-title"></h4>
+                                <p class="text-sm text-indigo-800 dark:text-indigo-300" data-i18n="explore.fact.5-desc"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Concepts -->
+                    <div>
+                        <h3 class="font-bold text-2xl mb-6 flex items-center">
+                            <i data-lucide="book" class="w-6 h-6 mr-2 text-indigo-600"></i>
+                            <span data-i18n="explore.concepts-title"></span>
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="fade-in-card p-4 rounded-lg bg-gradient-to-r from-indigo-50 to-cyan-50 dark:from-indigo-900/20 dark:to-cyan-900/20">
+                                <h4 class="font-semibold text-indigo-900 dark:text-indigo-200 mb-2" data-i18n="explore.concept.1"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.concept.1-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
+                                <h4 class="font-semibold text-purple-900 dark:text-purple-200 mb-2" data-i18n="explore.concept.2"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.concept.2-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20">
+                                <h4 class="font-semibold text-orange-900 dark:text-orange-200 mb-2" data-i18n="explore.concept.3"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.concept.3-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20">
+                                <h4 class="font-semibold text-cyan-900 dark:text-cyan-200 mb-2" data-i18n="explore.concept.4"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="explore.concept.4-desc"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Topic Detail Pages -->
+            <!-- Mekanika Kuantum Detail -->
+            <section id="topic-quantum" class="content-section">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+                    <button id="back-from-quantum" class="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-i18n="detail.back">Kembali</span>
+                    </button>
+                    <h2 class="text-4xl font-bold mb-4 text-indigo-600 dark:text-indigo-400" data-i18n="explore.topic.1-title"></h2>
+                    <div class="space-y-6 text-gray-700 dark:text-gray-300">
+                        <p data-i18n="detail.topic.1-intro"></p>
+                        <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400" data-i18n="detail.topic.1-h3-1"></h3>
+                        <p data-i18n="detail.topic.1-p1"></p>
+                        <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400" data-i18n="detail.topic.1-h3-2"></h3>
+                        <p data-i18n="detail.topic.1-p2"></p>
+                        <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400" data-i18n="detail.topic.1-h3-3"></h3>
+                        <p data-i18n="detail.topic.1-p3"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Relativitas Detail -->
+            <section id="topic-relativity" class="content-section">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+                    <button id="back-from-relativity" class="mb-4 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 transition-colors flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-i18n="detail.back">Kembali</span>
+                    </button>
+                    <h2 class="text-4xl font-bold mb-4 text-cyan-600 dark:text-cyan-400" data-i18n="explore.topic.2-title"></h2>
+                    <div class="space-y-6 text-gray-700 dark:text-gray-300">
+                        <p data-i18n="detail.topic.2-intro"></p>
+                        <h3 class="text-2xl font-semibold text-cyan-600 dark:text-cyan-400" data-i18n="detail.topic.2-h3-1"></h3>
+                        <p data-i18n="detail.topic.2-p1"></p>
+                        <h3 class="text-2xl font-semibold text-cyan-600 dark:text-cyan-400" data-i18n="detail.topic.2-h3-2"></h3>
+                        <p data-i18n="detail.topic.2-p2"></p>
+                        <h3 class="text-2xl font-semibold text-cyan-600 dark:text-cyan-400" data-i18n="detail.topic.2-h3-3"></h3>
+                        <p data-i18n="detail.topic.2-p3"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kosmologi Detail -->
+            <section id="topic-cosmology" class="content-section">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+                    <button id="back-from-cosmology" class="mb-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-i18n="detail.back">Kembali</span>
+                    </button>
+                    <h2 class="text-4xl font-bold mb-4 text-purple-600 dark:text-purple-400" data-i18n="explore.topic.3-title"></h2>
+                    <div class="space-y-6 text-gray-700 dark:text-gray-300">
+                        <p data-i18n="detail.topic.3-intro"></p>
+                        <h3 class="text-2xl font-semibold text-purple-600 dark:text-purple-400" data-i18n="detail.topic.3-h3-1"></h3>
+                        <p data-i18n="detail.topic.3-p1"></p>
+                        <h3 class="text-2xl font-semibold text-purple-600 dark:text-purple-400" data-i18n="detail.topic.3-h3-2"></h3>
+                        <p data-i18n="detail.topic.3-p2"></p>
+                        <h3 class="text-2xl font-semibold text-purple-600 dark:text-purple-400" data-i18n="detail.topic.3-h3-3"></h3>
+                        <p data-i18n="detail.topic.3-p3"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Termodinamika Detail -->
+            <section id="topic-thermodynamics" class="content-section">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+                    <button id="back-from-thermodynamics" class="mb-4 px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition-colors flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-i18n="detail.back">Kembali</span>
+                    </button>
+                    <h2 class="text-4xl font-bold mb-4 text-orange-600 dark:text-orange-400" data-i18n="explore.topic.4-title"></h2>
+                    <div class="space-y-6 text-gray-700 dark:text-gray-300">
+                        <p data-i18n="detail.topic.4-intro"></p>
+                        <h3 class="text-2xl font-semibold text-orange-600 dark:text-orange-400" data-i18n="detail.topic.4-h3-1"></h3>
+                        <p data-i18n="detail.topic.4-p1"></p>
+                        <h3 class="text-2xl font-semibold text-orange-600 dark:text-orange-400" data-i18n="detail.topic.4-h3-2"></h3>
+                        <p data-i18n="detail.topic.4-p2"></p>
+                        <h3 class="text-2xl font-semibold text-orange-600 dark:text-orange-400" data-i18n="detail.topic.4-h3-3"></h3>
+                        <p data-i18n="detail.topic.4-p3"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fisika Partikel Detail -->
+            <section id="topic-particle" class="content-section">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+                    <button id="back-from-particle" class="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-i18n="detail.back">Kembali</span>
+                    </button>
+                    <h2 class="text-4xl font-bold mb-4 text-green-600 dark:text-green-400" data-i18n="explore.topic.5-title"></h2>
+                    <div class="space-y-6 text-gray-700 dark:text-gray-300">
+                        <p data-i18n="detail.topic.5-intro"></p>
+                        <h3 class="text-2xl font-semibold text-green-600 dark:text-green-400" data-i18n="detail.topic.5-h3-1"></h3>
+                        <p data-i18n="detail.topic.5-p1"></p>
+                        <h3 class="text-2xl font-semibold text-green-600 dark:text-green-400" data-i18n="detail.topic.5-h3-2"></h3>
+                        <p data-i18n="detail.topic.5-p2"></p>
+                        <h3 class="text-2xl font-semibold text-green-600 dark:text-green-400" data-i18n="detail.topic.5-h3-3"></h3>
+                        <p data-i18n="detail.topic.5-p3"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Elektromagnetisme Detail -->
+            <section id="topic-electromagnetism" class="content-section">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+                    <button id="back-from-electromagnetism" class="mb-4 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 transition-colors flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-i18n="detail.back">Kembali</span>
+                    </button>
+                    <h2 class="text-4xl font-bold mb-4 text-pink-600 dark:text-pink-400" data-i18n="explore.topic.6-title"></h2>
+                    <div class="space-y-6 text-gray-700 dark:text-gray-300">
+                        <p data-i18n="detail.topic.6-intro"></p>
+                        <h3 class="text-2xl font-semibold text-pink-600 dark:text-pink-400" data-i18n="detail.topic.6-h3-1"></h3>
+                        <p data-i18n="detail.topic.6-p1"></p>
+                        <h3 class="text-2xl font-semibold text-pink-600 dark:text-pink-400" data-i18n="detail.topic.6-h3-2"></h3>
+                        <p data-i18n="detail.topic.6-p2"></p>
+                        <h3 class="text-2xl font-semibold text-pink-600 dark:text-pink-400" data-i18n="detail.topic.6-h3-3"></h3>
+                        <p data-i18n="detail.topic.6-p3"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Lab Section -->
+            <section id="about" class="content-section">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+                    <!-- About Header -->
+                    <h2 class="font-bold text-3xl mb-8" data-i18n="about.title"></h2>
+
+                    <!-- Vision & Mission -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Vision -->
+                        <div class="fade-in-card p-6 rounded-lg">
+                            <h3 class="font-bold text-xl text-indigo-600 mb-4 flex items-center">
+                                <i data-lucide="eye" class="w-6 h-6 mr-2"></i>
+                                <span data-i18n="about.vision-title"></span>
+                            </h3>
+                            <p class="text-gray-600 dark:text-gray-300" data-i18n="about.vision-desc"></p>
+                        </div>
+
+                        <!-- Mission -->
+                        <div class="fade-in-card p-6 rounded-lg">
+                            <h3 class="font-bold text-xl text-indigo-600 mb-4 flex items-center">
+                                <i data-lucide="target" class="w-6 h-6 mr-2"></i>
+                                <span data-i18n="about.mission-title"></span>
+                            </h3>
+                            <p class="text-gray-600 dark:text-gray-300" data-i18n="about.mission-desc"></p>
+                        </div>
+                    </div>
+
+                    <!-- History Section -->
+                    <div class="mb-12">
+                        <h3 class="font-bold text-2xl mb-6 flex items-center">
+                            <i data-lucide="history" class="w-6 h-6 mr-2 text-indigo-600"></i>
+                            <span data-i18n="about.history-title"></span>
+                        </h3>
+                        <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border-l-4 border-indigo-600">
+                            <p class="text-gray-700 dark:text-gray-200 mb-4" data-i18n="about.history-p1"></p>
+                            <p class="text-gray-700 dark:text-gray-200" data-i18n="about.history-p2"></p>
+                        </div>
+                    </div>
+
+                    <!-- Facilities -->
+                    <div class="mb-12">
+                        <h3 class="font-bold text-2xl mb-6 flex items-center">
+                            <i data-lucide="cpu" class="w-6 h-6 mr-2 text-indigo-600"></i>
+                            <span data-i18n="about.facilities-title"></span>
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="fade-in-card p-4 rounded-lg">
+                                <h4 class="font-semibold text-indigo-600 mb-2" data-i18n="about.facility.1-title"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.facility.1-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg">
+                                <h4 class="font-semibold text-indigo-600 mb-2" data-i18n="about.facility.2-title"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.facility.2-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg">
+                                <h4 class="font-semibold text-indigo-600 mb-2" data-i18n="about.facility.3-title"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.facility.3-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg">
+                                <h4 class="font-semibold text-indigo-600 mb-2" data-i18n="about.facility.4-title"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.facility.4-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg">
+                                <h4 class="font-semibold text-indigo-600 mb-2" data-i18n="about.facility.5-title"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.facility.5-desc"></p>
+                            </div>
+                            <div class="fade-in-card p-4 rounded-lg">
+                                <h4 class="font-semibold text-indigo-600 mb-2" data-i18n="about.facility.6-title"></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.facility.6-desc"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="mb-12">
+                        <h3 class="font-bold text-2xl mb-8 flex items-center">
+                            <i data-lucide="calendar" class="w-6 h-6 mr-2 text-indigo-600"></i>
+                            <span data-i18n="about.timeline-title"></span>
+                        </h3>
+                        <div class="space-y-6">
+                            <div class="flex gap-4 fade-in-card p-4 rounded-lg">
+                                <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold">2015</div>
+                                <div>
+                                    <h4 class="font-semibold" data-i18n="about.timeline.1-title"></h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.timeline.1-desc"></p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 fade-in-card p-4 rounded-lg">
+                                <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold">2017</div>
+                                <div>
+                                    <h4 class="font-semibold" data-i18n="about.timeline.2-title"></h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.timeline.2-desc"></p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 fade-in-card p-4 rounded-lg">
+                                <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold">2020</div>
+                                <div>
+                                    <h4 class="font-semibold" data-i18n="about.timeline.3-title"></h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.timeline.3-desc"></p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 fade-in-card p-4 rounded-lg">
+                                <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold">2023</div>
+                                <div>
+                                    <h4 class="font-semibold" data-i18n="about.timeline.4-title"></h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="about.timeline.4-desc"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="mt-16 pt-12 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400 pb-6">
+                <p data-i18n="footer.copyright"></p>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Auth Modal (localStorage auth only) -->
+<div id="auth-panel" class="fixed inset-0 flex items-center justify-center bg-black/40 hidden z-50">
+  <div class="bg-white p-6 rounded shadow w-96">
+    <h3 class="font-semibold mb-4" data-i18n="auth.title"></h3>
+    <input id="email" type="email" class="w-full p-2 mb-2 border rounded" data-i18n-placeholder="auth.email" />
+    <input id="password" type="password" class="w-full p-2 mb-4 border rounded" data-i18n-placeholder="auth.password" />
+    <div class="flex justify-between">
+      <button id="btn-login" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors" data-i18n="auth.login"></button>
+      <button id="btn-register" class="px-4 py-2 border rounded hover:bg-gray-50 transition-colors" data-i18n="auth.register"></button>
+      <button id="btn-close-auth" class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700" data-i18n="auth.close"></button>
+    </div>
+    <p id="auth-message" class="text-sm text-red-500 mt-3 hidden"></p>
+  </div>
+</div>
+
+<!-- localStorage-based Auth Script (ONLY) -->
+<script>
+// ===== MULTI-LANGUAGE SYSTEM =====
+const translations = {
+  id: {
+    // Header
+    'header.welcome': 'Selamat Datang Di Lab Fisika Teori & Komputasi',
+    'header.loading-date': 'Memuat tanggal...',
+    'header.guest': 'Tamu',
+    'header.login': 'Masuk',
+    'header.logout': 'Keluar',
+    'header.change-lang': 'Ubah bahasa',
+    'header.change-theme': 'Ganti tema',
+
+    // Navigation
+    'nav.home': 'Beranda',
+    'nav.dosen': 'Dosen',
+    'nav.mahasiswa': 'Mahasiswa',
+    'nav.resources': 'Resources',
+    'nav.explore': 'Jelajahi',
+    'nav.about': 'Tentang',
+
+    // Home Section
+    'home.hero-title': 'Laboratorium Fisika Teori & Komputasi',
+    'home.hero-subtitle': 'Mengeksplorasi alam semesta melalui perhitungan dan simulasi',
+    'home.explore': 'Jelajahi',
+    'home.about': 'Tentang Lab',
+
+    // Dosen Section
+    'dosen.title': 'Daftar Dosen',
+    'dosen.no': 'No',
+    'dosen.name': 'Nama',
+    'dosen.expertise': 'Keahlian',
+    'dosen.email': 'Email',
+
+    // Dosen Expertise (id)
+    'dosen.expertise.1': 'Fisika Teoretis & Kosmologi Relativistik',
+    'dosen.expertise.2': 'Fisika Komputasi & Sistem Kompleks',
+    'dosen.expertise.3': 'Fisika Statistik & Termodinamika Komputasional',
+    'dosen.expertise.4': 'Fisika Kuantum & Simulasi Material',
+    'dosen.expertise.5': 'Fisika Dasar & Metode Numerik',
+
+    // Mahasiswa Section
+    'mahasiswa.title': 'Daftar Mahasiswa',
+    'mahasiswa.no': 'No',
+    'mahasiswa.name': 'Nama',
+    'mahasiswa.nim': 'NIM',
+    'mahasiswa.research': 'Topik Penelitian',
+    'mahasiswa.advisor': 'Pembimbing',
+
+    // Resources Section
+    'resources.title': 'Sumber Belajar & Pranala Penting',
+    'resources.library': 'Perpustakaan Digital Nasional',
+    'resources.library-desc': 'Akses jutaan buku, jurnal, dan referensi secara online.',
+    'resources.scholar': 'Google Scholar',
+    'resources.scholar-desc': 'Cari literatur akademis dari berbagai disiplin ilmu.',
+    'resources.portal': 'Portal Akademik Kampus',
+    'resources.portal-desc': 'Akses nilai, KRS, dan informasi akademik lainnya.',
+    'resources.ejornal': 'Direktori E-Journal',
+    'resources.ejornal-desc': 'Kumpulan jurnal elektronik yang dilanggan oleh universitas.',
+
+    // Quick Access & Lab Info
+    'quick.title': 'Akses Cepat',
+    'quick.faculty': 'Daftar Dosen Lab Fisika Teori & Komputasi',
+    'quick.students': 'Daftar Mahasiswa Lab Fisika Teori & Komputasi',
+
+    'lab.title': 'Informasi Lab',
+    'lab.name': 'Lab Fisika Teori & Komputasi',
+    'lab.description': 'Laboratorium Fisika Teori & Komputasi adalah pusat akademik bagi mahasiswa dan peneliti untuk mempelajari serta mengembangkan model fisika secara matematis dan komputasional. Fokus utama laboratorium adalah memahami fenomena alam dari skala mikroskopis hingga kosmologis melalui pendekatan teoritis dan simulasi numerik. Mahasiswa dilatih menguasai konsep dasar fisika teoretis, pemrograman ilmiah, dan analisis data komputasi. Kegiatan penelitian mencakup pemodelan sistem dinamis, fisika kuantum, mekanika statistik, dan kosmologi numerik.',
+
+    // Mahasiswa research items (id)
+    'mahasiswa.research.1': 'Analisis Dinamika Termal Sistem Satu Dimensi',
+    'mahasiswa.research.2': 'Pemodelan Numerik Konduksi Panas Batang Logam',
+    'mahasiswa.research.3': 'Simulasi Getaran Harmonik Menggunakan Python',
+    'mahasiswa.research.4': 'Pemodelan Osilasi Nonlinear Sistem Fisis',
+    'mahasiswa.research.5': 'Simulasi Numerik Perpindahan Panas pada Material Komposit',
+    'mahasiswa.research.6': 'Analisis Gelombang Berdiri Menggunakan Metode Beda Hingga',
+    'mahasiswa.research.7': 'Studi Termodinamika Sistem Gas Ideal melalui Komputasi',
+    'mahasiswa.research.8': 'Simulasi Pemodelan Gerak Planet dengan Persamaan Newton',
+    'mahasiswa.research.9': 'Simulasi Evolusi Alam Semesta Awal menggunakan Dinamika N-Body',
+
+    // Task Section
+    'task.title': 'Daftar Tugas',
+    'task.input': 'Tambah tugas baru...',
+    'task.add': 'Tambah',
+    'task.demo1': 'Presentasi Kelompok Jaringan Komputer - Bab 5',
+    'task.demo2': 'Kuis Pemrograman Web - Materi API',
+
+    // Auth Modal
+    'auth.title': 'Masuk / Daftar',
+    'auth.email': 'Email',
+    'auth.password': 'Password',
+    'auth.login': 'Masuk',
+    'auth.register': 'Daftar',
+    'auth.close': 'Tutup',
+    'auth.success-login': 'Berhasil masuk!',
+    'auth.success-register': 'Berhasil mendaftar! Silakan masuk.',
+    'auth.error-email': 'Email sudah terdaftar!',
+    'auth.error-login': 'Email atau password salah!',
+    'auth.error-empty': 'Email dan password tidak boleh kosong!',
+
+    // Explore Physics Section (id)
+    'explore.title': 'Jelajahi Fisika',
+    'explore.subtitle': 'Temukan keajaiban alam semesta melalui konsep-konsep fisika yang menakjubkan dan penelitian terkini',
+    'explore.topics-title': 'Cabang-Cabang Fisika',
+    'explore.topic.1-title': 'Mekanika Kuantum',
+    'explore.topic.1-desc': 'Mempelajari perilaku partikel pada skala atom dan subatomik, mengungkap misteri realitas kuantum dan superposisi.',
+    'explore.topic.2-title': 'Relativitas',
+    'explore.topic.2-desc': 'Teori tentang ruang, waktu, dan gravitasi yang mengubah pemahaman kita tentang alam semesta.',
+    'explore.topic.3-title': 'Kosmologi',
+    'explore.topic.3-desc': 'Studi tentang asal-usul, struktur, dan evolusi alam semesta dari Big Bang hingga masa depan.',
+    'explore.topic.4-title': 'Termodinamika',
+    'explore.topic.4-desc': 'Ilmu tentang energi, panas, dan entropi yang menjelaskan transformasi energi dalam sistem fisik.',
+    'explore.topic.5-title': 'Fisika Partikel',
+    'explore.topic.5-desc': 'Investigasi tentang partikel fundamental dan interaksi yang membentuk semua materi di alam semesta.',
+    'explore.topic.6-title': 'Elektromagnetisme',
+    'explore.topic.6-desc': 'Pemahaman tentang listrik, magnet, dan gelombang elektromagnetik yang menggerakkan teknologi modern.',
+    
+    // Detail Topic Pages (id)
+    'detail.back': 'Kembali',
+    'detail.topic.1-intro': 'Mekanika Kuantum adalah cabang fisika yang mempelajari perilaku materi dan energi pada skala atom dan subatomik. Teori ini merupakan fondasi untuk memahami struktur atom, reaksi kimia, dan sifat material.',
+    'detail.topic.1-h3-1': 'Prinsip Dasar',
+    'detail.topic.1-p1': 'Mekanika kuantum didasarkan pada beberapa prinsip fundamental seperti dualitas gelombang-partikel, prinsip ketidakpastian Heisenberg, dan superposisi. Partikel pada skala kuantum tidak memiliki posisi dan momentum yang pasti secara bersamaan.',
+    'detail.topic.1-h3-2': 'Aplikasi Praktis',
+    'detail.topic.1-p2': 'Pemahaman mekanika kuantum telah menghasilkan teknologi revolusioner seperti transistor, laser, dan magnetic resonance imaging (MRI). Semua perangkat elektronik modern bergantung pada prinsip-prinsip mekanika kuantum.',
+    'detail.topic.1-h3-3': 'Penelitian Terkini',
+    'detail.topic.1-p3': 'Saat ini, penelitian mekanika kuantum fokus pada komputasi kuantum, kriptografi kuantum, dan teleportasi kuantum. Teknologi ini berpotensi merevolusi cara kita memproses informasi dan mengamankan komunikasi.',
+    
+    'detail.topic.2-intro': 'Relativitas adalah teori yang menjelaskan hubungan antara ruang, waktu, dan gravitasi. Dikembangkan oleh Albert Einstein, teori ini mengubah pemahaman fundamental kita tentang alam semesta.',
+    'detail.topic.2-h3-1': 'Relativitas Khusus',
+    'detail.topic.2-p1': 'Relativitas khusus menunjukkan bahwa kecepatan cahaya adalah konstan untuk semua pengamat, dan tidak ada yang dapat bergerak lebih cepat dari cahaya. Teori ini juga memperkenalkan konsep dilatasi waktu dan kontraksi panjang.',
+    'detail.topic.2-h3-2': 'Relativitas Umum',
+    'detail.topic.2-p2': 'Relativitas umum memperluas teori Einstein dengan menggabungkan gravitasi sebagai kurva ruang-waktu yang disebabkan oleh massa dan energi. Ini menjelaskan fenomena seperti lubang hitam dan gelombang gravitasi.',
+    'detail.topic.2-h3-3': 'Dampak Kosmologis',
+    'detail.topic.2-p3': 'Relativitas membentuk pemahaman kita tentang asal usul alam semesta, evolusinya, dan masa depannya. Teori ini juga memprediksi fenomena eksotis seperti singularitas dan dislokasi waktu.',
+    
+    'detail.topic.3-intro': 'Kosmologi adalah studi ilmiah tentang asal usul, struktur, dan evolusi alam semesta. Ini menggabungkan astrofisika, fisika partikel, dan relativitas umum untuk memahami alam semesta skala besar.',
+    'detail.topic.3-h3-1': 'Big Bang dan Ekspansi Alam Semesta',
+    'detail.topic.3-p1': 'Teori Big Bang menjelaskan bahwa alam semesta dimulai dari keadaan yang sangat panas dan padat sekitar 13,8 miliar tahun lalu. Sejak saat itu, alam semesta terus mengembang dan mendingin.',
+    'detail.topic.3-h3-2': 'Materi Gelap dan Energi Gelap',
+    'detail.topic.3-p2': 'Pengamatan menunjukkan bahwa 95% alam semesta terdiri dari materi dan energi gelap yang tidak dapat kita lihat secara langsung. Memahami sifat kedua komponen ini adalah tantangan utama kosmologi modern.',
+    'detail.topic.3-h3-3': 'Struktur Alam Semesta',
+    'detail.topic.3-p3': 'Alam semesta memiliki struktur berhierarki, dari galaksi-galaksi yang membentuk cluster, supercluster, dan filamen yang lebih besar. Pola distribusi ini memberikan petunjuk tentang proses pembentukan dan evolusi alam semesta.',
+    
+    'detail.topic.4-intro': 'Termodinamika adalah ilmu tentang energi, panas, dan entropi. Ini menjelaskan bagaimana energi ditransformasikan dan mengapa proses tertentu dapat terjadi secara alami.',
+    'detail.topic.4-h3-1': 'Hukum-Hukum Termodinamika',
+    'detail.topic.4-p1': 'Hukum pertama menyatakan bahwa energi tidak dapat diciptakan atau dimusnahkan, hanya berubah bentuk. Hukum kedua menjelaskan bahwa entropi alam semesta selalu meningkat, yang membuat beberapa proses tidak reversibel.',
+    'detail.topic.4-h3-2': 'Aplikasi dalam Mesin dan Proses',
+    'detail.topic.4-p2': 'Termodinamika menjelaskan cara kerja mesin panas, refrigerator, dan pompa panas. Ini juga diterapkan dalam desain reaktor nuklir, pembangkit listrik, dan sistem pendingin.',
+    'detail.topic.4-h3-3': 'Fenomena Termodinamika Kompleks',
+    'detail.topic.4-p3': 'Termodinamika modern juga mempelajari fenomena seperti transisi fase, perubahan keadaan materi, dan sistem jauh dari keseimbangan yang relevan dengan biologi dan ilmu material.',
+    
+    'detail.topic.5-intro': 'Fisika Partikel adalah studi tentang partikel fundamental dan interaksi di antara mereka. Ini mencoba mengungkap apa yang membentuk semua materi dan energi di alam semesta.',
+    'detail.topic.5-h3-1': 'Partikel Fundamental dan Quark',
+    'detail.topic.5-p1': 'Penelitian menunjukkan bahwa semua materi terdiri dari partikel fundamental seperti quark dan lepton. Quark membentuk proton dan neutron, sementara lepton termasuk elektron dan neutrino.',
+    'detail.topic.5-h3-2': 'Standar Model Fisika Partikel',
+    'detail.topic.5-p2': 'Model Standar menggambarkan tiga dari empat gaya fundamental: elektromagnetisme, gaya nuklir kuat, dan gaya nuklir lemah. Ini adalah teori yang paling berhasil dalam menjelaskan fisika partikel elementer.',
+    'detail.topic.5-h3-3': 'Penelitian Masa Depan',
+    'detail.topic.5-p3': 'Fisikawan mencari partikel baru dan interaksi yang belum ditemukan, termasuk partikel materi gelap dan aspek lain dari gravitasi kuantum yang belum diintegrasikan ke dalam Model Standar.',
+    
+    'detail.topic.6-intro': 'Elektromagnetisme adalah studi tentang listrik, magnet, dan interaksi di antara keduanya melalui gelombang elektromagnetik. Teori ini menjelaskan cahaya, radio, dan banyak fenomena alam lainnya.',
+    'detail.topic.6-h3-1': 'Gaya Elektromagnetik',
+    'detail.topic.6-p1': 'Elektromagnetisme menggambarkan bagaimana muatan listrik menciptakan medan listrik dan bagaimana arus listrik menciptakan medan magnet. Kedua medan ini saling berkaitan dan dapat menghasilkan gelombang elektromagnetik.',
+    'detail.topic.6-h3-2': 'Gelombang Elektromagnetik',
+    'detail.topic.6-p2': 'Cahaya, gelombang radio, sinar-X, dan radiasi gamma adalah bentuk gelombang elektromagnetik dengan frekuensi dan panjang gelombang yang berbeda. Semua ini merambat dengan kecepatan cahaya.',
+    'detail.topic.6-h3-3': 'Aplikasi Teknologi',
+    'detail.topic.6-p3': 'Pemahaman elektromagnetisme telah menghasilkan teknologi seperti motor listrik, generator, transformer, antena, dan sistem komunikasi nirkabel yang membentuk infrastruktur teknologi modern.',
+    
+    'explore.facts-title': 'Fakta Fisika Menarik',
+    'explore.fact.1-title': 'Cahaya Memiliki Kecepatan Maksimal',
+    'explore.fact.1-desc': 'Tidak ada yang dapat bergerak lebih cepat dari cahaya (299.792.458 m/s). Prinsip fundamental dari teori relativitas Einstein.',
+    'explore.fact.2-title': 'Energi Tidak Dapat Diciptakan atau Dimusnahkan',
+    'explore.fact.2-desc': 'Hukum kekekalan energi: energi hanya dapat berubah bentuk, tidak dapat hilang atau muncul dari ketiadaan.',
+    'explore.fact.3-title': 'Kuantum Tuneling - Partikel Melalui Dinding',
+    'explore.fact.3-desc': 'Dalam mekanika kuantum, partikel dapat "menerobos" melalui penghalang yang seharusnya menutup berdasarkan fisika klasik.',
+    'explore.fact.4-title': 'Gravitasi Adalah Kelengkungan Ruang-Waktu',
+    'explore.fact.4-desc': 'Gravitasi bukan gaya tarik tradisional, tetapi hasil dari massa dan energi yang melengkungkan struktur ruang-waktu itu sendiri.',
+    'explore.fact.5-title': 'Waktu Berbeda di Lokasi Berbeda',
+    'explore.fact.5-desc': 'Dilatasi waktu relativistik: waktu berjalan lebih lambat untuk objek yang bergerak cepat atau berada di gravitasi kuat.',
+    
+    'explore.concepts-title': 'Konsep Kunci Fisika',
+    'explore.concept.1': 'Energi dan Momentum',
+    'explore.concept.1-desc': 'Energi adalah kapasitas melakukan kerja, momentum adalah ukuran gerak. Keduanya fundamental dalam dinamika sistem.',
+    'explore.concept.2': 'Gelombang dan Partikel',
+    'explore.concept.2-desc': 'Dualitas gelombang-partikel: materi dan radiasi menunjukkan sifat gelombang dan partikel sesuai situasi.',
+    'explore.concept.3': 'Entropi dan Fluktuasi Termal',
+    'explore.concept.3-desc': 'Entropi mengukur ketidakteraturan. Sistem alamiah cenderung menuju keadaan entropi maksimal (hukum kedua termodinamika).',
+    'explore.concept.4': 'Gaya Fundamental Alam',
+    'explore.concept.4-desc': 'Empat gaya fundamental: gravitasi, elektromagnetisme, gaya nuklir kuat, dan gaya nuklir lemah menjelaskan semua interaksi.',
+
+    // About Lab Section (id)
+    'about.title': 'Tentang Lab Kami',
+    'about.vision-title': 'Visi',
+    'about.vision-desc': 'Menjadi laboratorium penelitian terkemuka dalam bidang fisika teori dan komputasi yang berkontribusi pada kemajuan sains dan teknologi melalui inovasi dan kolaborasi internasional.',
+    'about.mission-title': 'Misi',
+    'about.mission-desc': 'Mendukung riset fisika teoretis dan komputasional berkualitas tinggi, mengembangkan sumber daya manusia yang kompeten, serta memfasilitasi transfer ilmu dan teknologi kepada masyarakat.',
+    'about.history-title': 'Sejarah Lab',
+    'about.history-p1': 'Laboratorium Fisika Teori & Komputasi didirikan pada tahun 2015 dengan tujuan untuk menyediakan fasilitas penelitian dan pembelajaran dalam bidang fisika modern, khususnya fokus pada pendekatan teoritis dan komputasional.',
+    'about.history-p2': 'Sejak berdiri, lab kami telah berkembang pesat dengan bertambahnya jumlah peneliti, mahasiswa, serta kolaborasi dengan institusi penelitian nasional dan internasional. Kami berkomitmen untuk terus berinovasi dalam penelitian dan pendidikan.',
+    'about.facilities-title': 'Fasilitas & Equipment',
+    'about.facility.1-title': 'Server Komputasi',
+    'about.facility.1-desc': 'Cluster computing untuk simulasi numerik skala besar dan modeling fisika.',
+    'about.facility.2-title': 'Software Simulasi',
+    'about.facility.2-desc': 'MATLAB, Python, COMSOL, dan tools open-source untuk computational physics.',
+    'about.facility.3-title': 'Workstation',
+    'about.facility.3-desc': 'Desktop dan laptop berperforma tinggi untuk penelitian dan analisis data.',
+    'about.facility.4-title': 'Ruang Seminar',
+    'about.facility.4-desc': 'Fasilitas diskusi dan presentasi dengan peralatan multimedia modern.',
+    'about.facility.5-title': 'Library Digital',
+    'about.facility.5-desc': 'Akses jurnal, buku, dan dataset penelitian fisika terkini.',
+    'about.facility.6-title': 'Lab Pengajaran',
+    'about.facility.6-desc': 'Ruang praktikum dengan peralatan untuk eksperimen dan demonstrasi fisika.',
+    'about.timeline-title': 'Perkembangan Lab',
+    'about.timeline.1-title': 'Pendirian Lab',
+    'about.timeline.1-desc': 'Lab Fisika Teori & Komputasi resmi didirikan dengan dukungan penuh dari universitas.',
+    'about.timeline.2-title': 'Ekspansi Fasilitas',
+    'about.timeline.2-desc': 'Penambahan server dan software simulasi untuk mendukung penelitian yang lebih kompleks.',
+    'about.timeline.3-title': 'Kolaborasi Internasional',
+    'about.timeline.3-desc': 'Dimulai kolaborasi penelitian dengan universitas ternama di luar negeri.',
+    'about.timeline.4-title': 'Perkembangan Saat Ini',
+    'about.timeline.4-desc': 'Lab terus berkembang dengan lebih dari 20 peneliti aktif dan puluhan publikasi internasional.',
+
+    // Footer
+    'footer.copyright': '© 2025 Laboratorium Fisika Teori & Komputasi. Semua hak dilindungi.',
+  },
+  en: {
+    // Header
+    'header.welcome': 'Welcome to Theoretical Physics & Computation Laboratory',
+    'header.loading-date': 'Loading date...',
+    'header.guest': 'Guest',
+    'header.login': 'Login',
+    'header.logout': 'Logout',
+    'header.change-lang': 'Change language',
+    'header.change-theme': 'Change theme',
+
+    // Navigation
+    'nav.home': 'Home',
+    'nav.dosen': 'Faculty',
+    'nav.mahasiswa': 'Students',
+    'nav.resources': 'Resources',
+    'nav.explore': 'Explore',
+    'nav.about': 'About',
+
+    // Home Section
+    'home.hero-title': 'Theoretical Physics & Computation Laboratory',
+    'home.hero-subtitle': 'Explore the universe through calculations and simulations',
+    'home.explore': 'Explore',
+    'home.about': 'About Lab',
+
+    // Dosen Section
+    'dosen.title': 'Faculty Members',
+    'dosen.no': 'No',
+    'dosen.name': 'Name',
+    'dosen.expertise': 'Expertise',
+    'dosen.email': 'Email',
+
+    // Dosen Expertise (en)
+    'dosen.expertise.1': 'Theoretical Physics & Relativistic Cosmology',
+    'dosen.expertise.2': 'Computational Physics & Complex Systems',
+    'dosen.expertise.3': 'Statistical Physics & Computational Thermodynamics',
+    'dosen.expertise.4': 'Quantum Physics & Material Simulation',
+    'dosen.expertise.5': 'Basic Physics & Numerical Methods',
+
+    // Mahasiswa Section
+    'mahasiswa.title': 'Student Members',
+    'mahasiswa.no': 'No',
+    'mahasiswa.name': 'Name',
+    'mahasiswa.nim': 'Student ID',
+    'mahasiswa.research': 'Research Topic',
+    'mahasiswa.advisor': 'Advisor',
+
+    // Resources Section
+    'resources.title': 'Learning Resources & Important Links',
+    'resources.library': 'National Digital Library',
+    'resources.library-desc': 'Access millions of books, journals, and references online.',
+    'resources.scholar': 'Google Scholar',
+    'resources.scholar-desc': 'Search academic literature from various disciplines.',
+    'resources.portal': 'Campus Academic Portal',
+    'resources.portal-desc': 'Access grades, course registration, and other academic information.',
+    'resources.ejornal': 'E-Journal Directory',
+    'resources.ejornal-desc': 'Collection of electronic journals subscribed by the university.',
+
+    // Quick Access & Lab Info
+    'quick.title': 'Quick Access',
+    'quick.faculty': 'Faculty Directory - Theoretical Physics & Computation Lab',
+    'quick.students': 'Student Directory - Theoretical Physics & Computation Lab',
+
+    'lab.title': 'Laboratory Information',
+    'lab.name': 'Theoretical Physics & Computation Laboratory',
+    'lab.description': 'The Laboratory of Theoretical Physics and Computation is an academic center for students and researchers to study and develop physical models mathematically and computationally. The laboratory focuses on understanding natural phenomena from microscopic to cosmological scales through theoretical approaches and numerical simulations. Students are trained in fundamental concepts of theoretical physics, scientific programming, and computational data analysis. Research activities include modeling dynamic systems, quantum physics, statistical mechanics, and numerical cosmology.',
+
+    // Mahasiswa research items (en)
+    'mahasiswa.research.1': 'Analysis of Thermal Dynamics in One-Dimensional Systems',
+    'mahasiswa.research.2': 'Numerical Modeling of Heat Conduction in Metal Rods',
+    'mahasiswa.research.3': 'Simulation of Harmonic Oscillations Using Python',
+    'mahasiswa.research.4': 'Modeling of Nonlinear Oscillations in Physical Systems',
+    'mahasiswa.research.5': 'Numerical Simulation of Heat Transfer in Composite Materials',
+    'mahasiswa.research.6': 'Analysis of Standing Waves Using Finite Difference Method',
+    'mahasiswa.research.7': 'Thermodynamic Study of Ideal Gas System through Computation',
+    'mahasiswa.research.8': 'Modeling Simulation of Planetary Motion with Newtonian Equations',
+    'mahasiswa.research.9': 'Simulation of Early Universe Evolution using N-Body Dynamics',
+
+    // Explore Physics Section (en)
+    'explore.title': 'Explore Physics',
+    'explore.subtitle': 'Discover the wonders of the universe through fascinating physics concepts and cutting-edge research',
+    'explore.topics-title': 'Branches of Physics',
+    'explore.topic.1-title': 'Quantum Mechanics',
+    'explore.topic.1-desc': 'Study the behavior of particles at atomic and subatomic scales, uncovering the mysteries of quantum reality and superposition.',
+    'explore.topic.2-title': 'Relativity',
+    'explore.topic.2-desc': 'The theory of space, time, and gravity that revolutionized our understanding of the universe.',
+    'explore.topic.3-title': 'Cosmology',
+    'explore.topic.3-desc': 'The study of the origin, structure, and evolution of the universe from the Big Bang to the distant future.',
+    'explore.topic.4-title': 'Thermodynamics',
+    'explore.topic.4-desc': 'The science of energy, heat, and entropy that explains energy transformations in physical systems.',
+    'explore.topic.5-title': 'Particle Physics',
+    'explore.topic.5-desc': 'Investigation of fundamental particles and the interactions that form all matter in the universe.',
+    'explore.topic.6-title': 'Electromagnetism',
+    'explore.topic.6-desc': 'Understanding electricity, magnetism, and electromagnetic waves that power modern technology.',
+    
+    // Detail Topic Pages (en)
+    'detail.back': 'Back',
+    'detail.topic.1-intro': 'Quantum Mechanics is the branch of physics that studies the behavior of matter and energy at atomic and subatomic scales. This theory is fundamental to understanding atomic structure, chemical reactions, and material properties.',
+    'detail.topic.1-h3-1': 'Basic Principles',
+    'detail.topic.1-p1': 'Quantum mechanics is based on fundamental principles such as wave-particle duality, Heisenberg\'s uncertainty principle, and superposition. Particles at the quantum scale do not have definite position and momentum simultaneously.',
+    'detail.topic.1-h3-2': 'Practical Applications',
+    'detail.topic.1-p2': 'Understanding quantum mechanics has resulted in revolutionary technologies like transistors, lasers, and magnetic resonance imaging (MRI). All modern electronic devices depend on principles of quantum mechanics.',
+    'detail.topic.1-h3-3': 'Current Research',
+    'detail.topic.1-p3': 'Current quantum mechanics research focuses on quantum computing, quantum cryptography, and quantum teleportation. These technologies have the potential to revolutionize how we process information and secure communications.',
+    
+    'detail.topic.2-intro': 'Relativity is a theory that explains the relationship between space, time, and gravity. Developed by Albert Einstein, this theory changed our fundamental understanding of the universe.',
+    'detail.topic.2-h3-1': 'Special Relativity',
+    'detail.topic.2-p1': 'Special relativity shows that the speed of light is constant for all observers, and nothing can move faster than light. The theory also introduces concepts of time dilation and length contraction.',
+    'detail.topic.2-h3-2': 'General Relativity',
+    'detail.topic.2-p2': 'General relativity extends Einstein\'s theory by incorporating gravity as a curvature of spacetime caused by mass and energy. This explains phenomena like black holes and gravitational waves.',
+    'detail.topic.2-h3-3': 'Cosmological Impact',
+    'detail.topic.2-p3': 'Relativity shapes our understanding of the universe\'s origin, evolution, and future. It also predicts exotic phenomena like singularities and time distortion.',
+    
+    'detail.topic.3-intro': 'Cosmology is the scientific study of the origin, structure, and evolution of the universe. It combines astrophysics, particle physics, and general relativity to understand the large-scale universe.',
+    'detail.topic.3-h3-1': 'Big Bang and Cosmic Expansion',
+    'detail.topic.3-p1': 'The Big Bang theory explains that the universe began from an extremely hot and dense state about 13.8 billion years ago. Since then, the universe has continued to expand and cool.',
+    'detail.topic.3-h3-2': 'Dark Matter and Dark Energy',
+    'detail.topic.3-p2': 'Observations show that 95% of the universe consists of dark matter and dark energy that we cannot directly observe. Understanding the nature of these components is a major challenge in modern cosmology.',
+    'detail.topic.3-h3-3': 'Structure of the Universe',
+    'detail.topic.3-p3': 'The universe has a hierarchical structure, with galaxies forming clusters, superclusters, and larger filaments. This distribution pattern provides clues about the process of universe formation and evolution.',
+    
+    'detail.topic.4-intro': 'Thermodynamics is the science of energy, heat, and entropy. It explains how energy is transformed and why certain processes occur naturally.',
+    'detail.topic.4-h3-1': 'Laws of Thermodynamics',
+    'detail.topic.4-p1': 'The first law states that energy cannot be created or destroyed, only transformed. The second law explains that the entropy of the universe always increases, making certain processes irreversible.',
+    'detail.topic.4-h3-2': 'Application in Machines and Processes',
+    'detail.topic.4-p2': 'Thermodynamics explains how heat engines, refrigerators, and heat pumps work. It is also applied in the design of nuclear reactors, power plants, and cooling systems.',
+    'detail.topic.4-h3-3': 'Complex Thermodynamic Phenomena',
+    'detail.topic.4-p3': 'Modern thermodynamics also studies phenomena such as phase transitions, changes in matter state, and systems far from equilibrium that are relevant to biology and material science.',
+    
+    'detail.topic.5-intro': 'Particle Physics is the study of fundamental particles and their interactions. It attempts to uncover what forms all matter and energy in the universe.',
+    'detail.topic.5-h3-1': 'Fundamental Particles and Quarks',
+    'detail.topic.5-p1': 'Research shows that all matter consists of fundamental particles such as quarks and leptons. Quarks form protons and neutrons, while leptons include electrons and neutrinos.',
+    'detail.topic.5-h3-2': 'Standard Model of Particle Physics',
+    'detail.topic.5-p2': 'The Standard Model describes three of four fundamental forces: electromagnetism, strong nuclear force, and weak nuclear force. It is the most successful theory in explaining elementary particle physics.',
+    'detail.topic.5-h3-3': 'Future Research',
+    'detail.topic.5-p3': 'Physicists seek new particles and undiscovered interactions, including dark matter particles and other aspects of quantum gravity not yet integrated into the Standard Model.',
+    
+    'detail.topic.6-intro': 'Electromagnetism is the study of electricity, magnetism, and their interactions through electromagnetic waves. This theory explains light, radio, and many other natural phenomena.',
+    'detail.topic.6-h3-1': 'Electromagnetic Force',
+    'detail.topic.6-p1': 'Electromagnetism describes how electric charges create electric fields and how electric currents create magnetic fields. These two fields are related and can generate electromagnetic waves.',
+    'detail.topic.6-h3-2': 'Electromagnetic Waves',
+    'detail.topic.6-p2': 'Light, radio waves, X-rays, and gamma rays are forms of electromagnetic waves with different frequencies and wavelengths. All travel at the speed of light.',
+    'detail.topic.6-h3-3': 'Technological Applications',
+    'detail.topic.6-p3': 'Understanding electromagnetism has resulted in technologies such as electric motors, generators, transformers, antennas, and wireless communication systems that form the backbone of modern technology.',
+    
+    'explore.facts-title': 'Interesting Physics Facts',
+    'explore.fact.1-title': 'Light Has a Maximum Speed',
+    'explore.fact.1-desc': 'Nothing can move faster than light (299,792,458 m/s). A fundamental principle of Einstein\'s theory of relativity.',
+    'explore.fact.2-title': 'Energy Cannot Be Created or Destroyed',
+    'explore.fact.2-desc': 'Law of conservation of energy: energy can only change forms, it cannot vanish or appear from nothing.',
+    'explore.fact.3-title': 'Quantum Tunneling - Particles Through Walls',
+    'explore.fact.3-desc': 'In quantum mechanics, particles can "tunnel" through barriers that should block them according to classical physics.',
+    'explore.fact.4-title': 'Gravity is the Curvature of Spacetime',
+    'explore.fact.4-desc': 'Gravity is not a traditional attractive force, but rather the result of mass and energy curving spacetime itself.',
+    'explore.fact.5-title': 'Time Passes Differently at Different Locations',
+    'explore.fact.5-desc': 'Relativistic time dilation: time passes slower for objects moving at high speeds or in strong gravitational fields.',
+    
+    'explore.concepts-title': 'Key Physics Concepts',
+    'explore.concept.1': 'Energy and Momentum',
+    'explore.concept.1-desc': 'Energy is the capacity to do work, momentum is a measure of motion. Both are fundamental to system dynamics.',
+    'explore.concept.2': 'Waves and Particles',
+    'explore.concept.2-desc': 'Wave-particle duality: matter and radiation exhibit both wave and particle properties depending on circumstances.',
+    'explore.concept.3': 'Entropy and Thermal Fluctuations',
+    'explore.concept.3-desc': 'Entropy measures disorder. Natural systems tend toward maximum entropy states (second law of thermodynamics).',
+    'explore.concept.4': 'Fundamental Forces of Nature',
+    'explore.concept.4-desc': 'Four fundamental forces—gravity, electromagnetism, strong nuclear force, and weak nuclear force—explain all interactions.',
+
+    // About Lab Section (en)
+    'about.title': 'About Our Laboratory',
+    'about.vision-title': 'Vision',
+    'about.vision-desc': 'To become a leading research laboratory in theoretical and computational physics that contributes to scientific and technological advancement through innovation and international collaboration.',
+    'about.mission-title': 'Mission',
+    'about.mission-desc': 'To support high-quality research in theoretical and computational physics, develop competent human resources, and facilitate knowledge and technology transfer to the community.',
+    'about.history-title': 'Laboratory History',
+    'about.history-p1': 'The Laboratory of Theoretical Physics & Computation was established in 2015 to provide research and learning facilities in modern physics, with particular focus on theoretical and computational approaches.',
+    'about.history-p2': 'Since its establishment, our laboratory has grown rapidly with increasing researchers and students, as well as collaborations with national and international research institutions. We are committed to continuous innovation in research and education.',
+    'about.facilities-title': 'Facilities & Equipment',
+    'about.facility.1-title': 'Computing Server',
+    'about.facility.1-desc': 'Computing cluster for large-scale numerical simulations and physics modeling.',
+    'about.facility.2-title': 'Simulation Software',
+    'about.facility.2-desc': 'MATLAB, Python, COMSOL, and open-source tools for computational physics.',
+    'about.facility.3-title': 'Workstations',
+    'about.facility.3-desc': 'High-performance desktops and laptops for research and data analysis.',
+    'about.facility.4-title': 'Seminar Room',
+    'about.facility.4-desc': 'Discussion and presentation facilities with modern multimedia equipment.',
+    'about.facility.5-title': 'Digital Library',
+    'about.facility.5-desc': 'Access to latest physics journals, books, and research datasets.',
+    'about.facility.6-title': 'Teaching Lab',
+    'about.facility.6-desc': 'Lab space with equipment for experiments and physics demonstrations.',
+    'about.timeline-title': 'Laboratory Development',
+    'about.timeline.1-title': 'Laboratory Establishment',
+    'about.timeline.1-desc': 'The Lab of Theoretical Physics & Computation was officially established with full university support.',
+    'about.timeline.2-title': 'Facility Expansion',
+    'about.timeline.2-desc': 'Addition of servers and simulation software to support more complex research.',
+    'about.timeline.3-title': 'International Collaboration',
+    'about.timeline.3-desc': 'Initiated research collaboration with renowned universities abroad.',
+    'about.timeline.4-title': 'Current Development',
+    'about.timeline.4-desc': 'Laboratory continues to grow with over 20 active researchers and numerous international publications.',
+
+    // Task Section
+    'task.title': 'Task List',
+    'task.input': 'Add new task...',
+    'task.add': 'Add',
+    'task.demo1': 'Computer Network Group Presentation - Chapter 5',
+    'task.demo2': 'Web Programming Quiz - API Material',
+
+    // Auth Modal
+    'auth.title': 'Login / Register',
+    'auth.email': 'Email',
+    'auth.password': 'Password',
+    'auth.login': 'Login',
+    'auth.register': 'Register',
+    'auth.close': 'Close',
+    'auth.success-login': 'Login successful!',
+    'auth.success-register': 'Registration successful! Please login.',
+    'auth.error-email': 'Email already registered!',
+    'auth.error-login': 'Email or password incorrect!',
+    'auth.error-empty': 'Email and password cannot be empty!',
+
+    // Footer
+    'footer.copyright': '© 2025 Theoretical Physics & Computation Laboratory. All rights reserved.',
+  }
+};
+
+// Fungsi untuk mendapatkan bahasa saat ini
+function getCurrentLanguage() { 
+  return localStorage.getItem('site-language') || 'id';
+}
+
+// Fungsi untuk set bahasa
+function setLanguage(lang) {
+  if (translations[lang]) {
+    localStorage.setItem('site-language', lang);
+    updateAllTranslations(lang);
+  }
+}
+
+// Fungsi untuk translate
+function t(key, lang = null) {
+  lang = lang || getCurrentLanguage();
+  return translations[lang]?.[key] || translations['id']?.[key] || key;
+}
+
+// Fungsi untuk update semua terjemahan di halaman
+function updateAllTranslations(lang) {
+  // Update elemen dengan data-i18n attribute
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    el.textContent = t(key, lang);
+  });
+  
+  // Update placeholder
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    el.placeholder = t(key, lang);
+  });
+  
+  // Update title attribute
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const key = el.dataset.i18nTitle;
+    el.title = t(key, lang);
+  });
+  
+  // Update language display
+  const langDisplay = document.getElementById('lang-display');
+  if (langDisplay) {
+    langDisplay.textContent = lang.toUpperCase();
+  }
+  
+  // Update HTML lang attribute
+  document.documentElement.lang = lang;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // --- LANGUAGE TOGGLE SETUP ---
+  const languageToggle = document.getElementById('language-toggle');
+  const languageMenu = document.getElementById('language-menu');
+  const langOptions = document.querySelectorAll('.lang-option');
+
+  if (languageToggle && languageMenu) {
+    languageToggle.addEventListener('click', () => {
+      languageMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!languageToggle.contains(e.target) && !languageMenu.contains(e.target)) {
+        languageMenu.classList.add('hidden');
+      }
+    });
+
+    langOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        const lang = e.currentTarget.dataset.lang;
+        setLanguage(lang);
+        languageMenu.classList.add('hidden');
+      });
+    });
+  }
+
+  // Initialize translations on page load
+  updateAllTranslations(getCurrentLanguage());
+
+  // --- util: SHA-256 hashing ke hex (Web Crypto) ---
+  async function hashHex(str) {
+    const enc = new TextEncoder();
+    const data = enc.encode(str);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // --- storage helpers ---
+  function loadUsers() {
+    try { return JSON.parse(localStorage.getItem('localUsers') || '{}'); } catch { return {}; }
+  }
+  function saveUsers(users) {
+    localStorage.setItem('localUsers', JSON.stringify(users));
+  }
+  function setAuth(email) { localStorage.setItem('localAuthUser', email); }
+  function clearAuth() { localStorage.removeItem('localAuthUser'); }
+  function getAuth() { return localStorage.getItem('localAuthUser'); }
+
+  // --- UI hooks ---
+  const authPanel = document.getElementById('auth-panel');
+  const emailEl = document.getElementById('email');
+  const passEl = document.getElementById('password');
+  const btnLogin = document.getElementById('btn-login');
+  const btnRegister = document.getElementById('btn-register');
+  const btnClose = document.getElementById('btn-close-auth');
+  const authToggleBtn = document.getElementById('auth-toggle-btn');
+  const profileName = document.getElementById('profile-name');
+  const profileRole = document.getElementById('profile-role');
+  const profileAvatar = document.getElementById('profile-avatar');
+  const authMessage = document.getElementById('auth-message');
+
+  if (!authPanel || !authToggleBtn) {
+    console.warn('Auth elements missing.');
+    return;
+  }
+
+  function showAuthPanel() { authMessage.classList.add('hidden'); authPanel.classList.remove('hidden'); emailEl?.focus(); }
+  function hideAuthPanel() { authPanel.classList.add('hidden'); if (emailEl) emailEl.value=''; if (passEl) passEl.value=''; authMessage.classList.add('hidden'); }
+
+  btnClose?.addEventListener('click', hideAuthPanel);
+  authToggleBtn.addEventListener('click', () => { if (getAuth()) localSignOut(); else showAuthPanel(); });
+
+  async function localRegister() {
+    const email = emailEl.value.trim().toLowerCase();
+    const pass = passEl.value;
+    if (!email || !pass) { showMsg(t('auth.error-empty')); return; }
+    const users = loadUsers();
+    if (users[email]) { showMsg(t('auth.error-email')); return; }
+    const h = await hashHex(pass);
+    users[email] = { hash: h, role: 'Mahasiswa' };
+    saveUsers(users);
+    setAuth(email);
+    updateUI();
+    hideAuthPanel();
+  }
+
+  async function localSignIn() {
+    const email = emailEl.value.trim().toLowerCase();
+    const pass = passEl.value;
+    if (!email || !pass) { showMsg(t('auth.error-empty')); return; }
+    const users = loadUsers();
+    const user = users[email];
+    if (!user) { showMsg(t('auth.error-login')); return; }
+    const h = await hashHex(pass);
+    if (h !== user.hash) { showMsg(t('auth.error-login')); return; }
+    setAuth(email);
+    updateUI();
+    hideAuthPanel();
+  }
+
+  function localSignOut() { clearAuth(); updateUI(); }
+
+  function showMsg(text) { authMessage.textContent = text; authMessage.classList.remove('hidden'); }
+
+  btnRegister?.addEventListener('click', () => { localRegister().catch(e=>{console.error(e); showMsg('Error registrasi');}); });
+  btnLogin?.addEventListener('click', () => { localSignIn().catch(e=>{console.error(e); showMsg('Error login');}); });
+
+  // --- update UI according to auth state ---
+  function updateUI() {
+    const email = getAuth();
+    if (email) {
+      profileName.textContent = email.split('@')[0];
+      const users = loadUsers();
+      profileRole.textContent = (users[email] && users[email].role) ? users[email].role : 'Mahasiswa / Dosen';
+      // Generate avatar with first 3 letters of username
+      const username = profileName.textContent;
+      const initials = username.split(/\s+/).slice(0, 3).map(word => word[0].toUpperCase()).join('');
+      profileAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=4F46E5&color=FFF&size=128&bold=true&uppercase=true`;
+      authToggleBtn.textContent = t('header.logout');
+      authToggleBtn.classList.remove('bg-indigo-600'); authToggleBtn.classList.add('bg-red-500');
+    } else {
+      profileName.textContent = t('header.guest');
+      profileRole.textContent = '-';
+      profileAvatar.src = 'https://ui-avatars.com/api/?name=GUEST&background=EFEFEF&color=333&size=128&bold=true';
+      authToggleBtn.textContent = t('header.login');
+      authToggleBtn.classList.remove('bg-red-500'); authToggleBtn.classList.add('bg-indigo-600');
+    }
+
+    // show/hide main content based on auth
+    const siteMain = document.getElementById('site-main');
+    if (siteMain) {
+      if (getAuth()) {
+        siteMain.classList.remove('hidden');
+        authPanel.classList.add('hidden');
+        document.body.classList.remove('not-logged-in');
+      } else {
+        siteMain.classList.add('hidden');
+        document.body.classList.add('not-logged-in');
+      }
+    }
+  }
+
+  // Enforce login immediately at page load
+  function enforceAuth() {
+    if (!getAuth()) {
+      // show modal login
+      showAuthPanel();
+      // hide main content (in case updateUI didn't run yet)
+      const siteMain = document.getElementById('site-main');
+      if (siteMain) siteMain.classList.add('hidden');
+      // Add not-logged-in class to body for styling
+      document.body.classList.add('not-logged-in');
+    } else {
+      document.body.classList.remove('not-logged-in');
+    }
+  }
+
+  // initialize UI
+  updateUI();
+  enforceAuth();
+  
+  // Optional: block navigation clicks when not authenticated
+  document.querySelectorAll('.nav-link').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (!getAuth()) {
+        e.preventDefault();
+        showMsg('Silakan login terlebih dahulu untuk mengakses halaman ini.');
+        showAuthPanel();
+      }
+    });
+  });
+  
+});
+</script>
+
+<!-- Dark Mode Toggle Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const darkModeToggle = document.getElementById('dark-mode-toggle');
+  const htmlElement = document.documentElement;
+
+  // Load dark mode preference dari localStorage
+  function loadDarkMode() {
+    const isDark = localStorage.getItem('dark-mode') === 'true';
+    if (isDark) {
+      htmlElement.classList.add('dark');
+    } else {
+      htmlElement.classList.remove('dark');
+    }
+  }
+
+  // Toggle dark mode
+  function toggleDarkMode() {
+    htmlElement.classList.toggle('dark');
+    const isDark = htmlElement.classList.contains('dark');
+    localStorage.setItem('dark-mode', isDark);
+  }
+
+  // Event listener untuk tombol
+  darkModeToggle.addEventListener('click', toggleDarkMode);
+
+  // Load preference saat page load
+  loadDarkMode();
+});
+</script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Lucide Icons
+            lucide.createIcons();
+
+            // --- Mobile Hamburger Menu ---
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const quickLinks = document.querySelectorAll('.nav-link-quick');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('mobile-open');
+                sidebarOverlay.classList.toggle('mobile-open');
+            }
+
+            sidebarToggle.addEventListener('click', toggleSidebar);
+
+            // Close sidebar saat klik overlay
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+
+            // Close sidebar saat klik link di nav
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    sidebar.classList.remove('mobile-open');
+                    sidebarOverlay.classList.remove('mobile-open');
+                });
+            });
+
+            // --- Intersection Observer untuk Animasi On-Scroll ---
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Amati semua elemen dengan class fade-in-card
+            document.querySelectorAll('.fade-in-card').forEach(card => {
+                observer.observe(card);
+            });
+
+            // --- Date and Time Display ---
+            function updateDate() {
+                const dateElement = document.getElementById('current-date');
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                // Use locale based on current language
+                const locale = getCurrentLanguage() === 'id' ? 'id-ID' : 'en-US';
+                dateElement.textContent = now.toLocaleDateString(locale, options);
+            }
+            updateDate();
+
+            // --- Navigation Logic ---
+            function switchTab(targetId) {
+                // Hide all sections
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                 // Deactivate all nav links
+                navLinks.forEach(link => {
+                    link.classList.remove('bg-gray-200', 'font-semibold');
+                    link.classList.add('text-gray-600');
+                });
+
+                // Show the target section
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+
+                // Activate the corresponding nav link
+                const activeLink = document.querySelector(`.nav-link[href="#${targetId}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('bg-gray-200', 'font-semibold');
+                    activeLink.classList.remove('text-gray-600');
+                }
+            }
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    switchTab(targetId);
+                });
+            });
+
+            quickLinks.forEach(link => {
+                 link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.dataset.target;
+                    switchTab(targetId);
+                });
+            });
+
+            // --- Hero Buttons Event Listeners ---
+            const heroExploreBtn = document.getElementById('hero-explore-btn');
+            const heroAboutBtn = document.getElementById('hero-about-btn');
+
+            if (heroExploreBtn) {
+                heroExploreBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    switchTab('explore'); // Navigate to Explore Physics section
+                });
+            }
+
+            if (heroAboutBtn) {
+                heroAboutBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    switchTab('about'); // Navigate to About section
+                });
+            }
+
+            // --- Topic Cards Click Handlers ---
+            const topicCards = document.querySelectorAll('.topic-card');
+            const topicMap = {
+                'quantum': 'topic-quantum',
+                'relativity': 'topic-relativity',
+                'cosmology': 'topic-cosmology',
+                'thermodynamics': 'topic-thermodynamics',
+                'particle': 'topic-particle',
+                'electromagnetism': 'topic-electromagnetism'
+            };
+
+            topicCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const topicId = this.getAttribute('data-topic');
+                    const sectionId = topicMap[topicId];
+                    if (sectionId) {
+                        switchTab(sectionId);
+                    }
+                });
+            });
+
+            // --- Back Buttons for Topic Details ---
+            const backButtons = [
+                { id: 'back-from-quantum', target: 'explore' },
+                { id: 'back-from-relativity', target: 'explore' },
+                { id: 'back-from-cosmology', target: 'explore' },
+                { id: 'back-from-thermodynamics', target: 'explore' },
+                { id: 'back-from-particle', target: 'explore' },
+                { id: 'back-from-electromagnetism', target: 'explore' }
+            ];
+
+            backButtons.forEach(btn => {
+                const element = document.getElementById(btn.id);
+                if (element) {
+                    element.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        switchTab(btn.target);
+                    });
+                }
+            });
+
+            // --- Click Animation System ---
+            // Ripple effect + Particle burst on click
+            function createClickAnimation(e) {
+                // Create ripple
+                const ripple = document.createElement('div');
+                ripple.className = 'click-ripple';
+                ripple.style.left = e.clientX + 'px';
+                ripple.style.top = e.clientY + 'px';
+                document.body.appendChild(ripple);
+                
+                ripple.classList.add('active');
+                setTimeout(() => ripple.remove(), 600);
+
+                // Create particle burst
+                const particleCount = 8;
+                const angleSlice = (Math.PI * 2) / particleCount;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'click-particle';
+                    
+                    // Random colors from indigo/cyan palette
+                    const colors = ['#06b6d4', '#0ea5e9', '#6366f1', '#a78bfa', '#c084fc'];
+                    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.width = Math.random() * 8 + 4 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.left = e.clientX + 'px';
+                    particle.style.top = e.clientY + 'px';
+                    particle.style.boxShadow = `0 0 ${Math.random() * 15 + 5}px ${particle.style.background}`;
+                    
+                    // Calculate trajectory
+                    const angle = angleSlice * i;
+                    const distance = Math.random() * 150 + 100;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    
+                    particle.style.setProperty('--tx', tx + 'px');
+                    particle.style.setProperty('--ty', ty + 'px');
+                    
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 800);
+                }
+            }
+
+            // Listen to all clicks on the document
+            document.addEventListener('click', createClickAnimation);
+
+            // --- Task List Logic ---
+            const taskInput = document.getElementById('new-task-input');
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const taskList = document.getElementById('task-list');
+
+            function createTaskElement(taskText) {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item flex justify-between items-center p-3 bg-gray-50 rounded-md border';
+
+                const taskContent = document.createElement('span');
+                taskContent.textContent = taskText;
+                taskContent.className = "flex-grow cursor-pointer";
+                taskContent.addEventListener('click', () => {
+                    taskItem.classList.toggle('completed');
+                });
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = `<i data-lucide="trash-2" class="w-5 h-5 text-red-500 hover:text-red-700"></i>`;
+                deleteBtn.className = "ml-4";
+                deleteBtn.addEventListener('click', () => {
+                    taskList.removeChild(taskItem);
+                });
+
+                taskItem.appendChild(taskContent);
+                taskItem.appendChild(deleteBtn);
+                taskList.appendChild(taskItem);
+                lucide.createIcons(); // Re-render icons after adding new one
+            }
+
+            function addTask() {
+                const taskText = taskInput.value.trim();
+                if (taskText !== '') {
+                    createTaskElement(taskText);
+                    taskInput.value = '';
+                    taskInput.focus();
+                }
+            }
+
+            addTaskBtn.addEventListener('click', addTask);
+            taskInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+
+            // Add some initial tasks for demonstration
+            createTaskElement("Presentasi Kelompok Jaringan Komputer - Bab 5");
+            createTaskElement("Kuis Pemrograman Web - Materi API");
+
+            // --- Navigation History & Shortcuts ---
+            let navigationHistory = ['home'];
+            let currentPageIndex = 0;
+
+            // Store original switchTab before wrapping it
+            const originalSwitchTab = switchTab;
+            
+            // Override switchTab to track history
+            window.switchTab = function(targetId) {
+                console.log('Navigating to:', targetId);
+                
+                // Remove any pages after current position in history
+                navigationHistory = navigationHistory.slice(0, currentPageIndex + 1);
+                
+                // Add new page if it's different from current
+                if (navigationHistory[currentPageIndex] !== targetId) {
+                    navigationHistory.push(targetId);
+                    currentPageIndex++;
+                }
+                
+                console.log('History:', navigationHistory, 'Current Index:', currentPageIndex);
+                
+                // Call original switchTab function
+                return originalSwitchTab(targetId);
+            };
+
+            // --- ESC key to go back ---
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' || e.key === 'Esc') {
+                    e.preventDefault();
+                    console.log('ESC pressed, going back');
+                    if (currentPageIndex > 0) {
+                        currentPageIndex--;
+                        switchTab(navigationHistory[currentPageIndex]);
+                    }
+                }
+            });
+
+            // --- Mouse Button Navigation ---
+            document.addEventListener('mousedown', function(e) {
+                // Button 3 = Browser Back button (side button)
+                if (e.button === 3) {
+                    e.preventDefault();
+                    console.log('Mouse Button 4 (Back) pressed');
+                    if (currentPageIndex > 0) {
+                        currentPageIndex--;
+                        switchTab(navigationHistory[currentPageIndex]);
+                    }
+                }
+                // Button 4 = Browser Forward button (side button)
+                else if (e.button === 4) {
+                    e.preventDefault();
+                    console.log('Mouse Button 5 (Forward) pressed');
+                    if (currentPageIndex < navigationHistory.length - 1) {
+                        currentPageIndex++;
+                        switchTab(navigationHistory[currentPageIndex]);
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+
