@@ -125,9 +125,32 @@
             main {
                 width: 100%;
                 padding-left: 0 !important;
+                padding: 1rem !important;
             }
+            
+            /* Compact header for mobile */
+            header {
+                flex-direction: row;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            header img.atom-logo {
+                width: 12px !important;
+                height: 12px !important;
+            }
+            
+            header h2 {
+                font-size: 1.25rem;
+            }
+            
+            header p {
+                font-size: 0.75rem;
+            }
+            
             .content-section {
                 padding: 1rem !important;
+
             }
             h1, h2, h3 {
                 word-break: break-word;
@@ -156,20 +179,30 @@
             .p-8 {
                 padding: 1.5rem !important;
             }
-            .text-2xl {
-                font-size: 1.25rem !important;
+            
+            /* Extra small mobile optimization */
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
             }
-            .text-3xl {
-                font-size: 1.75rem !important;
+            
+            header img {
+                width: 14px !important;
+                height: 14px !important;
             }
-            .text-4xl {
-                font-size: 2rem !important;
+            
+            header h2 {
+                font-size: 1.25rem;
             }
-            .gap-4 {
-                gap: 1rem !important;
+            
+            header p {
+                font-size: 0.65rem;
             }
-            .gap-6 {
-                gap: 1.5rem !important;
+            
+            main {
+                padding: 0.75rem !important;
             }
         }
 
@@ -2086,7 +2119,7 @@
             <header class="flex flex-col lg:flex-row items-center justify-between mb-8 w-full gap-4">
                 <!-- kiri: logo + judul -->
                 <div class="flex items-center space-x-4 flex-shrink-0">
-                    <img src="atom.gif" alt="planetary" class="w-20 h-20 object-cover rounded-full">
+                    <img src="atom.gif" alt="planetary" class="w-20 h-20 object-cover rounded-full atom-logo">
                     <div>
                         <h2 class="text-3xl font-bold" data-i18n="header.welcome"></h2>
                         <p id="current-date" class="text-gray-500 text-sm" data-i18n="header.loading-date"></p>
