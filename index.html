@@ -289,6 +289,16 @@
             overflow: hidden;
         }
 
+        /* Mobile responsive: change position to relative so it doesn't take full viewport */
+        @media (max-width: 768px) {
+            .physics-background {
+                position: static;
+                height: auto;
+                min-height: 0;
+                overflow: visible;
+            }
+        }
+
         body.physics-themed {
             background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 25%, #f0e7fe 50%, #f8fafc 100%);
             position: relative;
