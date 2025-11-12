@@ -646,6 +646,266 @@
             75% { transform: translate(50px, 20px) scale(0.9); opacity: 0.35; }
         }
 
+        /* ===== PARALLAX & MOUSE INTERACTION EFFECTS ===== */
+        
+        /* Mouse Follower - Sci-Fi Glow Cursor */
+        .mouse-follower {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid rgba(99, 102, 241, 0.6);
+            background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.2), transparent);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 
+                0 0 15px rgba(99, 102, 241, 0.5),
+                0 0 30px rgba(99, 102, 241, 0.2);
+            backdrop-filter: blur(2px);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .mouse-follower.active {
+            opacity: 1;
+        }
+
+        /* Inner glow pulse */
+        .mouse-follower::before {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #6366f1;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.8);
+            animation: cursor-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes cursor-pulse {
+            0%, 100% { 
+                box-shadow: 0 0 10px rgba(99, 102, 241, 0.8), 0 0 20px rgba(99, 102, 241, 0.4);
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(99, 102, 241, 1), 0 0 30px rgba(99, 102, 241, 0.6);
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+
+        /* Parallax Container */
+        .parallax-container {
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        /* Parallax Layers - akan di-update via JavaScript */
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        /* Particle yang mengikuti mouse dengan efek sci-fi */
+        .cursor-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+
+        @keyframes particle-trail {
+            0% {
+                opacity: 0.8;
+                transform: scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg);
+            }
+        }
+
+        .cursor-particle.trail {
+            animation: particle-trail 0.8s ease-out forwards;
+        }
+
+        /* Magnetic Effect Elements - akan tertarik ke mouse */
+        .magnetic-element {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+        }
+
+        .magnetic-element:hover {
+            box-shadow: 
+                0 0 20px rgba(99, 102, 241, 0.4),
+                0 0 40px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Parallax Text Effect */
+        .parallax-text {
+            position: relative;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Interactive Background Grid */
+        .interactive-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.2) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .interactive-grid.active {
+            animation: grid-distort 2s ease-in-out infinite;
+            opacity: 0.08;
+        }
+
+        @keyframes grid-distort {
+            0%, 100% { 
+                background-position: 0 0;
+                opacity: 0.03;
+            }
+            50% { 
+                background-position: 25px 25px;
+                opacity: 0.08;
+            }
+        }
+
+        /* Glow Ring untuk efek sci-fi */
+        .glow-ring {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            pointer-events: none;
+            z-index: 9997;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            box-shadow: 
+                inset 0 0 20px rgba(99, 102, 241, 0.2),
+                0 0 20px rgba(99, 102, 241, 0.1);
+        }
+
+        .glow-ring.active {
+            animation: ring-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes ring-pulse {
+            0% { 
+                opacity: 0.3;
+                box-shadow: 
+                    inset 0 0 20px rgba(99, 102, 241, 0.2),
+                    0 0 20px rgba(99, 102, 241, 0.1);
+            }
+            50% { 
+                opacity: 0.6;
+                box-shadow: 
+                    inset 0 0 30px rgba(99, 102, 241, 0.4),
+                    0 0 40px rgba(99, 102, 241, 0.3);
+            }
+            100% { 
+                opacity: 0.3;
+                box-shadow: 
+                    inset 0 0 20px rgba(99, 102, 241, 0.2),
+                    0 0 20px rgba(99, 102, 241, 0.1);
+            }
+        }
+
+        /* Parallax Depth Effect untuk Card */
+        .card-parallax {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .card-parallax::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, transparent 100%);
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card-parallax:hover::before {
+            opacity: 1;
+        }
+
+        /* Dark Mode Support untuk Mouse Effects */
+        .dark .mouse-follower {
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 
+                0 0 15px rgba(139, 92, 246, 0.5),
+                0 0 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .dark .mouse-follower::before {
+            background: #a78bfa;
+            box-shadow: 0 0 10px rgba(167, 139, 250, 0.8);
+        }
+
+        .dark .interactive-grid {
+            background-image: 
+                linear-gradient(rgba(139, 92, 246, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.2) 1px, transparent 1px);
+        }
+
+        .dark .glow-ring {
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 
+                inset 0 0 20px rgba(139, 92, 246, 0.2),
+                0 0 20px rgba(139, 92, 246, 0.1);
+        }
+
+        .dark .glow-ring.active {
+            animation: ring-pulse-dark 2s ease-in-out infinite;
+        }
+
+        @keyframes ring-pulse-dark {
+            0% { 
+                opacity: 0.3;
+                box-shadow: 
+                    inset 0 0 20px rgba(139, 92, 246, 0.2),
+                    0 0 20px rgba(139, 92, 246, 0.1);
+            }
+            50% { 
+                opacity: 0.6;
+                box-shadow: 
+                    inset 0 0 30px rgba(139, 92, 246, 0.4),
+                    0 0 40px rgba(139, 92, 246, 0.3);
+            }
+            100% { 
+                opacity: 0.3;
+                box-shadow: 
+                    inset 0 0 20px rgba(139, 92, 246, 0.2),
+                    0 0 20px rgba(139, 92, 246, 0.1);
+            }
+        }
+
+        /* Parallax Scroll Effect */
+        @media (prefers-reduced-motion: no-preference) {
+            .parallax-section {
+                background-attachment: fixed;
+            }
+        }
 
         /* Ensure content is above background */
         aside, main, #auth-panel {
@@ -1535,6 +1795,16 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .sim-tab {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.6rem;
+                margin-right: 0.5rem;
+            }
         }
 
         .sim-tab.active {
@@ -1564,11 +1834,31 @@
             animation: slideUp 0.3s ease-out;
         }
 
+        /* Canvas Responsive Styling */
         canvas {
             max-width: 100%;
             height: auto;
             display: block;
             margin: 0 auto;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            canvas {
+                min-height: 200px;
+            }
+            
+            #projectile-canvas {
+                height: 250px;
+            }
+            
+            #orbital-canvas {
+                height: 300px;
+            }
+            
+            #wave-canvas {
+                height: 200px;
+            }
         }
 
         .dark canvas {
@@ -1578,10 +1868,62 @@
         input[type="range"] {
             cursor: pointer;
             width: 100%;
+            height: 2px;
+        }
+
+        @media (max-width: 768px) {
+            input[type="range"] {
+                height: 3px;
+            }
         }
 
         input[type="range"]:hover {
             filter: brightness(1.1);
+        }
+
+        input[type="number"] {
+            width: 100%;
+        }
+
+        .sim-content select {
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Control Container Mobile Optimization */
+        @media (max-width: 768px) {
+            .sim-content > div {
+                padding: 1rem !important;
+            }
+            
+            .sim-content h3 {
+                font-size: 1.125rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .sim-content p {
+                font-size: 0.8125rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .space-y-3 > div {
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Button Mobile Sizing */
+        button {
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        @media (max-width: 768px) {
+            button {
+                font-size: 0.875rem;
+                padding: 0.5rem 0.75rem;
+                min-height: 44px;
+            }
         }
 
         .sim-content select {
@@ -1656,6 +1998,11 @@
     <div class="formula formula-3">F = ma</div>
     <div class="formula formula-4">ψ = Ae^(ikx)</div>
     <div class="formula formula-5">p = mv</div>
+
+    <!-- Mouse Interaction Elements -->
+    <div class="mouse-follower"></div>
+    <div class="glow-ring"></div>
+    <div class="interactive-grid"></div>
 
     <!-- Particle dots -->
     <div class="particle-dot particle-dot-1"></div>
@@ -3195,121 +3542,129 @@
 
             <!-- Physics Simulations Section -->
             <section id="simulations" class="content-section">
-                <div class="p-6 md:p-8">
-                    <h2 class="font-bold text-3xl mb-2" data-i18n="simulations.title"></h2>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8" data-i18n="simulations.subtitle"></p>
+                <div class="p-4 md:p-6 lg:p-8">
+                    <h2 class="font-bold text-2xl md:text-3xl mb-2" data-i18n="simulations.title"></h2>
+                    <p class="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-6 md:mb-8" data-i18n="simulations.subtitle"></p>
 
                     <!-- Simulation Tabs -->
-                    <div class="mb-6 flex flex-wrap gap-2 border-b border-gray-300 dark:border-gray-600">
-                        <button class="sim-tab active px-4 py-2 font-semibold text-indigo-600 border-b-2 border-indigo-600" data-tab="projectile">
-                            <i data-lucide="arrow-up-right" class="inline w-4 h-4 mr-2"></i>
+                    <div class="mb-6 flex flex-wrap gap-1 md:gap-2 border-b border-gray-300 dark:border-gray-600 overflow-x-auto">
+                        <button class="sim-tab active px-2 md:px-4 py-2 font-semibold text-xs md:text-sm text-indigo-600 border-b-2 border-indigo-600 whitespace-nowrap" data-tab="projectile">
+                            <i data-lucide="arrow-up-right" class="inline w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2"></i>
                             <span data-i18n="simulations.projectile"></span>
                         </button>
-                        <button class="sim-tab px-4 py-2 font-semibold text-gray-600 hover:text-indigo-600" data-tab="orbital">
-                            <i data-lucide="planet" class="inline w-4 h-4 mr-2"></i>
+                        <button class="sim-tab px-2 md:px-4 py-2 font-semibold text-xs md:text-sm text-gray-600 hover:text-indigo-600 whitespace-nowrap" data-tab="orbital">
+                            <i data-lucide="planet" class="inline w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2"></i>
                             <span data-i18n="simulations.orbital"></span>
                         </button>
-                        <button class="sim-tab px-4 py-2 font-semibold text-gray-600 hover:text-indigo-600" data-tab="wave">
-                            <i data-lucide="wave-square" class="inline w-4 h-4 mr-2"></i>
+                        <button class="sim-tab px-2 md:px-4 py-2 font-semibold text-xs md:text-sm text-gray-600 hover:text-indigo-600 whitespace-nowrap" data-tab="wave">
+                            <i data-lucide="wave-square" class="inline w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2"></i>
                             <span data-i18n="simulations.wave"></span>
                         </button>
                     </div>
 
                     <!-- Simulation 1: Projectile Motion -->
                     <div class="sim-content active" data-tab="projectile">
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                            <h3 class="text-xl font-bold mb-4 text-indigo-600" data-i18n="simulations.projectile"></h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4" data-i18n="simulations.projectile-desc"></p>
+                        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4 text-indigo-600" data-i18n="simulations.projectile"></h3>
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3 md:mb-4" data-i18n="simulations.projectile-desc"></p>
                             
-                            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+                            <div class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 mb-4">
                                 <div>
-                                    <label class="block font-semibold mb-2 text-sm" data-i18n="simulations.angle"></label>
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.angle"></label>
                                     <input type="range" class="proj-angle w-full" min="0" max="90" value="45">
-                                    <span class="proj-angle-value text-sm text-gray-600">45°</span>
+                                    <span class="proj-angle-value text-xs md:text-sm text-gray-600">45°</span>
                                 </div>
                                 <div>
-                                    <label class="block font-semibold mb-2 text-sm" data-i18n="simulations.velocity"></label>
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.velocity"></label>
                                     <input type="range" class="proj-velocity w-full" min="5" max="50" value="30">
-                                    <span class="proj-velocity-value text-sm text-gray-600">30 m/s</span>
+                                    <span class="proj-velocity-value text-xs md:text-sm text-gray-600">30 m/s</span>
                                 </div>
                                 <div>
-                                    <label class="block font-semibold mb-2 text-sm" data-i18n="simulations.gravity"></label>
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.gravity"></label>
                                     <input type="range" class="proj-gravity w-full" min="5" max="20" value="9.8" step="0.1">
-                                    <span class="proj-gravity-value text-sm text-gray-600">9.8 m/s²</span>
+                                    <span class="proj-gravity-value text-xs md:text-sm text-gray-600">9.8 m/s²</span>
                                 </div>
-                                <div class="flex items-end">
-                                    <button class="proj-start bg-indigo-600 text-white px-4 py-2 rounded font-semibold hover:bg-indigo-700 w-full" data-i18n="simulations.start"></button>
+                                <div>
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.start"></label>
+                                    <button class="proj-start bg-indigo-600 text-white px-3 md:px-4 py-2 rounded font-semibold hover:bg-indigo-700 w-full h-10" data-i18n="simulations.start"></button>
                                 </div>
                             </div>
 
-                            <canvas id="projectile-canvas" class="w-full border border-gray-300 dark:border-gray-600 rounded bg-gradient-to-b from-cyan-100 to-blue-100 dark:from-gray-700 dark:to-gray-800" width="800" height="400"></canvas>
+                            <div class="overflow-x-auto">
+                                <canvas id="projectile-canvas" class="w-full min-w-full border border-gray-300 dark:border-gray-600 rounded bg-gradient-to-b from-cyan-100 to-blue-100 dark:from-gray-700 dark:to-gray-800" width="800" height="400" style="max-width: 100%; height: auto;"></canvas>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Simulation 2: Orbital Motion -->
                     <div class="sim-content" data-tab="orbital">
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                            <h3 class="text-xl font-bold mb-4 text-indigo-600" data-i18n="simulations.orbital"></h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4" data-i18n="simulations.orbital-desc"></p>
+                        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4 text-indigo-600" data-i18n="simulations.orbital"></h3>
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3 md:mb-4" data-i18n="simulations.orbital-desc"></p>
                             
-                            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+                            <div class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 mb-4">
                                 <div>
-                                    <label class="block font-semibold mb-2 text-sm" data-i18n="simulations.planet-speed"></label>
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.planet-speed"></label>
                                     <input type="range" class="orbital-speed w-full" min="0.1" max="1" value="0.5" step="0.1">
-                                    <span class="orbital-speed-value text-sm text-gray-600">0.5x</span>
+                                    <span class="orbital-speed-value text-xs md:text-sm text-gray-600">0.5x</span>
                                 </div>
                                 <div>
-                                    <label class="block font-semibold mb-2 text-sm" data-i18n="simulations.planet-count"></label>
-                                    <input type="number" class="orbital-count border rounded px-2 py-1 w-full" min="1" max="5" value="3">
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.planet-count"></label>
+                                    <input type="number" class="orbital-count border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded px-2 py-2 w-full text-sm" min="1" max="5" value="3">
                                 </div>
                                 <div>
-                                    <label class="block font-semibold mb-2 text-sm" data-i18n="simulations.reset"></label>
-                                    <button class="orbital-reset bg-gray-600 text-white px-4 py-2 rounded font-semibold hover:bg-gray-700 w-full" data-i18n="simulations.reset-btn"></button>
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.reset"></label>
+                                    <button class="orbital-reset bg-gray-600 text-white px-3 md:px-4 py-2 rounded font-semibold hover:bg-gray-700 w-full h-10" data-i18n="simulations.reset-btn"></button>
                                 </div>
                             </div>
 
-                            <canvas id="orbital-canvas" class="w-full border border-gray-300 dark:border-gray-600 rounded bg-gradient-to-b from-gray-900 to-black dark:from-black dark:to-gray-900" width="800" height="500"></canvas>
+                            <div class="overflow-x-auto">
+                                <canvas id="orbital-canvas" class="w-full min-w-full border border-gray-300 dark:border-gray-600 rounded bg-gradient-to-b from-gray-900 to-black dark:from-black dark:to-gray-900" width="800" height="500" style="max-width: 100%; height: auto;"></canvas>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Simulation 3: Mechanical Wave -->
                     <div class="sim-content" data-tab="wave">
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                            <h3 class="text-xl font-bold mb-4 text-indigo-600" data-i18n="simulations.wave"></h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4" data-i18n="simulations.wave-desc"></p>
+                        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4 text-indigo-600" data-i18n="simulations.wave"></h3>
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3 md:mb-4" data-i18n="simulations.wave-desc"></p>
                             
-                            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+                            <div class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 mb-4">
                                 <div>
-                                    <label class="block font-semibold mb-2 text-sm" data-i18n="simulations.frequency"></label>
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.frequency"></label>
                                     <input type="range" class="wave-frequency w-full" min="0.5" max="3" value="1" step="0.1">
-                                    <span class="wave-frequency-value text-sm text-gray-600">1 Hz</span>
+                                    <span class="wave-frequency-value text-xs md:text-sm text-gray-600">1 Hz</span>
                                 </div>
                                 <div>
-                                    <label class="block font-semibold mb-2 text-sm" data-i18n="simulations.amplitude"></label>
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.amplitude"></label>
                                     <input type="range" class="wave-amplitude w-full" min="10" max="60" value="30">
-                                    <span class="wave-amplitude-value text-sm text-gray-600">30 px</span>
+                                    <span class="wave-amplitude-value text-xs md:text-sm text-gray-600">30 px</span>
                                 </div>
                                 <div>
-                                    <label class="block font-semibold mb-2 text-sm" data-i18n="simulations.wave-type"></label>
-                                    <select class="wave-type border border-gray-300 dark:border-gray-600 dark:bg-gray-700 px-2 py-1 rounded w-full">
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.wave-type"></label>
+                                    <select class="wave-type border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded px-2 py-2 w-full text-sm">
                                         <option value="sine" data-i18n="simulations.sine"></option>
                                         <option value="square" data-i18n="simulations.square"></option>
                                         <option value="triangle" data-i18n="simulations.triangle"></option>
                                     </select>
                                 </div>
-                                <div class="flex items-end">
-                                    <button class="wave-toggle bg-indigo-600 text-white px-4 py-2 rounded font-semibold hover:bg-indigo-700 w-full" data-i18n="simulations.pause"></button>
+                                <div>
+                                    <label class="block font-semibold mb-1 md:mb-2 text-xs md:text-sm" data-i18n="simulations.pause"></label>
+                                    <button class="wave-toggle bg-indigo-600 text-white px-3 md:px-4 py-2 rounded font-semibold hover:bg-indigo-700 w-full h-10" data-i18n="simulations.pause"></button>
                                 </div>
                             </div>
 
-                            <canvas id="wave-canvas" class="w-full border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700" width="900" height="300"></canvas>
+                            <div class="overflow-x-auto">
+                                <canvas id="wave-canvas" class="w-full min-w-full border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700" width="900" height="300" style="max-width: 100%; height: auto;"></canvas>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Info Box -->
-                    <div class="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded">
-                        <h4 class="font-semibold mb-2 text-blue-900 dark:text-blue-200" data-i18n="simulations.note-title"></h4>
-                        <p class="text-sm text-blue-800 dark:text-blue-300" data-i18n="simulations.note-content"></p>
+                    <div class="mt-6 md:mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded">
+                        <h4 class="font-semibold mb-2 text-sm md:text-base text-blue-900 dark:text-blue-200" data-i18n="simulations.note-title"></h4>
+                        <p class="text-xs md:text-sm text-blue-800 dark:text-blue-300" data-i18n="simulations.note-content"></p>
                     </div>
                 </div>
             </section>
@@ -5729,6 +6084,216 @@ document.addEventListener('DOMContentLoaded', function () {
                         switchTab(navigationHistory[currentPageIndex]);
                     }
                 }
+            });
+
+            // ===== PARALLAX & MOUSE INTERACTION SYSTEM =====
+            
+            // Get mouse follower and glow ring elements
+            const mouseFollower = document.querySelector('.mouse-follower');
+            const glowRing = document.querySelector('.glow-ring');
+            const interactiveGrid = document.querySelector('.interactive-grid');
+            
+            let mouseX = 0;
+            let mouseY = 0;
+            let followerX = 0;
+            let followerY = 0;
+            
+            // Mouse movement tracking
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                // Update mouse follower position with smooth easing
+                followerX += (mouseX - followerX) * 0.15;
+                followerY += (mouseY - followerY) * 0.15;
+                
+                mouseFollower.style.left = followerX + 'px';
+                mouseFollower.style.top = followerY + 'px';
+                
+                // Update glow ring position
+                glowRing.style.left = mouseX + 'px';
+                glowRing.style.top = mouseY + 'px';
+                
+                // Parallax effect on particle dots
+                const particleDots = document.querySelectorAll('.particle-dot');
+                particleDots.forEach((dot, index) => {
+                    const depth = (index + 1) * 0.02; // Each particle has different depth
+                    const moveX = (mouseX - window.innerWidth / 2) * depth;
+                    const moveY = (mouseY - window.innerHeight / 2) * depth;
+                    
+                    dot.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+                
+                // Parallax effect on text elements
+                const parallaxTexts = document.querySelectorAll('.parallax-text');
+                parallaxTexts.forEach((text, index) => {
+                    const depth = (index % 3 + 1) * 0.01;
+                    const moveX = (mouseX - window.innerWidth / 2) * depth;
+                    const moveY = (mouseY - window.innerHeight / 2) * depth;
+                    
+                    text.style.transform = `translateZ(${depth * 100}px) translate(${moveX}px, ${moveY}px)`;
+                });
+                
+                // Magnetic effect on interactive elements
+                const magneticElements = document.querySelectorAll('.magnetic-element');
+                magneticElements.forEach(element => {
+                    const rect = element.getBoundingClientRect();
+                    const elementCenterX = rect.left + rect.width / 2;
+                    const elementCenterY = rect.top + rect.height / 2;
+                    
+                    const distance = Math.sqrt(
+                        Math.pow(mouseX - elementCenterX, 2) + 
+                        Math.pow(mouseY - elementCenterY, 2)
+                    );
+                    
+                    const maxDistance = 150;
+                    if (distance < maxDistance) {
+                        const pullStrength = 1 - (distance / maxDistance);
+                        const pullX = (mouseX - elementCenterX) * pullStrength * 0.2;
+                        const pullY = (mouseY - elementCenterY) * pullStrength * 0.2;
+                        
+                        element.style.transform = `translate(${pullX}px, ${pullY}px) scale(${1 + pullStrength * 0.05})`;
+                    } else {
+                        element.style.transform = 'translate(0, 0) scale(1)';
+                    }
+                });
+                
+                // Card parallax depth effect
+                const cardParallaxes = document.querySelectorAll('.card-parallax');
+                cardParallaxes.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const cardCenterX = rect.left + rect.width / 2;
+                    const cardCenterY = rect.top + rect.height / 2;
+                    
+                    const angleX = (mouseY - cardCenterY) * 0.05;
+                    const angleY = (mouseX - cardCenterX) * 0.05;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+                });
+            });
+            
+            // Show mouse follower when mouse enters
+            document.addEventListener('mouseenter', () => {
+                mouseFollower.classList.add('active');
+                glowRing.classList.add('active');
+                interactiveGrid.classList.add('active');
+            });
+            
+            // Hide mouse follower when mouse leaves
+            document.addEventListener('mouseleave', () => {
+                mouseFollower.classList.remove('active');
+                glowRing.classList.remove('active');
+                interactiveGrid.classList.remove('active');
+            });
+            
+            // Create particle trail when mouse moves rapidly
+            let lastParticleTime = 0;
+            document.addEventListener('mousemove', (e) => {
+                const now = Date.now();
+                if (now - lastParticleTime > 30) { // Create particle every 30ms
+                    createCursorParticle(e.clientX, e.clientY);
+                    lastParticleTime = now;
+                }
+            });
+            
+            // Function to create cursor trail particles
+            function createCursorParticle(x, y) {
+                const particle = document.createElement('div');
+                particle.className = 'cursor-particle trail';
+                
+                // Random color from sci-fi palette
+                const colors = [
+                    'rgba(99, 102, 241, 0.6)',      // indigo
+                    'rgba(6, 182, 212, 0.6)',       // cyan
+                    'rgba(168, 85, 247, 0.6)',      // purple
+                    'rgba(14, 165, 233, 0.6)',      // sky
+                    'rgba(139, 92, 246, 0.6)',      // violet
+                ];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = color;
+                
+                // Random size
+                const size = Math.random() * 6 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Set position
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                
+                // Add glow effect
+                particle.style.boxShadow = `0 0 ${size + 4}px ${color}`;
+                
+                // Add animation
+                particle.style.animation = `particle-trail ${0.6 + Math.random() * 0.4}s ease-out forwards`;
+                
+                document.body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => particle.remove(), 1000);
+            }
+            
+            // Parallax scroll effect for sections
+            window.addEventListener('scroll', () => {
+                const parallaxSections = document.querySelectorAll('.parallax-section');
+                parallaxSections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    const speed = 0.5; // Parallax speed factor
+                    const yPos = rect.top * speed;
+                    section.style.backgroundPosition = `center ${yPos}px`;
+                });
+            });
+            
+            // Mouse hover effects on interactive elements
+            const interactiveElements = document.querySelectorAll('button, a, .topic-card, input[type="range"], select');
+            interactiveElements.forEach(element => {
+                element.addEventListener('mouseenter', () => {
+                    mouseFollower.style.width = '50px';
+                    mouseFollower.style.height = '50px';
+                    mouseFollower.style.borderColor = 'rgba(99, 102, 241, 0.9)';
+                    mouseFollower.style.boxShadow = `
+                        0 0 20px rgba(99, 102, 241, 0.8),
+                        0 0 40px rgba(99, 102, 241, 0.4)
+                    `;
+                });
+                
+                element.addEventListener('mouseleave', () => {
+                    mouseFollower.style.width = '30px';
+                    mouseFollower.style.height = '30px';
+                    mouseFollower.style.borderColor = 'rgba(99, 102, 241, 0.6)';
+                    mouseFollower.style.boxShadow = `
+                        0 0 15px rgba(99, 102, 241, 0.5),
+                        0 0 30px rgba(99, 102, 241, 0.2)
+                    `;
+                });
+            });
+            
+            // Magnetic button effect on hover
+            const magneticButtons = document.querySelectorAll('button.magnetic-element');
+            magneticButtons.forEach(button => {
+                button.addEventListener('mousemove', (e) => {
+                    const rect = button.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    button.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    button.style.transform = 'translate(0, 0)';
+                });
+            });
+            
+            // Add parallax-text class to main headings for effect
+            const mainHeadings = document.querySelectorAll('h1, h2.text-3xl');
+            mainHeadings.forEach(heading => {
+                heading.classList.add('parallax-text');
+            });
+            
+            // Add card-parallax class to cards for depth effect
+            const cards = document.querySelectorAll('.fade-in-card, .tool-tab, .sim-tab');
+            cards.forEach(card => {
+                card.classList.add('card-parallax');
             });
         });
     </script>
