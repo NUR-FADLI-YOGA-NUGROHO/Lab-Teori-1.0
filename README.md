@@ -2415,8 +2415,7 @@ Sections:
 Universitas Hasanuddin
 
 Untuk pertanyaan atau saran:
-- Portal Akademik Kampus
-- Email melalui dosen lab
+- Email: nurfadliyoga23@gmail.com
 
 ---
 
@@ -2444,7 +2443,7 @@ Semua hak dilindungi.
 ✅ Testing         : PASSED
 ✅ Documentation   : COMPLETE
 ✅ UI/UX Polish    : COMPLETE
-✅ Production Ready: YES ✨
+✅ Production Ready: YES (Only in experiment) ✨
 ```
 
 **Website siap untuk:**
@@ -2696,7 +2695,7 @@ Website Anda siap untuk:
 ## 📧 Support & Updates
 
 Semua dokumentasi tersedia di folder yang sama dengan `index.html`.
-
+  
 **File Structure:**
 ```
 Tugas PPI/
@@ -2714,3 +2713,4 @@ Tugas PPI/
 Jika ada pertanyaan, lihat dokumentasi yang sesuai atau hubungi development team.
 
 ---
+
