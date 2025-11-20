@@ -1892,8 +1892,8 @@ Required Features:
 Universitas Hasanuddin  
 Makassar, Indonesia
 
-**Website:** [https://unhas.ac.id](https://unhas.ac.id)  
-**Email:** Hubungi melalui dosen laboratorium  
+**Website:** [https://sci.unhas.ac.id/]([(https://sci.unhas.ac.id/))  
+**Email:** nurfadliyoga23@gmail.com 
 **Portal:** Akses via portal akademik kampus
 
 **Development Team:**  
@@ -2713,4 +2713,5 @@ Tugas PPI/
 Jika ada pertanyaan, lihat dokumentasi yang sesuai atau hubungi development team.
 
 ---
+
 
