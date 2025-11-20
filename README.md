@@ -1895,11 +1895,8 @@ Makassar, Indonesia
 **Website:** [https://sci.unhas.ac.id/]([(https://sci.unhas.ac.id/))  
 **Email:** nurfadliyoga23@gmail.com 
 
-**Development Team:**  
-- Frontend Development
-- Content Creation
-- Physics Content Curation
-- Documentation
+**Development By:**  
+- Nur Fadli Yoga
 
 ---
 
@@ -2712,6 +2709,7 @@ Tugas PPI/
 Jika ada pertanyaan, lihat dokumentasi yang sesuai atau hubungi development team.
 
 ---
+
 
 
 
