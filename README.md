@@ -1894,7 +1894,6 @@ Makassar, Indonesia
 
 **Website:** [https://sci.unhas.ac.id/]([(https://sci.unhas.ac.id/))  
 **Email:** nurfadliyoga23@gmail.com 
-**Portal:** Akses via portal akademik kampus
 
 **Development Team:**  
 - Frontend Development
@@ -2713,5 +2712,6 @@ Tugas PPI/
 Jika ada pertanyaan, lihat dokumentasi yang sesuai atau hubungi development team.
 
 ---
+
 
 
