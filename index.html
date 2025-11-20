@@ -86,6 +86,152 @@
             font-weight: bold;
             letter-spacing: 0.05em;
         }
+
+        /* Language Toggle Switch Styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 100px;
+            height: 36px;
+        }
+
+        .switch .on,
+        .switch .off {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            font-weight: 600;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .switch .on {
+            left: 12px;
+            color: black;
+        }
+
+        .switch .off {
+            right: 12px;
+            color: black;
+        }
+
+        .check-toggle {
+            position: absolute;
+            margin-left: -9999px;
+            visibility: hidden;
+        }
+
+        .check-toggle + label {
+            display: block;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            user-select: none;
+        }
+
+        .check-toggle-round-flat + label {
+            padding: 2px;
+            width: 100px;
+            height: 36px;
+            background-color: #e5e7eb;
+            border-radius: 60px;
+            transition: background 0.4s;
+        }
+
+        .check-toggle-round-flat + label:before,
+        .check-toggle-round-flat + label:after {
+            display: block;
+            position: absolute;
+            content: "";
+        }
+
+        .check-toggle-round-flat + label:before {
+            top: 2px;
+            left: 2px;
+            bottom: 2px;
+            right: 2px;
+            background-color: #e5e7eb;
+            border-radius: 60px;
+            transition: background 0.4s;
+        }
+
+        .check-toggle-round-flat + label:after {
+            top: 4px;
+            left: 4px;
+            bottom: 4px;
+            width: 48px;
+            background-color: #4f46e5;
+            border-radius: 52px;
+            transition: margin 0.4s, background 0.4s;
+        }
+
+        .check-toggle-round-flat:checked + label {
+            background-color: #e5e7eb;
+        }
+
+        .check-toggle-round-flat:checked + label:after {
+            margin-left: 44px;
+            background-color: #4f46e5;
+        }
+
+        /* Dark mode support for language toggle */
+        .dark .check-toggle-round-flat + label {
+            background-color: #374151;
+        }
+
+        .dark .check-toggle-round-flat + label:before {
+            background-color: #374151;
+        }
+
+        .dark .check-toggle-round-flat + label:after {
+            background-color: #6366f1;
+        }
+
+        .dark .check-toggle-round-flat:checked + label:after {
+            background-color: #6366f1;
+        }
+
+        .dark .switch .off {
+            color: #9ca3af;
+        }
+
+        .dark .switch .on {
+            color: white;
+        }
+
+        /* Dark Mode Toggle Switch - same size as language toggle */
+        .switch-dark .on {
+            left: 12px;
+            color: #6b7280;
+        }
+
+        .switch-dark .off {
+            right: 12px;
+            color: #6b7280;
+        }
+
+        .dark .switch-dark .on,
+        .dark .switch-dark .off {
+            color: #9ca3af;
+        }
+
+        .check-toggle-dark + label:after {
+            background-color: #3b82f6;
+        }
+
+        .check-toggle-dark:checked + label:after {
+            background-color: #3b82f6;
+        }
+
+        .dark .check-toggle-dark + label:after {
+            background-color: #60a5fa;
+        }
+
+        .dark .check-toggle-dark:checked + label:after {
+            background-color: #60a5fa;
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             body {
@@ -2923,62 +3069,48 @@
         <main id="site-main" class="flex-1 p-6 md:p-10">
           <div class="w-full px-0">
             <!-- Header -->
-            <header class="flex flex-col lg:flex-row items-center justify-between mb-8 w-full gap-4">
+            <header class="flex flex-wrap items-center justify-between mb-8 w-full gap-3">
                 <!-- kiri: logo + judul -->
-                <div class="flex items-center space-x-4 flex-shrink-0">
-                    <img src="atom.gif" alt="planetary" class="w-20 h-20 object-cover rounded-full atom-logo">
+                <div class="flex items-center space-x-3 flex-1 min-w-0">
+                    <img src="atom.gif" alt="planetary" class="w-16 h-16 lg:w-20 lg:h-20 object-cover rounded-full atom-logo flex-shrink-0">
                     <div class="flex-1 min-w-0">
-                        <h2 class="text-3xl font-bold break-words" data-i18n="header.welcome"></h2>
-                        <p id="current-date" class="text-gray-500 text-sm" data-i18n="header.loading-date"></p>
+                        <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold break-words" data-i18n="header.welcome"></h2>
+                        <p id="current-date" class="text-gray-500 text-xs sm:text-sm" data-i18n="header.loading-date"></p>
                     </div>
                 </div>
 
                 <!-- kanan: profil -->
-                <div class="flex items-center space-x-4 flex-shrink-0">
-                    <!-- Language Toggle -->
-                    <div class="relative">
-                        <button id="language-toggle" class="px-2 py-1 text-sm font-medium bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" title="Ubah bahasa / Change language">
-                            <span id="lang-display">ID</span>
-                        </button>
-                        <div id="language-menu" class="hidden absolute right-0 mt-2 w-24 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50">
-                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm" data-lang="id">
-                                🇮🇩 Bahasa Indonesia
-                            </button>
-                            <button class="lang-option w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm" data-lang="en">
-                                🇬🇧 English
-                            </button>
+                <div class="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
+                    <!-- Toggle Buttons Stack -->
+                    <div class="flex flex-col gap-3">
+                        <!-- Language Toggle -->
+                        <div class="switch">
+                            <input id="language-toggle" class="check-toggle check-toggle-round-flat" type="checkbox">
+                            <label for="language-toggle"></label>
+                            <span class="on">ID</span>
+                            <span class="off">EN</span>
+                        </div>
+
+                        <!-- Dark Mode Toggle -->
+                        <div class="switch switch-dark">
+                            <input id="dark-mode-toggle" class="check-toggle check-toggle-round-flat check-toggle-dark" type="checkbox">
+                            <label for="dark-mode-toggle"></label>
+                            <span class="on">☀️</span>
+                            <span class="off">🌙</span>
                         </div>
                     </div>
 
-                    <!-- Dark Mode Toggle -->
-                    <button id="dark-mode-toggle" class="dark-mode-toggle" title="Ganti tema">
-                        <svg id="sun-icon" class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="5"/>
-                            <line x1="12" y1="1" x2="12" y2="3"/>
-                            <line x1="12" y1="21" x2="12" y2="23"/>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                            <line x1="1" y1="12" x2="3" y2="12"/>
-                            <line x1="21" y1="12" x2="23" y2="12"/>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                        </svg>
-                        <svg id="moon-icon" class="dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                        </svg>
-                    </button>
-
-                    <div class="text-right">
+                    <div class="text-right hidden sm:block">
                         <!-- id untuk update via JS -->
-                        <p id="profile-name" class="font-semibold text-lg md:text-lg" data-i18n="header.guest"></p>
-                        <p id="profile-role" class="text-sm text-gray-500 dark:text-gray-400">-</p>
+                        <p id="profile-name" class="font-semibold text-sm lg:text-base" data-i18n="header.guest"></p>
+                        <p id="profile-role" class="text-xs text-gray-500 dark:text-gray-400">-</p>
                     </div>
                     <img id="profile-avatar"
                          src="https://placehold.co/40x40/EFEFEF/333?text=NFY"
                          alt="User Avatar"
-                         class="w-12 h-12 rounded-full border border-gray-300 shadow-sm dark:border-gray-600">
+                         class="w-10 h-10 lg:w-12 lg:h-12 rounded-full border border-gray-300 shadow-sm dark:border-gray-600">
                     <!-- tombol ini berfungsi: buka panel auth bila belum login, atau logout bila sudah -->
-                    <button id="auth-toggle-btn" class="ml-2 px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors" data-i18n="header.login"></button>
+                    <button id="auth-toggle-btn" class="ml-1 lg:ml-2 px-2 lg:px-3 py-1 text-xs lg:text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors" data-i18n="header.login"></button>
                 </div>
             </header>
 
@@ -5929,28 +6061,18 @@ function updateAllTranslations(lang) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  // --- LANGUAGE TOGGLE SETUP ---
+  // --- LANGUAGE TOGGLE SETUP (Checkbox Toggle) ---
   const languageToggle = document.getElementById('language-toggle');
-  const languageMenu = document.getElementById('language-menu');
-  const langOptions = document.querySelectorAll('.lang-option');
 
-  if (languageToggle && languageMenu) {
-    languageToggle.addEventListener('click', () => {
-      languageMenu.classList.toggle('hidden');
-    });
+  if (languageToggle) {
+    // Initialize checkbox based on current language
+    const currentLang = getCurrentLanguage();
+    languageToggle.checked = (currentLang === 'en');
 
-    document.addEventListener('click', (e) => {
-      if (!languageToggle.contains(e.target) && !languageMenu.contains(e.target)) {
-        languageMenu.classList.add('hidden');
-      }
-    });
-
-    langOptions.forEach(option => {
-      option.addEventListener('click', (e) => {
-        const lang = e.currentTarget.dataset.lang;
-        setLanguage(lang);
-        languageMenu.classList.add('hidden');
-      });
+    // Listen for checkbox change
+    languageToggle.addEventListener('change', () => {
+      const newLang = languageToggle.checked ? 'en' : 'id';
+      setLanguage(newLang);
     });
   }
 
@@ -7479,6 +7601,2177 @@ document.addEventListener('DOMContentLoaded', function () {
   animate();
 })();
 </script>
+
+<!-- Chatbot Asisten Lab -->
+<div id="chatbot-container" class="fixed bottom-6 right-6 z-50">
+  <!-- Chat Button -->
+  <button id="chat-toggle-btn" class="bg-indigo-600 dark:bg-indigo-500 text-white rounded-full p-4 shadow-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <span id="unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">1</span>
+  </button>
+
+  <!-- Chat Window -->
+  <div id="chat-window" class="hidden fixed bottom-24 right-6 w-96 h-[600px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 backdrop-blur-none opacity-100">
+    <!-- Chat Header -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 7.07 2.93 10 10 0 0 1 0 14.14A10 10 0 1 1 12 2Z"></path>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-semibold">Asisten Lab</h3>
+          <p class="text-xs text-white/80">
+            <span class="inline-block w-2 h-2 rounded-full bg-green-400 mr-1 animate-pulse"></span>
+            Mode Offline 📚
+          </p>
+        </div>
+      </div>
+      <button id="chat-close-btn" class="hover:bg-white/20 rounded-lg p-2 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Chat Messages -->
+    <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900 opacity-100">
+      <!-- Welcome message will be set by JavaScript -->
+    </div>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="px-4 py-2 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <p id="quick-actions-label" class="text-xs text-gray-500 dark:text-gray-400 mb-2"></p>
+      <div id="quick-actions-buttons" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <div class="flex gap-2">
+        <input type="text" id="chat-input" placeholder="Ketik pesan..." class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white" />
+        <button id="chat-send-btn" class="bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="flex items-center justify-end mt-2">
+        <button id="clear-chat-btn" class="text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400">
+          🗑️ Hapus Chat
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Chatbot Responsive Styles */
+#chat-window {
+  background-color: white !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+}
+
+.dark #chat-window {
+  background-color: #1f2937 !important;
+  opacity: 1 !important;
+}
+
+#chat-messages {
+  background-color: #f9fafb !important;
+  opacity: 1 !important;
+}
+
+.dark #chat-messages {
+  background-color: #111827 !important;
+  opacity: 1 !important;
+}
+
+.bg-white.dark\:bg-gray-800 {
+  opacity: 1 !important;
+}
+
+@media (max-width: 640px) {
+  #chat-window {
+    width: calc(100vw - 2rem);
+    height: calc(100vh - 8rem);
+    bottom: 5rem;
+    right: 1rem;
+    background-color: white !important;
+    opacity: 1 !important;
+  }
+  
+  .dark #chat-window {
+    background-color: #1f2937 !important;
+  }
+}
+
+/* Smooth animations */
+#chat-window {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Typing indicator */
+.typing-indicator {
+  display: inline-flex;
+  gap: 4px;
+  padding: 8px 12px;
+}
+
+.typing-indicator span {
+  width: 8px;
+  height: 8px;
+  background-color: #9ca3af;
+  border-radius: 50%;
+  animation: typing 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Scrollbar styling for chat */
+#chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+#chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.dark #chat-messages::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+</style>
+
+<script>
+// Chatbot Script - 100% Offline
+(function() {
+  const chatToggleBtn = document.getElementById('chat-toggle-btn');
+  const chatWindow = document.getElementById('chat-window');
+  const chatCloseBtn = document.getElementById('chat-close-btn');
+  const chatMessages = document.getElementById('chat-messages');
+  const chatInput = document.getElementById('chat-input');
+  const chatSendBtn = document.getElementById('chat-send-btn');
+  const clearChatBtn = document.getElementById('clear-chat-btn');
+  const unreadBadge = document.getElementById('unread-badge');
+
+  let isChatOpen = false;
+  let isTyping = false;
+
+  // Toggle chat window
+  chatToggleBtn.addEventListener('click', () => {
+    isChatOpen = !isChatOpen;
+    chatWindow.classList.toggle('hidden');
+    unreadBadge.classList.add('hidden');
+    if (isChatOpen) {
+      chatInput.focus();
+    }
+  });
+
+  chatCloseBtn.addEventListener('click', () => {
+    isChatOpen = false;
+    chatWindow.classList.add('hidden');
+  });
+
+  // Clear chat
+    clearChatBtn.addEventListener('click', () => {
+        const currentLang = getCurrentLanguage();
+        const confirmMsg = currentLang === 'en' ? 'Delete all chat messages?' : 'Hapus semua pesan chat?';
+    
+        if (confirm(confirmMsg)) {
+            initWelcomeMessage();
+        }
+    });
+
+  // Add message functions
+  function addUserMessage(text) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'flex gap-2 justify-end';
+    messageDiv.innerHTML = `
+      <div class="bg-indigo-600 text-white rounded-2xl rounded-tr-none p-3 max-w-[80%] shadow-sm">
+        <p class="text-sm">${escapeHtml(text)}</p>
+      </div>
+    `;
+    chatMessages.appendChild(messageDiv);
+    scrollToBottom();
+  }
+
+  function addBotMessage(text, isHtml = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'flex gap-2';
+    
+    let formattedText = isHtml ? text : escapeHtml(text);
+    if (!isHtml) {
+      formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      formattedText = formattedText.replace(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-700 px-1 rounded text-xs">$1</code>');
+      formattedText = formattedText.replace(/\n/g, '<br>');
+    }
+    
+    messageDiv.innerHTML = `
+      <div class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 2a10 10 0 0 1 7.07 2.93 10 10 0 0 1 0 14.14A10 10 0 1 1 12 2Z"></path>
+        </svg>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-none p-3 max-w-[80%] shadow-sm">
+        <div class="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">${formattedText}</div>
+      </div>
+    `;
+    chatMessages.appendChild(messageDiv);
+    scrollToBottom();
+    
+    if (!isChatOpen) {
+      unreadBadge.classList.remove('hidden');
+    }
+  }
+
+  function showTypingIndicator() {
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'flex gap-2 typing-message';
+    typingDiv.innerHTML = `
+      <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 2a10 10 0 0 1 7.07 2.93 10 10 0 0 1 0 14.14A10 10 0 1 1 12 2Z"></path>
+        </svg>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-none p-3 shadow-sm">
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    `;
+    chatMessages.appendChild(typingDiv);
+    scrollToBottom();
+  }
+
+  function removeTypingIndicator() {
+    const typingMsg = chatMessages.querySelector('.typing-message');
+    if (typingMsg) typingMsg.remove();
+  }
+
+  function scrollToBottom() {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // ===== COMPREHENSIVE OFFLINE KNOWLEDGE BASE (BILINGUAL) =====
+  const knowledgeBase = {
+    // Tentang Lab
+    tentang: {
+      keywords: ['tentang', 'about', 'profil', 'profile', 'sejarah', 'history', 'visi', 'misi', 'vision', 'mission'],
+      answer: {
+        id: `<strong>🏛️ Laboratorium Fisika Teori & Komputasi</strong><br><br>
+<strong>Visi:</strong><br>
+Menjadi laboratorium penelitian terkemuka dalam bidang fisika teori dan komputasi yang berkontribusi pada kemajuan sains dan teknologi melalui inovasi dan kolaborasi internasional.<br><br>
+<strong>Misi:</strong><br>
+• Mendukung riset fisika teoretis dan komputasional berkualitas tinggi<br>
+• Mengembangkan SDM yang kompeten<br>
+• Memfasilitasi transfer ilmu dan teknologi kepada masyarakat<br><br>
+<strong>Sejarah:</strong><br>
+• <strong>2015:</strong> Pendirian lab dengan fokus fisika komputasi<br>
+• <strong>2017:</strong> Kolaborasi internasional dengan MIT dan CERN<br>
+• <strong>2020:</strong> Upgrade komputer high-performance<br>
+• <strong>2023:</strong> Ekspansi riset AI dan machine learning untuk fisika`,
+        en: `<strong>🏛️ Theoretical & Computational Physics Laboratory</strong><br><br>
+<strong>Vision:</strong><br>
+To become a leading research laboratory in theoretical and computational physics that contributes to the advancement of science and technology through innovation and international collaboration.<br><br>
+<strong>Mission:</strong><br>
+• Support high-quality theoretical and computational physics research<br>
+• Develop competent human resources<br>
+• Facilitate knowledge and technology transfer to society<br><br>
+<strong>History:</strong><br>
+• <strong>2015:</strong> Lab establishment focusing on computational physics<br>
+• <strong>2017:</strong> International collaboration with MIT and CERN<br>
+• <strong>2020:</strong> High-performance computer upgrade<br>
+• <strong>2023:</strong> Expansion of AI and machine learning research for physics`
+      }
+    },
+
+    // Fasilitas
+    fasilitas: {
+      keywords: ['fasilitas', 'facilities', 'alat', 'peralatan', 'equipment', 'komputer', 'computer', 'software', 'tools', 'perangkat'],
+      answer: {
+        id: `<strong>🔬 Fasilitas Lab:</strong><br><br>
+<strong>1. Komputer High-Performance</strong><br>
+Workstation dengan GPU NVIDIA untuk simulasi fisika kompleks dan visualisasi data<br><br>
+<strong>2. Software Komputasi</strong><br>
+• MATLAB - Analisis numerik dan visualisasi<br>
+• Python (NumPy, SciPy, Matplotlib) - Komputasi ilmiah<br>
+• Mathematica - Simbolik & numerik<br>
+• COMSOL Multiphysics - Simulasi multifisika<br><br>
+<strong>3. Perpustakaan Digital</strong><br>
+Akses jurnal internasional: Nature, Science, Physical Review<br><br>
+<strong>4. Peralatan Eksperimen</strong><br>
+Sensor, oscilloscope, dan peralatan fisika komputasi<br><br>
+<strong>5. Ruang Kolaborasi</strong><br>
+Ruang diskusi dengan proyektor dan whiteboard interaktif<br><br>
+<strong>6. Server & Storage</strong><br>
+Server untuk simulasi besar dan penyimpanan data penelitian`,
+        en: `<strong>🔬 Lab Facilities:</strong><br><br>
+<strong>1. High-Performance Computers</strong><br>
+Workstations with NVIDIA GPUs for complex physics simulations and data visualization<br><br>
+<strong>2. Computational Software</strong><br>
+• MATLAB - Numerical analysis and visualization<br>
+• Python (NumPy, SciPy, Matplotlib) - Scientific computing<br>
+• Mathematica - Symbolic & numerical<br>
+• COMSOL Multiphysics - Multiphysics simulation<br><br>
+<strong>3. Digital Library</strong><br>
+Access to international journals: Nature, Science, Physical Review<br><br>
+<strong>4. Experimental Equipment</strong><br>
+Sensors, oscilloscopes, and computational physics equipment<br><br>
+<strong>5. Collaboration Room</strong><br>
+Discussion room with projector and interactive whiteboard<br><br>
+<strong>6. Server & Storage</strong><br>
+Server for large-scale simulations and research data storage`
+      }
+    },
+
+    // Topik Penelitian
+    topik: {
+      keywords: ['topik', 'riset', 'penelitian', 'fokus', 'bidang', 'area', 'tema', 'topics', 'research', 'fields'],
+      answer: {
+        id: `<strong>🔬 Bidang Penelitian Utama:</strong><br><br>
+<strong>1. 🌌 Kosmologi & Astrofisika</strong><br>
+• Dark matter dan dark energy<br>
+• Struktur skala besar alam semesta<br>
+• Model FLRW dan persamaan Friedmann<br>
+• Big Bang dan evolusi kosmik<br><br>
+<strong>2. ⚛️ Fisika Kuantum & Partikel</strong><br>
+• Mekanika kuantum dan persamaan Schrödinger<br>
+• Quantum computing dan qubit<br>
+• Model standar partikel elementer<br>
+• Entanglement dan decoherence<br><br>
+<strong>3. 💻 Fisika Komputasi</strong><br>
+• Simulasi numerik sistem kompleks<br>
+• Metode Monte Carlo<br>
+• Finite element methods<br>
+• Visualisasi data saintifik<br><br>
+<strong>4. 🧠 Machine Learning untuk Fisika</strong><br>
+• AI untuk analisis data eksperimen<br>
+• Neural networks untuk prediksi<br>
+• Pattern recognition dalam fisika<br><br>
+<strong>5. 🔮 Teori String & Gravitasi Kuantum</strong><br>
+• String theory dan M-theory<br>
+• Loop quantum gravity<br><br>
+<strong>6. 🌡️ Fisika Statistik</strong><br>
+• Sistem many-body<br>
+• Phase transitions<br>
+• Critical phenomena`,
+        en: `<strong>🔬 Main Research Areas:</strong><br><br>
+<strong>1. 🌌 Cosmology & Astrophysics</strong><br>
+• Dark matter and dark energy<br>
+• Large-scale structure of the universe<br>
+• FLRW model and Friedmann equations<br>
+• Big Bang and cosmic evolution<br><br>
+<strong>2. ⚛️ Quantum & Particle Physics</strong><br>
+• Quantum mechanics and Schrödinger equation<br>
+• Quantum computing and qubits<br>
+• Standard model of elementary particles<br>
+• Entanglement and decoherence<br><br>
+<strong>3. 💻 Computational Physics</strong><br>
+• Numerical simulation of complex systems<br>
+• Monte Carlo methods<br>
+• Finite element methods<br>
+• Scientific data visualization<br><br>
+<strong>4. 🧠 Machine Learning for Physics</strong><br>
+• AI for experimental data analysis<br>
+• Neural networks for prediction<br>
+• Pattern recognition in physics<br><br>
+<strong>5. 🔮 String Theory & Quantum Gravity</strong><br>
+• String theory and M-theory<br>
+• Loop quantum gravity<br><br>
+<strong>6. 🌡️ Statistical Physics</strong><br>
+• Many-body systems<br>
+• Phase transitions<br>
+• Critical phenomena`
+      }
+    },
+
+    // Kosmologi
+    kosmologi: {
+      keywords: ['kosmologi', 'cosmology', 'alam semesta', 'universe', 'big bang', 'ekspansi', 'friedmann', 'flrw'],
+      answer: {
+        id: `<strong>🌌 Kosmologi:</strong><br><br>
+<strong>Definisi:</strong><br>
+Studi tentang asal usul, evolusi, dan struktur alam semesta secara keseluruhan.<br><br>
+<strong>Persamaan Friedmann:</strong><br>
+Persamaan fundamental yang menggambarkan ekspansi alam semesta:<br><br>
+<code>H² = (8πG/3)ρ - k/a² + Λ/3</code><br><br>
+Di mana:<br>
+• <strong>H</strong> = Hubble parameter (laju ekspansi)<br>
+• <strong>ρ</strong> = densitas energi total<br>
+• <strong>k</strong> = kelengkungan ruang (-1, 0, +1)<br>
+• <strong>a</strong> = faktor skala<br>
+• <strong>Λ</strong> = konstanta kosmologi (dark energy)<br><br>
+<strong>Konsep Penting:</strong><br>
+• <strong>Big Bang:</strong> Awal alam semesta ~13.8 miliar tahun lalu<br>
+• <strong>Dark Matter:</strong> ~27% dari total energi alam semesta<br>
+• <strong>Dark Energy:</strong> ~68% yang menyebabkan ekspansi dipercepat<br>
+• <strong>CMB:</strong> Cosmic Microwave Background radiation<br><br>
+<strong>🎮 Eksplorasi:</strong><br>
+Coba simulasi kosmologi interaktif di tab "Simulasi" website ini!`,
+        en: `<strong>🌌 Cosmology:</strong><br><br>
+<strong>Definition:</strong><br>
+The study of the origin, evolution, and structure of the universe as a whole.<br><br>
+<strong>Friedmann Equation:</strong><br>
+Fundamental equation describing the expansion of the universe:<br><br>
+<code>H² = (8πG/3)ρ - k/a² + Λ/3</code><br><br>
+Where:<br>
+• <strong>H</strong> = Hubble parameter (expansion rate)<br>
+• <strong>ρ</strong> = total energy density<br>
+• <strong>k</strong> = spatial curvature (-1, 0, +1)<br>
+• <strong>a</strong> = scale factor<br>
+• <strong>Λ</strong> = cosmological constant (dark energy)<br><br>
+<strong>Key Concepts:</strong><br>
+• <strong>Big Bang:</strong> Universe began ~13.8 billion years ago<br>
+• <strong>Dark Matter:</strong> ~27% of total universe energy<br>
+• <strong>Dark Energy:</strong> ~68% causing accelerated expansion<br>
+• <strong>CMB:</strong> Cosmic Microwave Background radiation<br><br>
+<strong>🎮 Explore:</strong><br>
+Try our interactive cosmology simulation in the "Simulations" tab!`
+      }
+    },
+
+    // Fisika Kuantum
+    kuantum: {
+      keywords: ['kuantum', 'quantum', 'schrodinger', 'heisenberg', 'mekanika', 'qubit', 'entanglement'],
+      answer: {
+        id: `<strong>⚛️ Fisika Kuantum:</strong><br><br>
+<strong>Definisi:</strong><br>
+Cabang fisika yang mempelajari fenomena pada skala atomik dan subatomik.<br><br>
+<strong>Persamaan Schrödinger:</strong><br>
+<code>iℏ ∂ψ/∂t = Ĥψ</code><br><br>
+• <strong>ψ:</strong> Fungsi gelombang (probability amplitude)<br>
+• <strong>Ĥ:</strong> Operator Hamiltonian (energi total)<br>
+• <strong>ℏ:</strong> Konstanta Planck tereduksi<br><br>
+<strong>Prinsip Ketidakpastian Heisenberg:</strong><br>
+<code>Δx · Δp ≥ ℏ/2</code><br><br>
+Tidak bisa mengukur posisi dan momentum secara simultan dengan presisi sempurna.<br><br>
+<strong>Fenomena Kuantum:</strong><br>
+• <strong>Superposisi:</strong> Partikel bisa berada di banyak state sekaligus<br>
+• <strong>Entanglement:</strong> Korelasi kuantum non-lokal<br>
+• <strong>Tunneling:</strong> Partikel menembus barrier klasik<br>
+• <strong>Quantization:</strong> Energi dalam paket diskrit<br><br>
+<strong>Aplikasi:</strong><br>
+• Quantum computing (qubit, gerbang kuantum)<br>
+• Kriptografi kuantum<br>
+• Sensor kuantum ultra-sensitif<br><br>
+<strong>Peneliti:</strong> Dr. Sarah Wijaya (Fisika Kuantum)`,
+        en: `<strong>⚛️ Quantum Physics:</strong><br><br>
+<strong>Definition:</strong><br>
+Branch of physics studying phenomena at atomic and subatomic scales.<br><br>
+<strong>Schrödinger Equation:</strong><br>
+<code>iℏ ∂ψ/∂t = Ĥψ</code><br><br>
+• <strong>ψ:</strong> Wave function (probability amplitude)<br>
+• <strong>Ĥ:</strong> Hamiltonian operator (total energy)<br>
+• <strong>ℏ:</strong> Reduced Planck constant<br><br>
+<strong>Heisenberg Uncertainty Principle:</strong><br>
+<code>Δx · Δp ≥ ℏ/2</code><br><br>
+Cannot simultaneously measure position and momentum with perfect precision.<br><br>
+<strong>Quantum Phenomena:</strong><br>
+• <strong>Superposition:</strong> Particles can exist in multiple states simultaneously<br>
+• <strong>Entanglement:</strong> Non-local quantum correlations<br>
+• <strong>Tunneling:</strong> Particles penetrate classical barriers<br>
+• <strong>Quantization:</strong> Energy in discrete packets<br><br>
+<strong>Applications:</strong><br>
+• Quantum computing (qubits, quantum gates)<br>
+• Quantum cryptography<br>
+• Ultra-sensitive quantum sensors<br><br>
+<strong>Researcher:</strong> Dr. Sarah Wijaya (Quantum Physics)`
+      }
+    },
+
+    // Simulasi
+    simulasi: {
+      keywords: ['simulasi', 'simulation', 'interaktif', 'demo', 'visualisasi', 'interactive'],
+      answer: {
+        id: `<strong>🎮 Simulasi Interaktif:</strong><br><br>
+Website ini menyediakan <strong>Simulasi Kosmologi FLRW</strong> yang bisa Anda coba!<br><br>
+<strong>Fitur:</strong><br>
+• Visualisasi ekspansi alam semesta<br>
+• Kontrol parameter (H₀, Ω_m, Ω_Λ)<br>
+• Worldlines galaksi<br>
+• Real-time calculation<br><br>
+<strong>Parameter yang bisa diatur:</strong><br>
+• <strong>H₀:</strong> Hubble constant (km/s/Mpc)<br>
+• <strong>Ω_m:</strong> Densitas materi<br>
+• <strong>Ω_Λ:</strong> Densitas dark energy<br>
+• <strong>Jumlah galaksi:</strong> 20-1500<br>
+• <strong>Kecepatan waktu:</strong> 0.5× - 5×<br><br>
+<strong>🎯 Cara Akses:</strong><br>
+Klik menu "Simulasi Interaktif" di sidebar website!<br><br>
+<strong>Teknologi:</strong><br>
+• Canvas HTML5<br>
+• JavaScript (Runge-Kutta integration)<br>
+• Real-time physics engine`,
+        en: `<strong>🎮 Interactive Simulations:</strong><br><br>
+This website provides <strong>FLRW Cosmology Simulation</strong> you can try!<br><br>
+<strong>Features:</strong><br>
+• Universe expansion visualization<br>
+• Parameter controls (H₀, Ω_m, Ω_Λ)<br>
+• Galaxy worldlines<br>
+• Real-time calculations<br><br>
+<strong>Adjustable Parameters:</strong><br>
+• <strong>H₀:</strong> Hubble constant (km/s/Mpc)<br>
+• <strong>Ω_m:</strong> Matter density<br>
+• <strong>Ω_Λ:</strong> Dark energy density<br>
+• <strong>Galaxy count:</strong> 20-1500<br>
+• <strong>Time speed:</strong> 0.5× - 5×<br><br>
+<strong>🎯 How to Access:</strong><br>
+Click "Interactive Simulations" menu in the website sidebar!<br><br>
+<strong>Technology:</strong><br>
+• HTML5 Canvas<br>
+• JavaScript (Runge-Kutta integration)<br>
+• Real-time physics engine`
+      }
+    },
+
+    // Software
+    software: {
+      keywords: ['python', 'matlab', 'mathematica', 'comsol', 'programming', 'bahasa pemrograman', 'tools'],
+      answer: {
+        id: `<strong>💻 Software & Tools:</strong><br><br>
+<strong>1. Python 🐍</strong><br>
+• NumPy, SciPy - Komputasi numerik<br>
+• Matplotlib, Plotly - Visualisasi<br>
+• TensorFlow, PyTorch - Machine learning<br>
+• SymPy - Matematika simbolik<br><br>
+<strong>2. MATLAB</strong><br>
+• Analisis numerik & matriks<br>
+• Simulasi sistem dinamik<br>
+• Toolbox sinyal & image processing<br><br>
+<strong>3. Mathematica</strong><br>
+• Komputasi simbolik canggih<br>
+• Visualisasi 3D interaktif<br>
+• Wolfram Language<br><br>
+<strong>4. COMSOL Multiphysics</strong><br>
+• Simulasi fenomena multifisika<br>
+• Finite element analysis<br>
+• Elektromagnetik, termal, mekanik<br><br>
+<strong>5. Tools Lain:</strong><br>
+• Git - Version control<br>
+• LaTeX - Scientific writing<br>
+• Jupyter Notebook - Interactive computing<br>
+• VSCode - Code editor<br><br>
+<strong>📚 Training:</strong> Lab sediakan workshop software berkala!`,
+        en: `<strong>💻 Software & Tools:</strong><br><br>
+<strong>1. Python 🐍</strong><br>
+• NumPy, SciPy - Numerical computing<br>
+• Matplotlib, Plotly - Visualization<br>
+• TensorFlow, PyTorch - Machine learning<br>
+• SymPy - Symbolic mathematics<br><br>
+<strong>2. MATLAB</strong><br>
+• Numerical analysis & matrices<br>
+• Dynamic system simulation<br>
+• Signal & image processing toolbox<br><br>
+<strong>3. Mathematica</strong><br>
+• Advanced symbolic computing<br>
+• Interactive 3D visualization<br>
+• Wolfram Language<br><br>
+<strong>4. COMSOL Multiphysics</strong><br>
+• Multiphysics phenomena simulation<br>
+• Finite element analysis<br>
+• Electromagnetic, thermal, mechanical<br><br>
+<strong>5. Other Tools:</strong><br>
+• Git - Version control<br>
+• LaTeX - Scientific writing<br>
+• Jupyter Notebook - Interactive computing<br>
+• VSCode - Code editor<br><br>
+<strong>📚 Training:</strong> We offer regular software workshops!`
+      }
+    },
+
+    // ===== CABANG-CABANG FISIKA (9 Topik) =====
+    
+    // 1. Mekanika Kuantum
+    mekanika_kuantum: {
+      keywords: ['mekanika kuantum', 'quantum mechanics', 'kuantum', 'quantum', 'planck', 'heisenberg', 'schrödinger', 'schrodinger', 'bohr', 'einstein foton', 'superposisi', 'quantization'],
+            answer: {
+                id: `<strong>⚛️ Mekanika Kuantum</strong><br><br>
+<strong>Definisi:</strong><br>
+Revolusi abad ke-20 yang mempelajari perilaku partikel pada skala atom & subatomik. Dirintis oleh Max Planck (1900), berkembang melalui kerja Heisenberg, Schrödinger & Dirac.<br><br>
+<strong>Konsep Fundamental:</strong><br>
+• <strong>Dualitas Gelombang-Partikel:</strong> Partikel bisa berperilaku sebagai gelombang dan sebaliknya<br>
+• <strong>Superposisi:</strong> Partikel bisa berada di banyak state sekaligus<br>
+• <strong>Prinsip Ketidakpastian (Heisenberg):</strong> Δx·Δp ≥ ℏ/2<br>
+• <strong>Quantization:</strong> Energi dalam paket diskrit (kuanta)<br><br>
+<strong>Tokoh Penting:</strong><br>
+• <strong>Max Planck (1858-1947):</strong> Konsep kuanta energi, Nobel 1918<br>
+• <strong>Albert Einstein:</strong> Efek fotolistrik (foton), Nobel 1921<br>
+• <strong>Niels Bohr (1885-1962):</strong> Model atom, Nobel 1922<br>
+• <strong>Werner Heisenberg:</strong> Prinsip ketidakpastian, Nobel 1932<br>
+• <strong>Erwin Schrödinger:</strong> Persamaan gelombang<br>
+• <strong>Paul Dirac:</strong> Teori relativistik elektron<br><br>
+<strong>Aplikasi Modern:</strong><br>
+• 🔬 Transistor & semikonduktor<br>
+• 💡 Laser & LED<br>
+• 🏥 MRI medis<br>
+• ☀️ Panel surya<br>
+• 💻 Quantum computing<br><br>
+<strong>Persamaan Schrödinger:</strong><br>
+<code>iℏ ∂ψ/∂t = Ĥψ</code>`,
+                en: `<strong>⚛️ Quantum Mechanics</strong><br><br>
+<strong>Definition:</strong><br>
+20th-century revolution studying particle behaviour at atomic & subatomic scales. Initiated by Max Planck (1900), developed by Heisenberg, Schrödinger & Dirac.<br><br>
+<strong>Fundamental Concepts:</strong><br>
+• <strong>Wave–Particle Duality:</strong> Matter exhibits both wave and particle properties<br>
+• <strong>Superposition:</strong> A system can exist in multiple states simultaneously<br>
+• <strong>Heisenberg Uncertainty:</strong> Δx·Δp ≥ ℏ/2 (limits simultaneous precision)<br>
+• <strong>Quantization:</strong> Energy appears in discrete packets (quanta)<br><br>
+<strong>Key Figures:</strong><br>
+• <strong>Max Planck:</strong> Energy quanta, Nobel 1918<br>
+• <strong>Albert Einstein:</strong> Photoelectric effect (photon), Nobel 1921<br>
+• <strong>Niels Bohr:</strong> Atomic model, Nobel 1922<br>
+• <strong>Werner Heisenberg:</strong> Uncertainty principle, Nobel 1932<br>
+• <strong>Erwin Schrödinger:</strong> Wave equation<br>
+• <strong>Paul Dirac:</strong> Relativistic electron theory<br><br>
+<strong>Modern Applications:</strong><br>
+• 🔬 Transistors & semiconductors<br>
+• 💡 Lasers & LEDs<br>
+• 🏥 Medical MRI<br>
+• ☀️ Solar cells<br>
+• 💻 Quantum computing<br><br>
+<strong>Schrödinger Equation:</strong><br>
+<code>iℏ ∂ψ/∂t = Ĥψ</code>`
+            }
+    },
+
+    // 2. Relativitas
+    relativitas: {
+      keywords: ['relativitas', 'relativity', 'einstein', 'ruang waktu', 'spacetime', 'gravitasi', 'kecepatan cahaya', 'e=mc2', 'dilatasi', 'kontraksi'],
+            answer: {
+                id: `<strong>🚀 Teori Relativitas</strong><br><br>
+<strong>Definisi:</strong><br>
+Puncak pemahaman Einstein tentang ruang, waktu, & gravitasi (1905-1915). Mengubah pemahaman fundamental kita tentang alam semesta.<br><br>
+<strong>Relativitas Khusus (1905):</strong><br>
+• <strong>Kecepatan cahaya konstan:</strong> c = 299,792,458 m/s di semua frame referensi<br>
+• <strong>Dilatasi waktu:</strong> Waktu berjalan lebih lambat pada kecepatan tinggi<br>
+• <strong>Kontraksi panjang:</strong> Objek memendek saat bergerak cepat<br>
+• <strong>E = mc²:</strong> Massa dan energi ekuivalen<br><br>
+<strong>Relativitas Umum (1915):</strong><br>
+• <strong>Gravitasi = Kelengkungan ruang-waktu</strong><br>
+• Massa membengkokkan ruang-waktu<br>
+• Prediksi: Lubang hitam, gelombang gravitasi, lensa gravitasi<br><br>
+<strong>Bukti Eksperimental:</strong><br>
+• ✅ Pembelokan cahaya bintang (Eddington 1919)<br>
+• ✅ GPS satellites (koreksi relativistik)<br>
+• ✅ Gelombang gravitasi (LIGO 2015)<br>
+• ✅ Foto lubang hitam (EHT 2019)<br><br>
+<strong>Dampak:</strong><br>
+Membuka era kosmologi modern, astrofisika relativistik, dan teknologi berbasis GPS.`,
+                en: `<strong>🚀 Theory of Relativity</strong><br><br>
+<strong>Definition:</strong><br>
+Einstein's breakthrough framework for space, time & gravity (1905–1915) transforming fundamental physics.<br><br>
+<strong>Special Relativity (1905):</strong><br>
+• <strong>Constancy of light speed:</strong> c = 299,792,458 m/s in all inertial frames<br>
+• <strong>Time dilation:</strong> Moving clocks tick slower<br>
+• <strong>Length contraction:</strong> Moving objects shorten along direction of motion<br>
+• <strong>E = mc²:</strong> Mass–energy equivalence<br><br>
+<strong>General Relativity (1915):</strong><br>
+• <strong>Gravity = Curvature of spacetime</strong><br>
+• Mass-energy tells spacetime how to curve; curvature guides motion<br>
+• Predicts black holes, gravitational waves, gravitational lensing<br><br>
+<strong>Experimental Confirmations:</strong><br>
+• ✅ Starlight bending (Eddington 1919)<br>
+• ✅ GPS relativistic corrections<br>
+• ✅ Gravitational waves (LIGO 2015)<br>
+• ✅ Black hole image (EHT 2019)<br><br>
+<strong>Impact:</strong><br>
+Opened modern cosmology, relativistic astrophysics & precision navigation (GPS).`
+            }
+    },
+
+    // 3. Kosmologi Detail
+    kosmologi_detail: {
+      keywords: ['big bang', 'cmb', 'radiasi latar belakang', 'hubble', 'ekspansi alam semesta', 'alam semesta awal', 'inflasi'],
+            answer: {
+                id: `<strong>🌌 Kosmologi Modern</strong><br><br>
+<strong>Big Bang Theory:</strong><br>
+Alam semesta dimulai dari singularitas ~13.8 miliar tahun lalu. Bukti utama:<br>
+• <strong>Ekspansi Hubble:</strong> Galaksi menjauh (1929)<br>
+• <strong>CMB Radiation:</strong> Radiasi "gema" Big Bang (2.7 K)<br>
+• <strong>Nucleosynthesis:</strong> Kelimpahan unsur ringan<br><br>
+<strong>Komposisi Alam Semesta:</strong><br>
+• 🌑 <strong>Dark Energy:</strong> ~68% (ekspansi dipercepat)<br>
+• 🔮 <strong>Dark Matter:</strong> ~27% (gravitasi tak terlihat)<br>
+• ⭐ <strong>Materi Biasa:</strong> ~5% (bintang, planet, kita)<br><br>
+<strong>Timeline Kosmik:</strong><br>
+• <strong>t = 0:</strong> Big Bang singularity<br>
+• <strong>t = 10⁻³⁶ s:</strong> Inflasi kosmik<br>
+• <strong>t = 3 menit:</strong> Nucleosynthesis<br>
+• <strong>t = 380,000 yr:</strong> Rekombinasi (CMB terbentuk)<br>
+• <strong>t = 100 juta yr:</strong> Bintang pertama<br>
+• <strong>t = 13.8 miliar yr:</strong> Sekarang<br><br>
+<strong>Model FLRW:</strong><br>
+Friedmann-Lemaître-Robertson-Walker metric menggambarkan geometri alam semesta yang homogen dan isotropik.`,
+                en: `<strong>🌌 Modern Cosmology</strong><br><br>
+<strong>Big Bang Theory:</strong><br>
+Universe began from a hot dense singularity ~13.8 billion years ago. Key evidence:<br>
+• <strong>Hubble Expansion:</strong> Galaxies receding (1929)<br>
+• <strong>CMB Radiation:</strong> Relic background (2.7 K)<br>
+• <strong>Primordial Nucleosynthesis:</strong> Light element abundances<br><br>
+<strong>Universe Composition:</strong><br>
+• 🌑 <strong>Dark Energy:</strong> ~68% (accelerated expansion)<br>
+• 🔮 <strong>Dark Matter:</strong> ~27% (invisible gravitating component)<br>
+• ⭐ <strong>Baryonic Matter:</strong> ~5% (stars, planets, us)<br><br>
+<strong>Cosmic Timeline:</strong><br>
+• <strong>t = 0:</strong> Big Bang singularity<br>
+• <strong>t ~ 10⁻³⁶ s:</strong> Cosmic inflation<br>
+• <strong>t ~ 3 min:</strong> Nucleosynthesis (H, He formed)<br>
+• <strong>t ~ 380,000 yr:</strong> Recombination (CMB released)<br>
+• <strong>t ~ 100 Myr:</strong> First stars<br>
+• <strong>t = 13.8 Gyr:</strong> Present day<br><br>
+<strong>FLRW Metric:</strong><br>
+Friedmann–Lemaître–Robertson–Walker geometry for a homogeneous & isotropic universe.`
+            }
+    },
+
+    // 4. Termodinamika
+    termodinamika: {
+      keywords: ['termodinamika', 'thermodynamics', 'entropi', 'entropy', 'panas', 'energi', 'hukum termodinamika', 'carnot', 'heat'],
+            answer: {
+                id: `<strong>🌡️ Termodinamika</strong><br><br>
+<strong>Definisi:</strong><br>
+Ilmu tentang transformasi energi, panas, dan entropi dalam sistem fisik. Dari mesin Carnot hingga aplikasi modern.<br><br>
+<strong>4 Hukum Fundamental:</strong><br><br>
+<strong>Hukum ke-0:</strong> Keseimbangan Termal<br>
+Jika A = B dan B = C dalam termal, maka A = C<br><br>
+<strong>Hukum I:</strong> Kekekalan Energi<br>
+<code>ΔU = Q - W</code><br>
+Energi tidak bisa diciptakan/dimusnahkan, hanya berubah bentuk<br><br>
+<strong>Hukum II:</strong> Peningkatan Entropi<br>
+<code>ΔS ≥ 0</code> (sistem terisolasi)<br>
+Entropi alam semesta selalu meningkat. Proses spontan irreversible.<br><br>
+<strong>Hukum III:</strong> Nol Absolut<br>
+T = 0 K tidak bisa dicapai dalam jumlah langkah terbatas<br><br>
+<strong>Aplikasi:</strong><br>
+• 🚗 Mesin pembakaran internal<br>
+• ❄️ Refrigerasi & AC<br>
+• ⚡ Pembangkit listrik (thermal, nuklir)<br>
+• 🧬 Biologi sistem & metabolisme<br>
+• ♻️ Efisiensi energi<br><br>
+<strong>Konsep Penting:</strong><br>
+• Entropi sebagai ukuran "disorder"<br>
+• Siklus Carnot (efisiensi maksimum)<br>
+• Free energy (Gibbs, Helmholtz)`,
+                en: `<strong>🌡️ Thermodynamics</strong><br><br>
+<strong>Definition:</strong><br>
+Science of energy transformation, heat & entropy in physical systems—from Carnot engines to modern applications.<br><br>
+<strong>4 Fundamental Laws:</strong><br><br>
+<strong>Zeroth Law:</strong> Thermal Equilibrium (A=B & B=C ⇒ A=C)<br><br>
+<strong>First Law:</strong> Energy Conservation<br>
+<code>ΔU = Q - W</code> (Internal energy change equals heat in minus work out)<br><br>
+<strong>Second Law:</strong> Entropy Increase<br>
+<code>ΔS ≥ 0</code> (isolated system) – spontaneous processes are irreversible<br><br>
+<strong>Third Law:</strong> Absolute Zero unattainable in finite steps<br><br>
+<strong>Applications:</strong><br>
+• 🚗 Internal combustion engines<br>
+• ❄️ Refrigeration & air conditioning<br>
+• ⚡ Power plants (thermal, nuclear)<br>
+• 🧬 Biological metabolism & bioenergetics<br>
+• ♻️ Energy efficiency engineering<br><br>
+<strong>Key Concepts:</strong><br>
+• Entropy as measure of disorder/information<br>
+• Carnot cycle (maximum efficiency)<br>
+• Free energies (Gibbs, Helmholtz)`
+            }
+    },
+
+    // 5. Fisika Partikel
+    fisika_partikel: {
+      keywords: ['fisika partikel', 'particle physics', 'model standar', 'standard model', 'quark', 'lepton', 'higgs', 'boson', 'lhc', 'cern', 'fermion'],
+            answer: {
+                id: `<strong>🔬 Fisika Partikel</strong><br><br>
+<strong>Definisi:</strong><br>
+Investigasi partikel fundamental & interaksi yang membentuk semua materi. Dari penemuan elektron (Thomson 1897) hingga Higgs boson (2012).<br><br>
+<strong>Model Standar:</strong><br>
+Teori paling sukses menjelaskan partikel & gaya fundamental<br><br>
+<strong>Partikel Materi (Fermion):</strong><br>
+• <strong>Quarks:</strong> up, down, charm, strange, top, bottom<br>
+• <strong>Leptons:</strong> elektron, muon, tau, neutrino (3 jenis)<br><br>
+<strong>Partikel Gaya (Boson):</strong><br>
+• <strong>Foton (γ):</strong> Elektromagnetisme<br>
+• <strong>Gluon (g):</strong> Gaya kuat (QCD)<br>
+• <strong>W±, Z⁰:</strong> Gaya lemah<br>
+• <strong>Higgs boson:</strong> Pemberi massa (ditemukan 2012)<br><br>
+<strong>4 Gaya Fundamental:</strong><br>
+1. <strong>Gravitasi:</strong> Paling lemah tapi jangkauan tak terbatas<br>
+2. <strong>Elektromagnetik:</strong> Listrik, magnet, cahaya<br>
+3. <strong>Gaya Lemah:</strong> Radioaktivitas beta<br>
+4. <strong>Gaya Kuat:</strong> Ikat quark dalam proton/neutron<br><br>
+<strong>Accelerator:</strong><br>
+• <strong>LHC (CERN):</strong> 27 km, energi 13 TeV<br>
+• Mencari fisika baru: supersymmetry, dimensi ekstra, dark matter<br><br>
+<strong>Misteri Terbuka:</strong><br>
+• Mengapa materi > antimateri?<br>
+• Apa itu dark matter?<br>
+• Unifikasi gaya-gaya?`,
+                en: `<strong>🔬 Particle Physics</strong><br><br>
+<strong>Definition:</strong><br>
+Study of fundamental particles & interactions forming all matter—from electron discovery (Thomson 1897) to Higgs boson (2012).<br><br>
+<strong>Standard Model:</strong><br>
+Most successful theory describing particles & fundamental forces (except gravity).<br><br>
+<strong>Matter Particles (Fermions):</strong><br>
+• <strong>Quarks:</strong> up, down, charm, strange, top, bottom<br>
+• <strong>Leptons:</strong> electron, muon, tau, 3 neutrinos<br><br>
+<strong>Force Carriers (Bosons):</strong><br>
+• <strong>Photon (γ):</strong> Electromagnetism<br>
+• <strong>Gluon (g):</strong> Strong force (QCD)<br>
+• <strong>W±, Z⁰:</strong> Weak interaction<br>
+• <strong>Higgs boson:</strong> Mass generation (found 2012)<br><br>
+<strong>4 Fundamental Forces:</strong><br>
+1. <strong>Gravity:</strong> Weakest, infinite range<br>
+2. <strong>Electromagnetism:</strong> Electricity, magnetism, light<br>
+3. <strong>Weak Force:</strong> Beta decay processes<br>
+4. <strong>Strong Force:</strong> Binds quarks in nucleons<br><br>
+<strong>Accelerators:</strong><br>
+• <strong>LHC (CERN):</strong> 27 km, 13 TeV collisions<br>
+• Searches: Supersymmetry, extra dimensions, dark matter<br><br>
+<strong>Open Questions:</strong><br>
+• Why matter > antimatter?<br>
+• What is dark matter?<br>
+• Can forces be unified?`
+            }
+    },
+
+    // 6. Elektromagnetisme
+    elektromagnetisme: {
+      keywords: ['elektromagnetisme', 'electromagnetism', 'maxwell', 'listrik', 'magnet', 'gelombang em', 'cahaya', 'faraday', 'electromagnetic'],
+            answer: {
+                id: `<strong>⚡ Elektromagnetisme</strong><br><br>
+<strong>Definisi:</strong><br>
+Satu kekuatan fundamental! Maxwell (1865) menyatukan listrik & magnet dalam 4 persamaan elegan. Cahaya adalah gelombang elektromagnetik.<br><br>
+<strong>4 Persamaan Maxwell:</strong><br><br>
+<strong>1. Hukum Gauss (Listrik):</strong><br>
+<code>∇·E = ρ/ε₀</code><br>
+Muatan listrik menghasilkan medan listrik<br><br>
+<strong>2. Hukum Gauss (Magnet):</strong><br>
+<code>∇·B = 0</code><br>
+Tidak ada monopole magnetik<br><br>
+<strong>3. Hukum Faraday:</strong><br>
+<code>∇×E = -∂B/∂t</code><br>
+Medan magnet berubah → arus listrik terinduksi<br><br>
+<strong>4. Hukum Ampère-Maxwell:</strong><br>
+<code>∇×B = μ₀J + μ₀ε₀∂E/∂t</code><br>
+Arus & medan listrik berubah → medan magnet<br><br>
+<strong>Spektrum Gelombang EM:</strong><br>
+• 📻 Radio waves (λ > 1 m)<br>
+• 📺 Microwaves (1 mm - 1 m)<br>
+• 🌡️ Infrared (700 nm - 1 mm)<br>
+• 👁️ Visible light (400-700 nm)<br>
+• 🦠 Ultraviolet (10-400 nm)<br>
+• 🏥 X-rays (0.01-10 nm)<br>
+• ☢️ Gamma rays (λ < 0.01 nm)<br><br>
+<strong>Aplikasi:</strong><br>
+• ⚡ Motor & generator listrik<br>
+• 📡 Telekomunikasi (radio, TV, WiFi)<br>
+• 🏥 Imaging medis (MRI, X-ray)<br>
+• ☀️ Energi terbarukan (solar, wind)<br>
+• 🔦 Laser & fiber optik`,
+                en: `<strong>⚡ Electromagnetism</strong><br><br>
+<strong>Definition:</strong><br>
+One fundamental interaction. Maxwell (1865) unified electricity & magnetism into 4 elegant equations. Light is an electromagnetic wave.<br><br>
+<strong>Maxwell's 4 Equations:</strong><br><br>
+<strong>1. Gauss's Law (Electric):</strong> <code>∇·E = ρ/ε₀</code> (Charge creates electric field)<br>
+<strong>2. Gauss's Law (Magnetic):</strong> <code>∇·B = 0</code> (No magnetic monopoles)<br>
+<strong>3. Faraday's Law:</strong> <code>∇×E = -∂B/∂t</code> (Changing B induces E)<br>
+<strong>4. Ampère–Maxwell:</strong> <code>∇×B = μ₀J + μ₀ε₀∂E/∂t</code> (Currents & changing E produce B)<br><br>
+<strong>EM Spectrum:</strong><br>
+• 📻 Radio (λ > 1 m)<br>
+• 📺 Microwave (1 mm – 1 m)<br>
+• 🌡️ Infrared (700 nm – 1 mm)<br>
+• 👁️ Visible (400–700 nm)<br>
+• 🦠 Ultraviolet (10–400 nm)<br>
+• 🏥 X‑ray (0.01–10 nm)<br>
+• ☢️ Gamma (< 0.01 nm)<br><br>
+<strong>Applications:</strong><br>
+• ⚡ Motors & generators<br>
+• 📡 Telecommunications (radio, TV, WiFi)<br>
+• 🏥 Medical imaging (MRI, X‑ray)<br>
+• ☀️ Renewable energy (solar, wind)<br>
+• 🔦 Lasers & fiber optics`
+            }
+    },
+
+    // 7. Fisika Nuklir
+    fisika_nuklir: {
+      keywords: ['fisika nuklir', 'nuclear physics', 'radioaktivitas', 'radioactive', 'fisi', 'fussion', 'nuklir', 'reaktor', 'pltn', 'alpha', 'beta', 'gamma'],
+            answer: {
+                id: `<strong>☢️ Fisika Nuklir</strong><br><br>
+<strong>Definisi:</strong><br>
+Mempelajari inti atom, radioaktivitas, dan reaksi nuklir. Energi nuklir membuka era baru teknologi dan tantangan.<br><br>
+<strong>Struktur Inti:</strong><br>
+• <strong>Proton (p⁺):</strong> Muatan +e<br>
+• <strong>Neutron (n⁰):</strong> Netral<br>
+• <strong>Gaya Kuat:</strong> Mengikat nukleon bersama<br>
+• <strong>Defisit Massa:</strong> E = Δmc² (energi ikat)<br><br>
+<strong>Radioaktivitas:</strong><br>
+Inti tidak stabil memancarkan radiasi<br><br>
+• <strong>Alpha (α):</strong> Inti Helium (2p + 2n)<br>
+• <strong>Beta (β⁻):</strong> Elektron dari neutron → proton<br>
+• <strong>Beta (β⁺):</strong> Positron dari proton → neutron<br>
+• <strong>Gamma (γ):</strong> Foton energi tinggi<br><br>
+<strong>Reaksi Nuklir:</strong><br>
+• <strong>Fisi:</strong> Inti berat pecah → energi besar (U-235, Pu-239)<br>
+• <strong>Fusi:</strong> Inti ringan bergabung → energi (seperti di Matahari)<br><br>
+<strong>Aplikasi:</strong><br>
+• ⚡ PLTN (Pembangkit Listrik Tenaga Nuklir)<br>
+• 🏥 Kedokteran nuklir (PET scan, terapi kanker)<br>
+• 🔬 Pelacak radioaktif<br>
+• ⭐ Astrofisika nuklir (nucleosynthesis bintang)<br><br>
+<strong>Tantangan:</strong><br>
+• ☢️ Keselamatan reaktor<br>
+• 🗑️ Manajemen limbah radioaktif<br>
+• ⚠️ Proliferasi senjata nuklir<br><br>
+<strong>Tokoh:</strong> Becquerel, Marie Curie, Rutherford, Fermi`,
+                en: `<strong>☢️ Nuclear Physics</strong><br><br>
+<strong>Definition:</strong><br>
+Study of atomic nuclei, radioactivity & nuclear reactions. Nuclear energy introduced powerful technologies & challenges.<br><br>
+<strong>Nuclear Structure:</strong><br>
+• <strong>Proton (p⁺):</strong> Charge +e<br>
+• <strong>Neutron (n⁰):</strong> Neutral<br>
+• <strong>Strong Force:</strong> Binds nucleons together<br>
+• <strong>Mass Defect:</strong> E = Δmc² (binding energy)<br><br>
+<strong>Radioactivity:</strong><br>
+Unstable nuclei emit radiation:<br>
+• <strong>Alpha (α):</strong> Helium nucleus (2p+2n)<br>
+• <strong>Beta (β⁻):</strong> Electron (n → p + e⁻ + ν̄)<br>
+• <strong>Beta (β⁺):</strong> Positron (p → n + e⁺ + ν)<br>
+• <strong>Gamma (γ):</strong> High‑energy photon<br><br>
+<strong>Nuclear Reactions:</strong><br>
+• <strong>Fission:</strong> Heavy nucleus splits → large energy (U-235, Pu-239)<br>
+• <strong>Fusion:</strong> Light nuclei merge → energy (powers stars)<br><br>
+<strong>Applications:</strong><br>
+• ⚡ Nuclear power plants (energy generation)<br>
+• 🏥 Nuclear medicine (PET, cancer therapy)<br>
+• 🔬 Radioactive tracers<br>
+• ⭐ Stellar nucleosynthesis (element formation)<br><br>
+<strong>Challenges:</strong><br>
+• ☢️ Reactor safety
+• 🗑️ Radioactive waste management
+• ⚠️ Proliferation & security<br><br>
+<strong>Pioneers:</strong> Becquerel, Marie Curie, Rutherford, Fermi`
+            }
+    },
+
+    // 8. Astrofisika
+    astrofisika: {
+      keywords: ['astrofisika', 'astrophysics', 'bintang', 'stars', 'galaksi', 'galaxy', 'lubang hitam', 'black hole', 'supernova', 'jwst', 'neutron star'],
+            answer: {
+                id: `<strong>🌟 Astrofisika</strong><br><br>
+<strong>Definisi:</strong><br>
+Menggabungkan fisika dengan astronomi untuk memahami bintang, galaksi, dan lubang hitam. Dari teleskop Galileo hingga era JWST & gelombang gravitasi.<br><br>
+<strong>Evolusi Bintang:</strong><br>
+• <strong>Awan Molekuler:</strong> Kolaps gravitasi<br>
+• <strong>Protobintang:</strong> Akumulasi massa<br>
+• <strong>Main Sequence:</strong> Fusi H → He (95% kehidupan)<br>
+• <strong>Red Giant:</strong> Fusi He, ekspansi<br>
+• <strong>Akhir Hidup:</strong><br>
+    - Kecil: White dwarf → Planetary nebula<br>
+    - Besar: Supernova → Neutron star / Black hole<br><br>
+<strong>Objek Ekstrem:</strong><br>
+• <strong>Neutron Star:</strong> Densitas nuklir, pulsar<br>
+• <strong>Black Hole:</strong> Gravitasi ekstrem, horizon peristiwa<br>
+• <strong>Quasar:</strong> AGN super luminous<br>
+• <strong>Magnetar:</strong> Medan magnet terkuat di alam semesta<br><br>
+<strong>Struktur Kosmik:</strong><br>
+• <strong>Galaksi:</strong> 100-400 miliar bintang<br>
+• <strong>Cluster:</strong> Ribuan galaksi terikat gravitasi<br>
+• <strong>Cosmic Web:</strong> Filamen dark matter<br><br>
+<strong>Breakthrough Modern:</strong><br>
+• 🌊 <strong>Gelombang Gravitasi (LIGO 2015):</strong> Tabrakan black hole<br>
+• 📸 <strong>Foto Black Hole (EHT 2019):</strong> M87*<br>
+• 🔭 <strong>JWST (2022):</strong> Galaksi alam semesta awal<br><br>
+<strong>Topik Riset:</strong><br>
+• Evolusi galaksi<br>
+• Exoplanet & astrobiologi<br>
+• Sinar kosmik<br>
+• Kinetika struktur kosmik`,
+                en: `<strong>🌟 Astrophysics</strong><br><br>
+<strong>Definition:</strong><br>
+Applies physics to understand stars, galaxies & black holes—from Galileo's telescope to JWST & gravitational waves.<br><br>
+<strong>Stellar Evolution:</strong><br>
+• <strong>Molecular Cloud:</strong> Gravitational collapse<br>
+• <strong>Protostar:</strong> Accretion & heating<br>
+• <strong>Main Sequence:</strong> H → He fusion (major lifetime)<br>
+• <strong>Red Giant:</strong> Helium fusion & expansion<br>
+• <strong>End States:</strong><br>
+    - Low mass: White dwarf → planetary nebula<br>
+    - High mass: Supernova → Neutron star / Black hole<br><br>
+<strong>Extreme Objects:</strong><br>
+• <strong>Neutron Stars:</strong> Nuclear-density remnants, pulsars<br>
+• <strong>Black Holes:</strong> Event horizon & strong gravity<br>
+• <strong>Quasars:</strong> Hyper‑luminous active galactic nuclei<br>
+• <strong>Magnetars:</strong> Most intense magnetic fields known<br><br>
+<strong>Cosmic Structure:</strong><br>
+• <strong>Galaxies:</strong> 10⁸–10¹² stars<br>
+• <strong>Clusters:</strong> Thousands of galaxies gravitationally bound<br>
+• <strong>Cosmic Web:</strong> Dark matter filaments shaping formation<br><br>
+<strong>Modern Breakthroughs:</strong><br>
+• 🌊 <strong>Gravitational Waves (LIGO 2015):</strong> Black hole mergers<br>
+• 📸 <strong>Black Hole Image (EHT 2019):</strong> M87* shadow<br>
+• 🔭 <strong>JWST (2022):</strong> Early universe galaxy imaging<br><br>
+<strong>Research Topics:</strong><br>
+• Galaxy evolution<br>
+• Exoplanets & astrobiology<br>
+• Cosmic rays
+• Large‑scale structure dynamics`
+            }
+    },
+
+    // 9. Optika
+    optika: {
+      keywords: ['optika', 'optics', 'cahaya', 'light', 'lensa', 'lens', 'pembiasan', 'interferensi', 'laser', 'fiber optik', 'refraction', 'diffraction'],
+            answer: {
+                id: `<strong>🔦 Optika</strong><br><br>
+<strong>Definisi:</strong><br>
+Sains cahaya & penglihatan. Mempelajari cahaya, pantulan, pembiasan, interferensi. Dari Newton vs Huygens hingga quantum optics modern.<br><br>
+<strong>Sejarah Perdebatan:</strong><br>
+• <strong>Newton:</strong> Cahaya = partikel (corpuscular theory)<br>
+• <strong>Huygens:</strong> Cahaya = gelombang (wave theory)<br>
+• <strong>Maxwell:</strong> Cahaya = gelombang elektromagnetik<br>
+• <strong>Quantum:</strong> Cahaya = dualitas gelombang-partikel (foton)<br><br>
+<strong>Optika Geometris:</strong><br>
+• <strong>Pantulan:</strong> θᵢ = θᵣ (cermin)<br>
+• <strong>Pembiasan:</strong> n₁sinθ₁ = n₂sinθ₂ (Snell's law)<br>
+• <strong>Lensa:</strong> Konvergen (cembung) & divergen (cekung)<br>
+• <strong>Aberasi:</strong> Spherical, chromatic<br><br>
+<strong>Optika Fisis:</strong><br>
+• <strong>Interferensi:</strong> Konstruktif & destruktif (Young's double slit)<br>
+• <strong>Difraksi:</strong> Bengkokan cahaya di tepi objek<br>
+• <strong>Polarisasi:</strong> Orientasi gelombang EM<br>
+• <strong>Dispersi:</strong> Spektrum warna (prisma)<br><br>
+<strong>Aplikasi Modern:</strong><br>
+• 🔬 <strong>Mikroskop & Teleskop:</strong> Optik canggih<br>
+• 💡 <strong>Laser:</strong> Light Amplification by Stimulated Emission<br>
+• 🌐 <strong>Fiber Optik:</strong> Telekomunikasi kecepatan cahaya<br>
+• 📷 <strong>Kamera & Imaging:</strong> Sensor CMOS/CCD<br>
+• 👓 <strong>Koreksi Penglihatan:</strong> Kacamata, LASIK<br>
+• 🎨 <strong>Holografi:</strong> Rekaman 3D<br><br>
+<strong>Quantum Optics:</strong><br>
+• Single-photon sources<br>
+• Quantum entanglement<br>
+• Quantum cryptography`,
+                en: `<strong>🔦 Optics</strong><br><br>
+<strong>Definition:</strong><br>
+Science of light & vision—reflection, refraction, interference—from Newton vs Huygens debates to modern quantum optics.<br><br>
+<strong>Historical Debate:</strong><br>
+• <strong>Newton:</strong> Light = particles (corpuscles)<br>
+• <strong>Huygens:</strong> Light = wave phenomenon<br>
+• <strong>Maxwell:</strong> Light = electromagnetic wave<br>
+• <strong>Quantum:</strong> Wave–particle dual nature (photons)<br><br>
+<strong>Geometrical Optics:</strong><br>
+• <strong>Reflection:</strong> θᵢ = θᵣ (mirror law)<br>
+• <strong>Refraction:</strong> n₁ sin θ₁ = n₂ sin θ₂ (Snell)<br>
+• <strong>Lenses:</strong> Converging (convex) & diverging (concave)<br>
+• <strong>Aberrations:</strong> Spherical, chromatic distortions<br><br>
+<strong>Physical Optics:</strong><br>
+• <strong>Interference:</strong> Constructive & destructive (Young's double slit)<br>
+• <strong>Diffraction:</strong> Bending around edges/apertures<br>
+• <strong>Polarization:</strong> Orientation of EM wave oscillations<br>
+• <strong>Dispersion:</strong> Wavelength-dependent refraction (prism spectrum)<br><br>
+<strong>Modern Applications:</strong><br>
+• 🔬 <strong>Microscopes & Telescopes:</strong> Advanced imaging systems<br>
+• 💡 <strong>Lasers:</strong> Stimulated emission light sources<br>
+• 🌐 <strong>Fiber Optics:</strong> High-speed light communication<br>
+• 📷 <strong>Cameras:</strong> CMOS/CCD image sensors<br>
+• 👓 <strong>Vision Correction:</strong> Glasses, contact lenses, LASIK<br>
+• 🎨 <strong>Holography:</strong> 3D recording & display<br><br>
+<strong>Quantum Optics:</strong><br>
+• Single-photon sources<br>
+• Quantum entanglement systems<br>
+• Quantum cryptography protocols`
+            }
+    },
+
+    // ===== FISIKA KLASIK VS FISIKA MODERN =====
+    
+    // Fisika Klasik
+    fisika_klasik: {
+      keywords: ['fisika klasik', 'classical physics', 'newton', 'mekanika newton', 'classical mechanics', 'fisika pra-kuantum'],
+            answer: {
+                id: `<strong>🏛️ Fisika Klasik</strong><br><br>
+<strong>Definisi:</strong><br>
+Fisika yang berkembang sebelum revolusi kuantum (~1900). Berlaku dengan sangat akurat untuk objek berukuran makroskopis dan kecepatan jauh di bawah kecepatan cahaya.<br><br>
+<strong>Cabang Utama:</strong><br><br>
+<strong>1. Mekanika Newton (1687)</strong><br>
+• <strong>3 Hukum Newton:</strong><br>
+    - Hukum I: Inersia (F=0 → v konstan)<br>
+    - Hukum II: F = ma<br>
+    - Hukum III: Aksi-reaksi<br>
+• <strong>Gravitasi Universal:</strong> F = Gm₁m₂/r²<br>
+• Berlaku: Benda makroskopis, v << c<br><br>
+<strong>2. Elektrodinamika Klasik (Maxwell 1865)</strong><br>
+• 4 Persamaan Maxwell<br>
+• Gelombang elektromagnetik<br>
+• Cahaya sebagai gelombang EM<br><br>
+<strong>3. Termodinamika Klasik</strong><br>
+• 4 Hukum termodinamika<br>
+• Konsep entropi<br>
+• Mesin kalor & efisiensi<br><br>
+<strong>4. Mekanika Fluida</strong><br>
+• Persamaan Navier-Stokes<br>
+• Hukum Bernoulli<br>
+• Aliran laminar & turbulen<br><br>
+<strong>Keterbatasan:</strong><br>
+❌ Gagal menjelaskan:<br>
+• Radiasi benda hitam<br>
+• Efek fotolistrik<br>
+• Spektrum atom<br>
+• Stabilitas atom<br>
+• Orbit elektron<br><br>
+<strong>Validitas:</strong><br>
+✅ Masih sangat akurat untuk:<br>
+• Teknik sipil & mekanik<br>
+• Gerak planet & satelit<br>
+• Dinamika fluida klasik<br>
+• Skala makroskopis sehari-hari`,
+                en: `<strong>🏛️ Classical Physics</strong><br><br>
+<strong>Definition:</strong><br>
+Physics developed before the quantum revolution (~1900). Highly accurate for macroscopic objects moving at speeds far below light speed.<br><br>
+<strong>Main Branches:</strong><br><br>
+<strong>1. Newtonian Mechanics (1687)</strong><br>
+• <strong>3 Laws of Motion:</strong><br>
+    - Law I (Inertia): F=0 → constant velocity<br>
+    - Law II: F = ma<br>
+    - Law III: Action–reaction<br>
+• <strong>Universal Gravitation:</strong> F = Gm₁m₂/r²<br>
+• Valid for: Macroscopic bodies, v << c<br><br>
+<strong>2. Classical Electrodynamics (Maxwell 1865)</strong><br>
+• Maxwell's 4 equations<br>
+• Electromagnetic waves<br>
+• Light as EM wave<br><br>
+<strong>3. Classical Thermodynamics</strong><br>
+• 4 laws of thermodynamics<br>
+• Entropy concept<br>
+• Heat engines & efficiency<br><br>
+<strong>4. Fluid Mechanics</strong><br>
+• Navier–Stokes equations<br>
+• Bernoulli's principle<br>
+• Laminar vs turbulent flow<br><br>
+<strong>Limitations:</strong><br>
+❌ Fails to explain:<br>
+• Blackbody radiation<br>
+• Photoelectric effect<br>
+• Atomic spectra<br>
+• Atomic stability<br>
+• Electron orbits<br><br>
+<strong>Continued Validity:</strong><br>
+✅ Still highly accurate for:<br>
+• Civil & mechanical engineering<br>
+• Planetary & satellite motion<br>
+• Classical fluid dynamics<br>
+• Everyday macroscopic scales`
+            }
+    },
+
+    // Fisika Modern
+    fisika_modern: {
+      keywords: ['fisika modern', 'modern physics', 'fisika abad 20', 'fisika kontemporer', 'post-classical'],
+            answer: {
+                id: `<strong>🚀 Fisika Modern</strong><br><br>
+<strong>Definisi:</strong><br>
+Fisika yang berkembang sejak awal abad ke-20, dimulai dengan revolusi kuantum dan relativitas. Mengubah pemahaman fundamental tentang ruang, waktu, materi, dan energi.<br><br>
+<strong>2 Pilar Utama:</strong><br><br>
+<strong>1️⃣ Mekanika Kuantum (1900-1930)</strong><br>
+• <strong>Pelopor:</strong> Planck, Einstein, Bohr, Heisenberg, Schrödinger<br>
+• <strong>Konsep Kunci:</strong><br>
+    - Dualitas gelombang-partikel<br>
+    - Quantization energi<br>
+    - Prinsip ketidakpastian<br>
+    - Superposisi & entanglement<br>
+• <strong>Aplikasi:</strong> Transistor, laser, MRI, quantum computing<br><br>
+<strong>2️⃣ Relativitas (1905-1915)</strong><br>
+• <strong>Pelopor:</strong> Albert Einstein<br>
+• <strong>Relativitas Khusus:</strong> E=mc², dilatasi waktu<br>
+• <strong>Relativitas Umum:</strong> Gravitasi = kelengkungan ruang-waktu<br>
+• <strong>Aplikasi:</strong> GPS, kosmologi, deteksi gelombang gravitasi<br><br>
+<strong>Perbedaan dengan Fisika Klasik:</strong><br>
+• <strong>Klasik:</strong> Deterministik, kontinu, lokal<br>
+• <strong>Modern:</strong> Probabilistik, diskrit (kuanta), non-lokal<br><br>
+<strong>Cabang Fisika Modern:</strong><br>
+• ⚛️ Fisika Partikel (Model Standar)<br>
+• ☢️ Fisika Nuklir<br>
+• 🌌 Kosmologi Relativistik<br>
+• 💻 Fisika Komputasi Kuantum<br>
+• 🔬 Fisika Materi Terkondensasi<br><br>
+<strong>Frontier Penelitian:</strong><br>
+• Unifikasi gaya-gaya fundamental<br>
+• Teori segala (Theory of Everything)<br>
+• Gravitasi kuantum<br>
+• Dark matter & dark energy`,
+                en: `<strong>🚀 Modern Physics</strong><br><br>
+<strong>Definition:</strong><br>
+Physics developed since the early 20th century—founded on quantum theory and relativity—reshaping concepts of space, time, matter & energy.<br><br>
+<strong>Two Main Pillars:</strong><br><br>
+<strong>1️⃣ Quantum Mechanics (1900–1930)</strong><br>
+• <strong>Pioneers:</strong> Planck, Einstein, Bohr, Heisenberg, Schrödinger<br>
+• <strong>Key Concepts:</strong><br>
+    - Wave–particle duality<br>
+    - Energy quantization<br>
+    - Uncertainty principle<br>
+    - Superposition & entanglement<br>
+• <strong>Applications:</strong> Transistors, lasers, MRI, quantum computing<br><br>
+<strong>2️⃣ Relativity (1905–1915)</strong><br>
+• <strong>Pioneer:</strong> Albert Einstein<br>
+• <strong>Special Relativity:</strong> E = mc², time dilation<br>
+• <strong>General Relativity:</strong> Gravity as spacetime curvature<br>
+• <strong>Applications:</strong> GPS, cosmology, gravitational wave detection<br><br>
+<strong>Differences vs Classical Physics:</strong><br>
+• <strong>Classical:</strong> Deterministic, continuous, local<br>
+• <strong>Modern:</strong> Probabilistic, discrete (quanta), sometimes non‑local correlations<br><br>
+<strong>Branches of Modern Physics:</strong><br>
+• ⚛️ Particle Physics (Standard Model)<br>
+• ☢️ Nuclear Physics<br>
+• 🌌 Relativistic Cosmology<br>
+• 💻 Quantum Computational Physics<br>
+• 🔬 Condensed Matter Physics<br><br>
+<strong>Research Frontiers:</strong><br>
+• Unification of fundamental forces<br>
+• Theory of Everything candidates<br>
+• Quantum gravity approaches<br>
+• Dark matter & dark energy puzzles`
+            }
+    },
+
+    // Penelitian Fisika Terkini
+    penelitian_terkini: {
+      keywords: ['penelitian terkini', 'penelitian terbaru', 'riset terbaru', 'breakthrough', 'discovery', 'penemuan baru', 'fisika terkini', 'cutting edge'],
+      answer: `<strong>🔬 Penelitian Fisika Terkini (2023-2025)</strong><br><br>
+<strong>1. 🌌 Kosmologi & Astrofisika</strong><br><br>
+<strong>JWST Discoveries (2022-2025):</strong><br>
+• 🔭 <strong>Galaksi alam semesta awal:</strong> Deteksi galaksi 13.5 miliar tahun lalu<br>
+• 🪐 <strong>Exoplanet atmospheres:</strong> Deteksi molekul organik di exoplanet<br>
+• ⭐ <strong>Formasi bintang:</strong> Imaging nebula pembentuk bintang detail tinggi<br><br>
+<strong>Gelombang Gravitasi:</strong><br>
+• 🌊 <strong>LIGO/Virgo/KAGRA:</strong> Deteksi 90+ merger black hole & neutron star<br>
+• 📡 <strong>Pulsar Timing Arrays (2023):</strong> Bukti background gelombang gravitasi stokastik<br><br>
+<strong>Dark Matter Search:</strong><br>
+• 🔮 <strong>LUX-ZEPLIN:</strong> Eksperimen deteksi langsung dengan sensitivitas record<br>
+• 🧲 <strong>Axion searches:</strong> Kandidat dark matter alternatif<br><br>
+<strong>2. ⚛️ Fisika Kuantum & Komputasi</strong><br><br>
+<strong>Quantum Computing Breakthrough:</strong><br>
+• 💻 <strong>Google Willow (2024):</strong> Quantum error correction milestone<br>
+• 🔐 <strong>Quantum Supremacy:</strong> Task yang tidak bisa dilakukan komputer klasik<br>
+• 🧮 <strong>IBM Quantum:</strong> Prosesor 1000+ qubit (2023)<br><br>
+<strong>Quantum Communication:</strong><br>
+• 🛰️ <strong>Quantum Internet:</strong> Teleportasi kuantum jarak 1200+ km<br>
+• 🔒 <strong>Quantum Cryptography:</strong> Implementasi QKD komersial<br><br>
+<strong>Quantum Sensors:</strong><br>
+• 📏 <strong>Atomic Clocks:</strong> Presisi 10⁻¹⁹ (1 detik dalam 33 miliar tahun)<br>
+• 🧭 <strong>Quantum Magnetometers:</strong> Deteksi medan magnet ultra-sensitif<br><br>
+<strong>3. 🔬 Fisika Partikel</strong><br><br>
+<strong>LHC Run 3 (2022-2025):</strong><br>
+• ⚡ <strong>High Luminosity:</strong> Energi 13.6 TeV, data 10× lebih banyak<br>
+• 🔍 <strong>Higgs Precision:</strong> Pengukuran properti Higgs boson detail<br>
+• 🌌 <strong>Supersymmetry Search:</strong> Mencari partikel SUSY<br>
+• 💫 <strong>Dark Matter Candidates:</strong> Pencarian WIMPs & axions<br><br>
+<strong>Neutrino Physics:</strong><br>
+• 👻 <strong>DUNE Experiment:</strong> Studi osilasi neutrino<br>
+• ⚖️ <strong>Neutrino Mass Ordering:</strong> Hierarki massa neutrino<br><br>
+<strong>4. 🧲 Fisika Materi Terkondensasi</strong><br><br>
+<strong>Topological Materials:</strong><br>
+• 🌀 <strong>Topological Insulators:</strong> Konduktor permukaan, insulator bulk<br>
+• 🧬 <strong>Weyl Semimetals:</strong> Quasipartikel tanpa massa<br>
+• 🔗 <strong>Quantum Hall Effect:</strong> Konduksi tanpa dissipasi<br><br>
+<strong>Superconductivity:</strong><br>
+• 🌡️ <strong>Room-Temperature Superconductors:</strong> LuH₃ pada tekanan tinggi<br>
+• 💎 <strong>High-Tc Materials:</strong> Cuprate & iron-based superconductors<br><br>
+<strong>2D Materials:</strong><br>
+• ⬛ <strong>Graphene Applications:</strong> Elektronik fleksibel, sensor<br>
+• 📄 <strong>Transition Metal Dichalcogenides:</strong> Optoelektronik 2D<br>
+• 🔋 <strong>MXenes:</strong> Baterai & supercapacitor generasi baru<br><br>
+<strong>5. 🤖 AI & Machine Learning untuk Fisika</strong><br><br>
+• 🧠 <strong>Protein Folding:</strong> AlphaFold revolutionize biofisika<br>
+• 🌊 <strong>Turbulence Prediction:</strong> Neural networks untuk dinamika fluida<br>
+• ⚗️ <strong>Materials Discovery:</strong> AI design material baru<br>
+• 📊 <strong>Data Analysis:</strong> ML untuk analisis data LHC & observatorium<br><br>
+<strong>6. 🔋 Energi & Fusi Nuklir</strong><br><br>
+<strong>Fusion Energy Breakthrough:</strong><br>
+• ⭐ <strong>NIF Achievement (2022):</strong> Net energy gain dari fusi (Q>1)<br>
+• 🔥 <strong>ITER Progress:</strong> Konstruksi menuju operasi 2025<br>
+• 💡 <strong>Private Fusion:</strong> Commonwealth Fusion, TAE Technologies<br><br>
+<strong>Perovskite Solar Cells:</strong><br>
+• ☀️ <strong>Efisiensi record:</strong> 33.7% (2024)<br>
+• 💰 <strong>Low-cost production:</strong> Panel surya murah & efisien`
+    },
+
+    // Frontier Fisika
+    frontier_fisika: {
+      keywords: ['frontier', 'masa depan fisika', 'future physics', 'open questions', 'misteri fisika', 'pertanyaan terbuka'],
+      answer: `<strong>🔮 Frontier Fisika - Pertanyaan Terbuka</strong><br><br>
+<strong>Misteri Besar yang Belum Terpecahkan:</strong><br><br>
+<strong>1. 🌑 Dark Matter & Dark Energy</strong><br>
+• <strong>Masalah:</strong> 95% alam semesta tidak terdeteksi langsung<br>
+• <strong>Kandidat Dark Matter:</strong> WIMPs, Axions, Sterile neutrinos<br>
+• <strong>Dark Energy:</strong> Menyebabkan ekspansi dipercepat - apa itu?<br>
+• <strong>Riset:</strong> LUX-ZEPLIN, XENON, Euclid telescope<br><br>
+<strong>2. 🔗 Unifikasi Gaya-Gaya Fundamental</strong><br>
+• <strong>Grand Unified Theory (GUT):</strong> Menyatukan 3 gaya (kuat, lemah, EM)<br>
+• <strong>Theory of Everything:</strong> Termasuk gravitasi<br>
+• <strong>Kandidat:</strong> String theory, Loop quantum gravity, M-theory<br>
+• <strong>Tantangan:</strong> Skala energi Planck (10¹⁹ GeV) - tidak terjangkau eksperimen<br><br>
+<strong>3. ⚖️ Hierarchy Problem</strong><br>
+• <strong>Masalah:</strong> Mengapa gravitasi jauh lebih lemah dari gaya lain?<br>
+• <strong>Solusi Kandidat:</strong><br>
+  - Supersymmetry (SUSY)<br>
+  - Dimensi ekstra<br>
+  - Antropic principle<br><br>
+<strong>4. 🎭 Matter-Antimatter Asymmetry</strong><br>
+• <strong>Masalah:</strong> Mengapa alam semesta didominasi materi?<br>
+• <strong>Big Bang:</strong> Seharusnya produksi materi = antimateri<br>
+• <strong>Riset:</strong> CP violation, Baryon asymmetry<br><br>
+<strong>5. 🌀 Gravitasi Kuantum</strong><br>
+• <strong>Tantangan:</strong> Menyatukan relativitas umum & mekanika kuantum<br>
+• <strong>Pendekatan:</strong><br>
+  - String Theory (graviton sebagai string)<br>
+  - Loop Quantum Gravity (ruang-waktu diskrit)<br>
+  - Causal Sets<br>
+• <strong>Fenomena:</strong> Black hole information paradox, Hawking radiation<br><br>
+<strong>6. 🧠 Quantum Measurement Problem</strong><br>
+• <strong>Masalah:</strong> Apa yang terjadi saat "pengukuran"?<br>
+• <strong>Interpretasi:</strong><br>
+  - Copenhagen: Collapse fungsi gelombang<br>
+  - Many-Worlds: Splitting realities<br>
+  - Pilot Wave (de Broglie-Bohm)<br>
+  - Objective Collapse<br><br>
+<strong>7. 🌌 Inflasi Kosmik</strong><br>
+• <strong>Teori:</strong> Ekspansi eksponensial 10⁻³⁶ detik setelah Big Bang<br>
+• <strong>Bukti:</strong> Flatness, horizon problem, CMB uniformity<br>
+• <strong>Open:</strong> Mekanisme inflasi? Inflaton field?<br><br>
+<strong>Teknologi Eksperimen Masa Depan:</strong><br>
+• 🔬 <strong>Collider:</strong> Future Circular Collider (100 TeV)<br>
+• 🛰️ <strong>Space Telescopes:</strong> Nancy Grace Roman, Habitable Worlds Observatory<br>
+• 🧊 <strong>Neutrino Detectors:</strong> IceCube-Gen2, Hyper-Kamiokande<br>
+• 🌊 <strong>Gravitational Wave:</strong> LISA (space-based), Einstein Telescope<br>
+• 💻 <strong>Quantum Computers:</strong> Simulasi sistem kuantum kompleks<br><br>
+<strong>Implikasi Filosofis:</strong><br>
+• Realitas fundamental kuantum vs klasik?<br>
+• Determinisme vs probabilitas?<br>
+• Peran observer dalam fisika?<br>
+• Multiverse - fiksi atau fakta?`
+    },
+
+    // ===== FISIKA KLASIK - DETAIL TAMBAHAN =====
+    
+    // Mekanika Newton Detail
+    mekanika_newton: {
+      keywords: ['mekanika newton', 'hukum newton', 'newton laws', 'gerak', 'gaya', 'force', 'motion', 'momentum', 'impuls'],
+      answer: `<strong>🍎 Mekanika Newton</strong><br><br>
+<strong>Isaac Newton (1643-1727):</strong><br>
+"Philosophiæ Naturalis Principia Mathematica" (1687) - Salah satu karya paling berpengaruh dalam sejarah sains.<br><br>
+<strong>3 Hukum Newton:</strong><br><br>
+<strong>Hukum I - Inersia:</strong><br>
+<code>ΣF = 0 → v = konstan</code><br>
+Benda diam tetap diam, benda bergerak tetap bergerak lurus beraturan, kecuali ada gaya eksternal.<br><br>
+<strong>Hukum II - Percepatan:</strong><br>
+<code>ΣF = ma</code> atau <code>F = dp/dt</code><br>
+Percepatan sebanding dengan gaya total, berbanding terbalik dengan massa.<br><br>
+<strong>Hukum III - Aksi-Reaksi:</strong><br>
+<code>F₁₂ = -F₂₁</code><br>
+Setiap aksi memiliki reaksi yang sama besar berlawanan arah.<br><br>
+<strong>Hukum Gravitasi Universal:</strong><br>
+<code>F = G(m₁m₂)/r²</code><br>
+• G = 6.674 × 10⁻¹¹ N·m²/kg²<br>
+• Menjelaskan orbit planet (Hukum Kepler)<br>
+• Valid dari apel jatuh hingga gerak galaksi<br><br>
+<strong>Konsep Fundamental:</strong><br>
+• <strong>Momentum:</strong> p = mv<br>
+• <strong>Impuls:</strong> J = Δp = FΔt<br>
+• <strong>Energi Kinetik:</strong> Ek = ½mv²<br>
+• <strong>Energi Potensial:</strong> Ep = mgh (gravitasi)<br>
+• <strong>Kekekalan Momentum:</strong> Sistem terisolasi<br>
+• <strong>Kekekalan Energi Mekanik:</strong> E total = Ek + Ep<br><br>
+<strong>Aplikasi:</strong><br>
+• 🚗 Dinamika kendaraan & keselamatan<br>
+• ✈️ Aerodinamika pesawat<br>
+• 🚀 Peluncuran roket & satelit<br>
+• ⚽ Olahraga (balistik, rotasi)<br>
+• 🏗️ Teknik sipil & mesin<br><br>
+<strong>Limit Validitas:</strong><br>
+❌ Tidak berlaku untuk:<br>
+• Kecepatan mendekati cahaya → Relativitas<br>
+• Skala atomik → Mekanika kuantum`
+    },
+
+    // Gelombang & Osilasi
+    gelombang_klasik: {
+      keywords: ['gelombang', 'wave', 'osilasi', 'oscillation', 'harmonic', 'harmonik', 'getaran', 'resonansi', 'resonance'],
+      answer: `<strong>🌊 Gelombang & Osilasi</strong><br><br>
+<strong>Gerak Harmonik Sederhana (SHM):</strong><br>
+<code>x(t) = A sin(ωt + φ)</code><br><br>
+• <strong>A:</strong> Amplitudo (simpangan maksimum)<br>
+• <strong>ω:</strong> Frekuensi angular (rad/s)<br>
+• <strong>φ:</strong> Fase awal<br>
+• <strong>T:</strong> Periode = 2π/ω<br>
+• <strong>f:</strong> Frekuensi = 1/T<br><br>
+<strong>Sistem Osilasi:</strong><br>
+• <strong>Pegas:</strong> F = -kx (Hukum Hooke)<br>
+  - ω = √(k/m)<br>
+  - T = 2π√(m/k)<br>
+• <strong>Bandul sederhana:</strong> T = 2π√(L/g)<br>
+• <strong>Bandul fisis:</strong> Momen inersia<br><br>
+<strong>Jenis Gelombang:</strong><br><br>
+<strong>1. Gelombang Mekanik</strong> (butuh medium)<br>
+• <strong>Transversal:</strong> Getaran ⊥ propagasi (tali, air)<br>
+• <strong>Longitudinal:</strong> Getaran ∥ propagasi (suara)<br><br>
+<strong>2. Gelombang Elektromagnetik</strong> (tidak butuh medium)<br>
+• Cahaya, radio, X-ray<br>
+• c = 3 × 10⁸ m/s (vakum)<br><br>
+<strong>Persamaan Gelombang:</strong><br>
+<code>y(x,t) = A sin(kx - ωt)</code><br><br>
+• <strong>k:</strong> Bilangan gelombang = 2π/λ<br>
+• <strong>λ:</strong> Panjang gelombang<br>
+• <strong>v:</strong> Kecepatan = λf = ω/k<br><br>
+<strong>Fenomena Gelombang:</strong><br>
+• <strong>Interferensi:</strong> Konstruktif & destruktif<br>
+• <strong>Difraksi:</strong> Pembelokan di celah/obstacle<br>
+• <strong>Polarisasi:</strong> Orientasi getaran (transversal)<br>
+• <strong>Dispersi:</strong> Kecepatan bergantung frekuensi<br>
+• <strong>Resonansi:</strong> Amplitudo maksimum saat f = f₀<br>
+• <strong>Efek Doppler:</strong> Perubahan frekuensi karena gerak relatif<br><br>
+<strong>Gelombang Bunyi:</strong><br>
+• <strong>Kecepatan di udara:</strong> ~343 m/s (20°C)<br>
+• <strong>Intensitas:</strong> I = P/A (W/m²)<br>
+• <strong>Level intensitas:</strong> β = 10 log(I/I₀) dB<br>
+• <strong>Beat:</strong> f_beat = |f₁ - f₂|<br><br>
+<strong>Aplikasi:</strong><br>
+• 🎸 Instrumen musik (resonansi string, pipa)<br>
+• 🔊 Akustik ruangan<br>
+• 📡 Komunikasi gelombang radio<br>
+• 🩺 Ultrasonografi medis<br>
+• 🌊 Gempa & seismologi`
+    },
+
+    // Fluida
+    fluida_klasik: {
+      keywords: ['fluida', 'fluid', 'hidrodinamika', 'hidrostatika', 'bernoulli', 'viskositas', 'viscosity', 'aliran', 'flow'],
+      answer: `<strong>💧 Mekanika Fluida</strong><br><br>
+<strong>Hidrostatika (Fluida Diam):</strong><br><br>
+<strong>Tekanan Hidrostatik:</strong><br>
+<code>P = P₀ + ρgh</code><br>
+• ρ: Densitas fluida (kg/m³)<br>
+• g: Gravitasi<br>
+• h: Kedalaman<br><br>
+<strong>Hukum Pascal:</strong><br>
+Tekanan yang diberikan pada fluida tertutup diteruskan sama besar ke segala arah<br>
+• Aplikasi: Dongkrak hidrolik, rem hidrolik<br><br>
+<strong>Hukum Archimedes:</strong><br>
+<code>F_apung = ρ_fluida × V_tercelup × g</code><br>
+• Benda mengapung jika ρ_benda < ρ_fluida<br>
+• Aplikasi: Kapal, kapal selam, balon udara<br><br>
+<strong>Hidrodinamika (Fluida Bergerak):</strong><br><br>
+<strong>Persamaan Kontinuitas:</strong><br>
+<code>A₁v₁ = A₂v₂</code><br>
+Laju aliran volume konstan (fluida inkompresibel)<br><br>
+<strong>Persamaan Bernoulli:</strong><br>
+<code>P + ½ρv² + ρgh = konstan</code><br><br>
+• Tekanan rendah di aliran cepat<br>
+• Aplikasi:<br>
+  - ✈️ Gaya angkat sayap pesawat<br>
+  - ⚽ Efek Magnus (bola melengkung)<br>
+  - 🚿 Venturi meter, karburator<br><br>
+<strong>Viskositas:</strong><br>
+Gesekan internal fluida<br><br>
+<strong>Hukum Stokes (bola dalam fluida viskos):</strong><br>
+<code>F_drag = 6πηrv</code><br>
+• η: Koefisien viskositas<br>
+• r: Jari-jari bola<br>
+• v: Kecepatan terminal<br><br>
+<strong>Bilangan Reynolds:</strong><br>
+<code>Re = ρvL/η</code><br>
+• Re < 2000: Aliran laminar (teratur)<br>
+• Re > 4000: Aliran turbulen (kacau)<br><br>
+<strong>Persamaan Navier-Stokes:</strong><br>
+Persamaan fundamental aliran fluida (sangat kompleks, solusi analitik jarang)<br>
+<code>ρ(∂v/∂t + v·∇v) = -∇P + η∇²v + f</code><br><br>
+<strong>Aplikasi Modern:</strong><br>
+• 🌊 Oseanografi & cuaca<br>
+• ✈️ Desain aerodinamis (pesawat, mobil)<br>
+• 💉 Aliran darah (biofluid)<br>
+• 🏭 Sistem pipa industri<br>
+• 🌪️ Simulasi CFD (Computational Fluid Dynamics)`
+    },
+
+    // ===== KOSMOLOGI - DETAIL TAMBAHAN =====
+    
+    // Dark Matter Detail
+    dark_matter: {
+      keywords: ['dark matter', 'materi gelap', 'wimp', 'axion', 'cdm', 'cold dark matter', 'halo gelap'],
+            answer: {
+                id: `<strong>🔮 Dark Matter (Materi Gelap)</strong><br><br>
+<strong>Penemuan Historis:</strong><br>
+• <strong>1933:</strong> Fritz Zwicky - Cluster Coma (kecepatan galaksi anomali)<br>
+• <strong>1970s:</strong> Vera Rubin - Kurva rotasi galaksi datar (bukan Keplerian)<br>
+• <strong>Ekspektasi:</strong> v ∝ 1/√r (hukum Kepler)<br>
+• <strong>Observasi:</strong> v ≈ konstan → massa tak terlihat di halo<br><br>
+<strong>Bukti Eksperimental:</strong><br><br>
+<strong>1. Kurva Rotasi Galaksi</strong><br>
+• Bintang di tepi bergerak lebih cepat dari prediksi<br>
+• Butuh massa 5-10× lebih banyak dari materi biasa<br><br>
+<strong>2. Gravitational Lensing</strong><br>
+• Pembelokan cahaya oleh massa tak terlihat<br>
+• <strong>Bullet Cluster (2006):</strong> Pemisahan materi gelap dari gas<br><br>
+<strong>3. Cosmic Microwave Background (CMB)</strong><br>
+• Planck satellite: Ω_DM = 26.8% (dark matter)<br>
+• Pola fluktuasi temperatur konsisten dengan CDM<br><br>
+<strong>4. Struktur Skala Besar</strong><br>
+• Simulasi N-body: Dark matter seed formasi galaksi<br>
+• Cosmic web: Filamen dark matter<br><br>
+<strong>Kandidat Dark Matter:</strong><br><br>
+<strong>1. WIMPs (Weakly Interacting Massive Particles)</strong><br>
+• Massa: 10-1000 GeV<br>
+• Interaksi: Gaya lemah (weak force)<br>
+• Deteksi: LUX-ZEPLIN, XENON, PandaX<br>
+• Status: Belum terdeteksi langsung<br><br>
+<strong>2. Axions</strong><br>
+• Massa: 10⁻⁶ - 10⁻³ eV (sangat ringan)<br>
+• Motivasi: Solusi Strong CP problem<br>
+• Eksperimen: ADMX, CAST, IAXO<br><br>
+<strong>3. Sterile Neutrinos</strong><br>
+• Tidak berinteraksi via gaya lemah<br>
+• Massa: keV - GeV range<br><br>
+<strong>4. Primordial Black Holes</strong><br>
+• Terbentuk di alam semesta awal<br>
+• Massa: Beragam (asteroid - ribuan M☉)<br><br>
+<strong>Distribusi Dark Matter:</strong><br>
+• <strong>Halo galaksi:</strong> Distribusi spheroidal<br>
+• <strong>NFW Profile:</strong> ρ(r) ∝ r⁻¹(r+r_s)⁻²<br>
+• <strong>Disk galaksi:</strong> Densitas lokal ~0.3 GeV/cm³<br><br>
+<strong>Eksperimen Deteksi:</strong><br>
+• <strong>Direct Detection:</strong> Recoil nukleus (LZ, XENON)<br>
+• <strong>Indirect Detection:</strong> Produk anihilasi (Fermi, HESS)<br>
+• <strong>Collider:</strong> Produksi di LHC<br><br>
+<strong>Alternatif Teori:</strong><br>
+• <strong>MOND:</strong> Modified Newtonian Dynamics<br>
+• <strong>TeVeS:</strong> Tensor-Vector-Scalar gravity<br>
+• Kurang konsisten dengan semua observasi`,
+                en: `<strong>🔮 Dark Matter</strong><br><br>
+<strong>Historical Clues:</strong><br>
+• <strong>1933:</strong> Fritz Zwicky – Coma Cluster velocity anomaly<br>
+• <strong>1970s:</strong> Vera Rubin – Flat galaxy rotation curves (non‑Keplerian)<br>
+• <strong>Expectation:</strong> v ∝ 1/√r (Kepler law)<br>
+• <strong>Observation:</strong> v ≈ constant → unseen halo mass<br><br>
+<strong>Evidence:</strong><br><br>
+<strong>1. Galaxy Rotation Curves</strong><br>
+• Outer stars rotate faster than visible mass predicts<br>
+• Implies 5–10× more mass than baryons<br><br>
+<strong>2. Gravitational Lensing</strong><br>
+• Light bent by invisible mass concentrations<br>
+• <strong>Bullet Cluster (2006):</strong> Separation of dark matter and hot gas<br><br>
+<strong>3. Cosmic Microwave Background</strong><br>
+• Planck: Ω_DM ≈ 26.8% of total energy density<br>
+• Temperature anisotropy spectrum matches cold dark matter (CDM)<br><br>
+<strong>4. Large-Scale Structure</strong><br>
+• N‑body simulations: Dark matter seeds galaxy formation<br>
+• Cosmic web: Filamentary dark matter scaffolding<br><br>
+<strong>Candidate Particles:</strong><br>
+<strong>1. WIMPs:</strong> 10–1000 GeV, weak interaction; searches (LZ, XENON, PandaX) yet null<br>
+<strong>2. Axions:</strong> 10⁻⁶–10⁻³ eV; solve strong CP problem; experiments ADMX, CAST, IAXO<br>
+<strong>3. Sterile Neutrinos:</strong> keV–GeV; no weak interaction; X‑ray line hints debated<br>
+<strong>4. Primordial Black Holes:</strong> Early-universe formed; wide mass spectrum<br><br>
+<strong>Distribution:</strong><br>
+• <strong>Galactic Halo:</strong> Roughly spheroidal<br>
+• <strong>NFW Profile:</strong> ρ(r) ∝ r⁻¹(r + r_s)⁻²<br>
+• <strong>Local Density:</strong> ~0.3 GeV/cm³ near Solar neighborhood<br><br>
+<strong>Detection Strategies:</strong><br>
+• <strong>Direct:</strong> Nuclear recoil events (LZ, XENON)<br>
+• <strong>Indirect:</strong> Annihilation products (Fermi, HESS, AMS)<br>
+• <strong>Collider:</strong> Missing energy signals at LHC<br><br>
+<strong>Alternative Theories:</strong><br>
+• <strong>MOND:</strong> Modified Newtonian Dynamics<br>
+• <strong>TeVeS:</strong> Relativistic MOND extension<br>
+• Less consistent across all cosmological observations`
+            }
+    },
+
+    // Dark Energy Detail
+    dark_energy: {
+      keywords: ['dark energy', 'energi gelap', 'konstanta kosmologi', 'cosmological constant', 'lambda', 'ekspansi dipercepat', 'quintessence'],
+            answer: {
+                id: `<strong>🌑 Dark Energy (Energi Gelap)</strong><br><br>
+<strong>Penemuan (1998):</strong><br>
+• <strong>Supernova Type Ia sebagai "Standard Candle"</strong><br>
+• <strong>Tim:</strong> Supernova Cosmology Project & High-Z Team<br>
+• <strong>Nobel 2011:</strong> Perlmutter, Schmidt, Riess<br>
+• <strong>Hasil Mengejutkan:</strong> Ekspansi alam semesta DIPERCEPAT<br><br>
+<strong>Bukti Observasional:</strong><br><br>
+<strong>1. Supernova Ia</strong><br>
+• Galaksi jauh lebih redup dari ekspektasi<br>
+• Jarak lebih jauh → ekspansi dipercepat<br>
+• Dimulai ~5 miliar tahun lalu<br><br>
+<strong>2. Cosmic Microwave Background</strong><br>
+• Ω_Λ = 68.3% (dark energy)<br>
+• Alam semesta geometri datar (k ≈ 0)<br>
+• Ω_total = Ω_m + Ω_Λ ≈ 1<br><br>
+<strong>3. Baryon Acoustic Oscillations (BAO)</strong><br>
+• "Ruler kosmik" di distribusi galaksi<br>
+• Konsisten dengan dark energy dominan<br><br>
+<strong>Kandidat Dark Energy:</strong><br><br>
+<strong>1. Konstanta Kosmologi (Λ)</strong><br>
+• Einstein (1917): Alam semesta statis<br>
+• Kemudian: "Biggest blunder"<br>
+• Sekarang: Kembali jadi penjelasan utama!<br>
+• <strong>Persamaan Friedmann:</strong><br>
+    <code>H² = (8πG/3)ρ - k/a² + Λ/3</code><br>
+• <strong>Equation of State:</strong> w = P/ρ = -1<br>
+• <strong>Masalah:</strong> Nilai Λ 10¹²⁰ × lebih kecil dari prediksi QFT<br><br>
+<strong>2. Quintessence</strong><br>
+• Medan skalar dinamis φ(x,t)<br>
+• <strong>w:</strong> Berubah dengan waktu<br>
+• Dapat berubah dari w > -1 ke w < -1<br>
+• Model: Tracker, K-essence<br><br>
+<strong>3. Phantom Energy</strong><br>
+• w < -1 (lebih negatif dari Λ)<br>
+• Densitas energi meningkat dengan ekspansi<br>
+• Prediksi: "Big Rip" (alam semesta robek)<br><br>
+<strong>4. Modified Gravity</strong><br>
+• f(R) gravity, DGP model<br>
+• Gravitasi berubah pada skala kosmologis<br><br>
+<strong>Nasib Alam Semesta:</strong><br><br>
+<strong>Skenario 1: Big Freeze (Λ dominan)</strong><br>
+• Ekspansi terus dipercepat<br>
+• Galaksi menjauh → terisolasi<br>
+• T → 0 K dalam ~10¹⁰⁰ tahun<br><br>
+<strong>Skenario 2: Big Rip (w < -1)</strong><br>
+• Dark energy meningkat<br>
+• Galaksi, bintang, atom robek<br>
+• Timeline: 22-50 miliar tahun<br><br>
+<strong>Skenario 3: Big Crunch (Λ negatif)</strong><br>
+• Ekspansi berbalik → kontraksi<br>
+• Alam semesta kolaps kembali<br><br>
+<strong>Parameter Kosmologi (Planck 2018):</strong><br>
+• H₀ = 67.4 km/s/Mpc (Hubble constant)<br>
+• Ω_Λ = 0.683 (dark energy)<br>
+• Ω_m = 0.315 (matter total)<br>
+• Ω_b = 0.049 (baryon/materi biasa)<br>
+• Age = 13.787 ± 0.020 Gyr<br><br>
+<strong>Hubble Tension:</strong><br>
+• <strong>CMB:</strong> H₀ = 67.4 km/s/Mpc<br>
+• <strong>Local (Cepheid):</strong> H₀ = 73.0 km/s/Mpc<br>
+• Diskrepansi 5σ - fisika baru?`,
+                en: `<strong>🌑 Dark Energy</strong><br><br>
+<strong>Discovery (1998):</strong><br>
+• <strong>Type Ia supernovae as standard candles</strong><br>
+• <strong>Teams:</strong> SCP & High‑Z Supernova Search<br>
+• <strong>Nobel 2011:</strong> Perlmutter, Schmidt, Riess<br>
+• <strong>Surprise:</strong> Cosmic expansion is accelerating<br><br>
+<strong>Observational Evidence:</strong><br><br>
+<strong>1. Type Ia Supernovae</strong><br>
+• Distant galaxies dimmer than deceleration models predict<br>
+• Indicates accelerated expansion starting ~5 Gyr ago<br><br>
+<strong>2. Cosmic Microwave Background</strong><br>
+• Ω_Λ ≈ 68% (dominant energy component)<br>
+• Flat geometry (k ≈ 0) → Ω_total ≈ 1<br><br>
+<strong>3. Baryon Acoustic Oscillations (BAO)</strong><br>
+• Standard ruler in galaxy clustering<br>
+• Consistent with late-time acceleration<br><br>
+<strong>Candidate Explanations:</strong><br><br>
+<strong>1. Cosmological Constant (Λ)</strong><br>
+• Einstein (1917) static universe term; later reconsidered<br>
+• <strong>Friedmann Equation:</strong> <code>H² = (8πG/3)ρ - k/a² + Λ/3</code><br>
+• Equation of state: w = -1<br>
+• <strong>Problem:</strong> Observed Λ is ~10¹²⁰ times smaller than naive QFT vacuum energy<br><br>
+<strong>2. Quintessence</strong><br>
+• Dynamical scalar field φ(x,t)<br>
+• Time-varying w (can evolve near -1)<br>
+• Tracker & k‑essence models<br><br>
+<strong>3. Phantom Energy</strong><br>
+• w < -1 → energy density grows with expansion<br>
+• Possible future "Big Rip" scenario<br><br>
+<strong>4. Modified Gravity</strong><br>
+• f(R), DGP braneworld, other large-scale modifications<br><br>
+<strong>Cosmic Fate Scenarios:</strong><br>
+• <strong>Big Freeze:</strong> Λ dominates; isolation & cooling (T → 0 K, ~10¹⁰⁰ yr)<br>
+• <strong>Big Rip:</strong> w < -1 tears structures (22–50 Gyr)<br>
+• <strong>Big Crunch:</strong> Negative Λ reverses expansion<br><br>
+<strong>Planck 2018 Parameters:</strong><br>
+• H₀ = 67.4 km/s/Mpc
+• Ω_Λ = 0.683
+• Ω_m = 0.315
+• Ω_b = 0.049
+• Age = 13.787 ± 0.020 Gyr<br><br>
+<strong>Hubble Tension:</strong><br>
+• CMB: H₀ ≈ 67.4 vs Local (Cepheid): 73.0 km/s/Mpc (≈5σ) → possible new physics?`
+            }
+    },
+
+    // Kosmologi Inflasi
+    inflasi_kosmik: {
+      keywords: ['inflasi', 'inflation', 'inflaton', 'alam semesta awal', 'early universe', 'horizon problem', 'flatness problem'],
+            answer: {
+                id: `<strong>💥 Inflasi Kosmik</strong><br><br>
+<strong>Motivasi (1980s):</strong><br>
+• <strong>Alan Guth (1981):</strong> Teori inflasi untuk selesaikan masalah Big Bang klasik<br><br>
+<strong>3 Masalah Klasik:</strong><br><br>
+<strong>1. Horizon Problem</strong><br>
+• CMB uniform hingga 1 bagian dalam 100,000<br>
+• Tapi region terpisah tidak pernah kontak kausal!<br>
+• <strong>Solusi Inflasi:</strong> Semua region berasal dari patch kecil yang ter-kausal<br><br>
+<strong>2. Flatness Problem</strong><br>
+• Ω = 1.000... ± 0.001 (sangat datar)<br>
+• Membutuhkan fine-tuning ekstrem di awal<br>
+• <strong>Solusi Inflasi:</strong> Ekspansi eksponensial → pelat kelengkungan<br><br>
+<strong>3. Monopole Problem</strong><br>
+• GUT prediksi monopole magnetik banyak<br>
+• Observasi: Tidak terdeteksi<br>
+• <strong>Solusi Inflasi:</strong> Dilusi eksponensial<br><br>
+<strong>Mekanisme Inflasi:</strong><br><br>
+<strong>Medan Inflaton (φ):</strong><br>
+• Medan skalar dengan potensial V(φ)<br>
+• <strong>Slow-roll:</strong> φ menggelinding lambat di potensial<br>
+• <strong>Energi vakum:</strong> Mendorong ekspansi eksponensial<br><br>
+<strong>Timeline Inflasi:</strong><br>
+• <strong>Start:</strong> t ~ 10⁻³⁶ detik setelah Big Bang<br>
+• <strong>Durasi:</strong> ~10⁻³² detik<br>
+• <strong>Ekspansi:</strong> Volume meningkat 10⁷⁸ kali (atau lebih!)<br>
+• <strong>End:</strong> Reheating → partikel & radiasi<br><br>
+<strong>Persamaan Friedmann (Inflasi):</strong><br>
+<code>H² ≈ (8πG/3)V(φ)</code><br>
+<code>a(t) ∝ e^(Ht)</code> (ekspansi eksponensial)<br><br>
+<strong>Prediksi Inflasi:</strong><br><br>
+<strong>1. Spektrum Fluktuasi Primordial</strong><br>
+• <strong>Skala-invarian (hampir):</strong> n_s ≈ 0.96<br>
+• Power spectrum: P(k) ∝ k^(n_s - 1)<br>
+• <strong>Planck:</strong> n_s = 0.9649 ± 0.0042 ✅<br><br>
+<strong>2. Gaussian Fluctuations</strong><br>
+• Fluktuasi densitas berdistribusi Gaussian<br>
+• <strong>Observasi:</strong> Konsisten ✅<br><br>
+<strong>3. Gelombang Gravitasi Primordial</strong><br>
+• Tensor modes dari inflasi<br>
+• <strong>Parameter:</strong> r (tensor-to-scalar ratio)<br>
+• <strong>Target:</strong> Deteksi polarisasi B-mode di CMB<br>
+• <strong>Status:</strong> r < 0.06 (belum terdeteksi)<br><br>
+<strong>Model Inflasi Populer:</strong><br><br>
+<strong>1. Chaotic Inflation (Linde)</strong><br>
+• V(φ) = ½m²φ²<br>
+• Inflaton mulai dari nilai besar<br><br>
+<strong>2. Slow-Roll Inflation</strong><br>
+• V(φ) landai → slow rolling<br>
+• ε = (V'/V)²/(16πG) << 1<br><br>
+<strong>3. Hybrid Inflation</strong><br>
+• Dua medan: inflaton + waterfall field<br><br>
+<strong>4. Eternal Inflation</strong><br>
+• Inflasi tidak pernah berakhir di semua region<br>
+• → Multiverse (bubble universes)<br><br>
+<strong>Bukti Observasional:</strong><br>
+• ✅ <strong>CMB Power Spectrum:</strong> Konsisten dengan inflasi<br>
+• ✅ <strong>Flatness:</strong> Ω_total ≈ 1.000<br>
+• ✅ <strong>Gaussianity:</strong> f_NL konsisten dengan 0<br>
+• ⏳ <strong>Primordial GW:</strong> Belum terdeteksi (target CMB-S4, LiteBIRD)<br><br>
+<strong>Alternatif Inflasi:</strong><br>
+• Ekpyrotic/Cyclic universe<br>
+• Bouncing cosmology<br>
+• String gas cosmology<br><br>
+<strong>Open Questions:</strong><br>
+• Apa medan inflaton sebenarnya?<br>
+• Berapa energi skala inflasi?<br>
+• Single field vs multi-field?<br>
+• Koneksi dengan fisika partikel?`,
+                en: `<strong>💥 Cosmic Inflation</strong><br><br>
+<strong>Motivation (1980s):</strong><br>
+• <strong>Alan Guth (1981):</strong> Proposed inflation to solve classic Big Bang problems<br><br>
+<strong>Three Classical Problems:</strong><br><br>
+<strong>1. Horizon Problem</strong><br>
+• CMB uniform to 1 part in 100,000 across causally disconnected regions<br>
+• <strong>Inflation Solution:</strong> Observable universe emerged from a small causally connected patch<br><br>
+<strong>2. Flatness Problem</strong><br>
+• Ω ≈ 1 to high precision requires extreme early fine‑tuning
+• <strong>Inflation:</strong> Exponential expansion drives curvature toward flatness<br><br>
+<strong>3. Monopole Problem</strong><br>
+• GUT predicts abundant magnetic monopoles
+• None observed
+• <strong>Inflation:</strong> Dilutes monopole density exponentially<br><br>
+<strong>Mechanism:</strong><br><br>
+<strong>Inflaton Field (φ):</strong><br>
+• Scalar field with potential V(φ)
+• <strong>Slow‑roll:</strong> φ rolls gently down potential
+• Vacuum-like energy drives exponential expansion<br><br>
+<strong>Timeline:</strong><br>
+• <strong>Start:</strong> t ~ 10⁻³⁶ s after Big Bang
+• <strong>Duration:</strong> ~10⁻³² s
+• <strong>Expansion:</strong> Volume grows by ≥10⁷⁸
+• <strong>End:</strong> Reheating produces particles & radiation<br><br>
+<strong>Friedmann (Inflation):</strong><br>
+<code>H² ≈ (8πG/3)V(φ)</code><br>
+<code>a(t) ∝ e^{Ht}</code><br><br>
+<strong>Predictions:</strong><br><br>
+<strong>1. Primordial Fluctuation Spectrum</strong><br>
+• Nearly scale‑invariant: n_s ≈ 0.96
+• P(k) ∝ k^{n_s - 1}
+• <strong>Planck:</strong> n_s = 0.9649 ± 0.0042 ✅<br><br>
+<strong>2. Gaussian Density Fluctuations</strong><br>
+• Observed: Consistent ✅<br><br>
+<strong>3. Primordial Gravitational Waves</strong><br>
+• Tensor modes characterized by r (tensor/scalar ratio)
+• Goal: Detect CMB B‑mode polarization
+• Status: r < 0.06 (no detection yet)<br><br>
+<strong>Popular Models:</strong><br>
+<strong>1. Chaotic Inflation (Linde):</strong> V(φ)=½m²φ²<br>
+<strong>2. Slow‑Roll Inflation:</strong> Flat potentials (ε ≪ 1)<br>
+<strong>3. Hybrid Inflation:</strong> Two fields; waterfall end<br>
+<strong>4. Eternal Inflation:</strong> Ongoing in some regions → multiverse<br><br>
+<strong>Observational Support:</strong><br>
+• ✅ CMB power spectrum
+• ✅ Flatness (Ω_total ≈ 1)
+• ✅ Gaussianity (f_NL ~ 0)
+• ⏳ Primordial GW pending (CMB‑S4, LiteBIRD)
+<br><br>
+<strong>Alternatives:</strong><br>
+• Ekpyrotic / Cyclic models
+• Bouncing cosmologies
+• String gas scenarios<br><br>
+<strong>Open Questions:</strong><br>
+• What is the true inflaton field?
+• Energy scale of inflation?
+• Single vs multi‑field dynamics?
+• Link to particle physics and GUTs?`
+            }
+    }
+  };
+
+  // Smart response function dengan fuzzy matching
+  function getSmartResponse(userMessage) {
+    const msg = userMessage.toLowerCase();
+    const currentLang = getCurrentLanguage(); // Get language from website setting
+    const isEnglish = currentLang === 'en';
+    
+    // Greetings
+    if (/^(hai|halo|hi|hello|hey|pagi|siang|sore|malam|selamat|good morning|good afternoon|good evening)/i.test(msg)) {
+      const greetingsID = [
+        '👋 Halo! Selamat datang di Lab Fisika Teori & Komputasi. Ada yang bisa saya bantu?',
+        '👋 Hai! Saya siap membantu Anda dengan informasi tentang lab kami. Silakan bertanya!',
+        '👋 Selamat datang! Ada pertanyaan tentang lab, penelitian, atau topik fisika?'
+      ];
+      const greetingsEN = [
+        '👋 Hello! Welcome to the Theoretical & Computational Physics Lab. How can I help you?',
+        '👋 Hi! I\'m ready to assist you with information about our lab. Feel free to ask!',
+        '👋 Welcome! Any questions about the lab, research, or physics topics?'
+      ];
+      const greetings = isEnglish ? greetingsEN : greetingsID;
+      return greetings[Math.floor(Math.random() * greetings.length)];
+    }
+    
+    // Thanks
+    if (/(terima kasih|thanks|makasih|thx|thank you|thanks a lot)/i.test(msg)) {
+      return isEnglish 
+        ? '🙏 You\'re welcome! Happy to help. Feel free to ask again anytime! 😊'
+        : '🙏 Sama-sama! Senang bisa membantu. Jangan ragu untuk bertanya lagi kapan saja! 😊';
+    }
+    
+    // Search knowledge base with scoring
+    let bestMatch = null;
+    let bestScore = 0;
+    
+    for (const [key, data] of Object.entries(knowledgeBase)) {
+      let score = 0;
+      for (const keyword of data.keywords) {
+        if (msg.includes(keyword)) {
+          score += keyword.length; // Longer matches get higher score
+        }
+      }
+      if (score > bestScore) {
+        bestScore = score;
+        // Get answer in appropriate language
+        bestMatch = typeof data.answer === 'object' 
+          ? (isEnglish ? data.answer.en : data.answer.id)
+          : data.answer; // fallback for non-bilingual entries
+      }
+    }
+    
+    if (bestMatch) {
+      return bestMatch;
+    }
+    
+    // Default helpful response
+    if (isEnglish) {
+      return `<strong>🤔 Hmm, what do you need?</strong><br><br>
+I can help you with the following information:<br><br>
+<strong>About Lab:</strong><br>
+• ℹ️ Profile, vision, mission, history<br>
+• 🔬 Facilities and equipment<br><br>
+<strong>Research:</strong><br>
+• 📚 Research topics (cosmology, quantum, etc.)<br>
+• 🎮 Interactive simulations<br>
+• 🔬 Current physics research (2023-2025)<br>
+• 🔮 Frontiers & open questions<br><br>
+<strong>Physics Branches:</strong><br>
+• ⚛️ Quantum Mechanics (Planck, Heisenberg, Schrödinger)<br>
+• 🚀 Relativity (Einstein, E=mc², spacetime)<br>
+• 🌌 Cosmology (Big Bang, CMB, dark matter/energy)<br>
+• 🌡️ Thermodynamics (entropy, laws)<br>
+• 🔬 Particle Physics (Standard Model, Higgs, LHC)<br>
+• ⚡ Electromagnetism (Maxwell, EM waves)<br>
+• ☢️ Nuclear Physics (radioactivity, fission, fusion)<br>
+• 🌟 Astrophysics (stars, galaxies, black holes)<br>
+• 🔦 Optics (light, lenses, lasers)<br><br>
+<strong>Classical vs Modern Physics:</strong><br>
+• 🏛️ Classical Physics (Newton, Maxwell, Thermodynamics)<br>
+• 🚀 Modern Physics (Quantum, Relativity)<br>
+• 🍎 Newtonian Mechanics details (3 laws, gravity)<br>
+• 🌊 Waves & Oscillations (harmonic, resonance)<br>
+• 💧 Fluid Mechanics (Bernoulli, viscosity)<br><br>
+<strong>Cosmology Details:</strong><br>
+• 🔮 Dark Matter (WIMP, axion, direct detection)<br>
+• 🌑 Dark Energy (cosmological constant, quintessence)<br>
+• 💥 Cosmic Inflation (horizon problem, flatness)<br><br>
+<strong>Tools:</strong><br>
+• 💻 Software (Python, MATLAB, etc.)<br><br>
+💡 <em>Try asking using the keywords above!</em>`;
+    }
+    
+    // Get current language for default response
+    if (isEnglish) {
+      return `<strong>🤔 Hmm, What do you need?</strong><br><br>
+I can help provide information about:<br><br>
+<strong>About Lab:</strong><br>
+• ℹ️ Profile, vision, mission, history<br>
+• 🔬 Facilities and equipment<br><br>
+<strong>Research:</strong><br>
+• 📚 Research topics (cosmology, quantum, etc)<br>
+• 🎮 Interactive simulations<br>
+• 🔬 Current physics research (2023-2025)<br>
+• 🔮 Frontier & open questions<br><br>
+<strong>Physics Branches:</strong><br>
+• ⚛️ Quantum Mechanics (Planck, Heisenberg, Schrödinger)<br>
+• 🚀 Relativity (Einstein, E=mc², spacetime)<br>
+• 🌌 Cosmology (Big Bang, CMB, dark matter/energy)<br>
+• 🌡️ Thermodynamics (entropy, laws of thermodynamics)<br>
+• 🔬 Particle Physics (Standard Model, Higgs, LHC)<br>
+• ⚡ Electromagnetism (Maxwell, EM waves)<br>
+• ☢️ Nuclear Physics (radioactivity, fission, fusion)<br>
+• 🌟 Astrophysics (stars, galaxies, black holes)<br>
+• 🔦 Optics (light, lenses, lasers)<br><br>
+<strong>Classical vs Modern Physics:</strong><br>
+• 🏛️ Classical Physics (Newton, Maxwell, Thermodynamics)<br>
+• 🚀 Modern Physics (Quantum, Relativity)<br>
+• 🍎 Newtonian Mechanics details (3 laws, gravity)<br>
+• 🌊 Waves & Oscillations (harmonic, resonance)<br>
+• 💧 Fluid Mechanics (Bernoulli, viscosity)<br><br>
+<strong>Cosmology Details:</strong><br>
+• 🔮 Dark Matter (WIMP, axion, direct detection)<br>
+• 🌑 Dark Energy (cosmological constant, quintessence)<br>
+• 💥 Cosmic Inflation (horizon problem, flatness)<br><br>
+<strong>Tools:</strong><br>
+• 💻 Software (Python, MATLAB, etc)<br><br>
+💡 <em>Try asking using the keywords above!</em>`;
+    }
+    
+    return `<strong>🤔 Hmm, Apa yang anda perlukan?</strong><br><br>
+Saya bisa bantu dengan memberikan informasi berikut:<br><br>
+<strong>Tentang Lab:</strong><br>
+• ℹ️ Profil, visi, misi, sejarah<br>
+• 🔬 Fasilitas dan peralatan<br><br>
+<strong>Penelitian:</strong><br>
+• 📚 Topik riset (kosmologi, kuantum, dll)<br>
+• 🎮 Simulasi interaktif<br>
+• 🔬 Penelitian fisika terkini (2023-2025)<br>
+• 🔮 Frontier & pertanyaan terbuka<br><br>
+<strong>Cabang-Cabang Fisika:</strong><br>
+• ⚛️ Mekanika Kuantum (Planck, Heisenberg, Schrödinger)<br>
+• 🚀 Relativitas (Einstein, E=mc², ruang-waktu)<br>
+• 🌌 Kosmologi (Big Bang, CMB, dark matter/energy)<br>
+• 🌡️ Termodinamika (entropi, hukum termodinamika)<br>
+• 🔬 Fisika Partikel (Model Standar, Higgs, LHC)<br>
+• ⚡ Elektromagnetisme (Maxwell, gelombang EM)<br>
+• ☢️ Fisika Nuklir (radioaktivitas, fisi, fusi)<br>
+• 🌟 Astrofisika (bintang, galaksi, lubang hitam)<br>
+• 🔦 Optika (cahaya, lensa, laser)<br><br>
+<strong>Fisika Klasik vs Modern:</strong><br>
+• 🏛️ Fisika Klasik (Newton, Maxwell, Termodinamika)<br>
+• 🚀 Fisika Modern (Kuantum, Relativitas)<br>
+• 🍎 Mekanika Newton detail (3 hukum, gravitasi)<br>
+• 🌊 Gelombang & Osilasi (harmonik, resonansi)<br>
+• 💧 Mekanika Fluida (Bernoulli, viskositas)<br><br>
+<strong>Kosmologi Detail:</strong><br>
+• 🔮 Dark Matter (WIMP, axion, deteksi langsung)<br>
+• 🌑 Dark Energy (konstanta kosmologi, quintessence)<br>
+• 💥 Inflasi Kosmik (horizon problem, flatness)<br><br>
+<strong>Tools:</strong><br>
+• 💻 Software (Python, MATLAB, dll)<br><br>
+💡 <em>Coba tanyakan dengan kata kunci di atas!</em>`;
+  }
+
+  // Send message - OFFLINE ONLY
+  async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message || isTyping) return;
+
+    addUserMessage(message);
+    chatInput.value = '';
+    
+    isTyping = true;
+    chatSendBtn.disabled = true;
+    showTypingIndicator();
+    
+    // Simulate thinking time
+    await new Promise(resolve => setTimeout(resolve, 400 + Math.random() * 600));
+    
+    removeTypingIndicator();
+    addBotMessage(getSmartResponse(message), true);
+    
+    isTyping = false;
+    chatSendBtn.disabled = false;
+    chatInput.focus();
+  }
+
+  // Initialize quick actions based on language
+  function initQuickActions() {
+    const currentLang = getCurrentLanguage();
+    const isEnglish = currentLang === 'en';
+    
+    const quickActionsLabel = document.getElementById('quick-actions-label');
+    const quickActionsButtons = document.getElementById('quick-actions-buttons');
+    
+    quickActionsLabel.textContent = isEnglish ? '💬 Popular questions:' : '💬 Pertanyaan populer:';
+    
+    const actions = isEnglish ? [
+      { question: 'What facilities does the lab have?', label: '🔬 Facilities', color: 'indigo' },
+      { question: 'What research topics?', label: '📚 Research Topics', color: 'purple' },
+      { question: 'Explain about cosmology', label: '🌌 Cosmology', color: 'pink' },
+      { question: 'What can you do?', label: '👥 Help', color: 'green' }
+    ] : [
+      { question: 'Apa saja fasilitas lab?', label: '🔬 Fasilitas', color: 'indigo' },
+      { question: 'Topik penelitian apa saja?', label: '📚 Topik Riset', color: 'purple' },
+      { question: 'Jelaskan tentang kosmologi', label: '🌌 Kosmologi', color: 'pink' },
+      { question: 'Apa yang bisa anda lakukan?', label: '👥 Help', color: 'green' }
+    ];
+    
+    quickActionsButtons.innerHTML = actions.map(action => `
+      <button class="quick-action-btn text-xs bg-${action.color}-100 dark:bg-${action.color}-900/30 text-${action.color}-700 dark:text-${action.color}-300 px-3 py-1 rounded-full hover:bg-${action.color}-200 dark:hover:bg-${action.color}-900/50 transition-colors" data-question="${action.question}">
+        ${action.label}
+      </button>
+    `).join('');
+    
+    // Re-attach event listeners
+    document.querySelectorAll('.quick-action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const question = btn.dataset.question;
+        chatInput.value = question;
+        sendMessage();
+      });
+    });
+  }
+
+  // Initialize welcome message
+  function initWelcomeMessage() {
+    const currentLang = getCurrentLanguage();
+    const isEnglish = currentLang === 'en';
+    
+    const welcomeHTML = isEnglish ? `
+      <div class="flex gap-2">
+        <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 7.07 2.93 10 10 0 0 1 0 14.14A10 10 0 1 1 12 2Z"></path>
+          </svg>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-none p-3 max-w-[80%] shadow-sm">
+          <p class="text-sm text-gray-800 dark:text-gray-200">👋 <strong>Welcome!</strong> I'm the Theoretical & Computational Physics Lab Assistant.</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">I can help you with information about the lab, research, facilities, physics topics, and much more!</p>
+          <div class="mt-3 p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+            <p class="text-xs text-indigo-700 dark:text-indigo-300">💡 <strong>Tips:</strong> Ask me anything about the lab or physics!</p>
+          </div>
+        </div>
+      </div>
+    ` : `
+      <div class="flex gap-2">
+        <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 7.07 2.93 10 10 0 0 1 0 14.14A10 10 0 1 1 12 2Z"></path>
+          </svg>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-none p-3 max-w-[80%] shadow-sm">
+          <p class="text-sm text-gray-800 dark:text-gray-200">👋 <strong>Selamat datang!</strong> Saya Asisten Lab Fisika Teori & Komputasi.</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Saya dapat membantu Anda dengan informasi tentang lab, penelitian, fasilitas, topik fisika, dan banyak lagi!</p>
+          <div class="mt-3 p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+            <p class="text-xs text-indigo-700 dark:text-indigo-300">💡 <strong>Tips:</strong> Tanya apa saja tentang lab atau fisika!</p>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    chatMessages.innerHTML = welcomeHTML;
+  }
+
+  // Event listeners
+  chatSendBtn.addEventListener('click', sendMessage);
+  
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+
+  // Initialize quick actions on load and language change
+  initQuickActions();
+  initWelcomeMessage();
+  
+  // Listen for language changes
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'site-language') {
+      initQuickActions();
+      initWelcomeMessage();
+    }
+  });
+
+  // Also reinitialize when language buttons are clicked
+  const originalSetLanguage = window.setLanguage;
+  window.setLanguage = function(lang) {
+    originalSetLanguage(lang);
+    initQuickActions();
+    initWelcomeMessage();
+  };
+
+})();
+</script>
+
 </body>
 </html>
 
